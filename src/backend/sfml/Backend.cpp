@@ -216,13 +216,16 @@ void SFML_Backend::beginScene(int color) {
 }
 
 void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
-                             FlxRect source, int color, bool flipped)
+                             FlxRect source, int color, bool flipped, bool scrool)
 {
     SFML_Image *gfx = (SFML_Image*)img;
 
+    FlxVector move = BackendHolder::get().getScroolVector();
+    if(!scrool) { move.x = move.y = 0; }
+
     sf::Sprite sprite;
     sprite.SetImage(gfx->Graphic);
-    sprite.SetPosition(x + (source.width / 2), y + (source.height / 2));
+    sprite.SetPosition(x + (source.width / 2) + move.x, y + (source.height / 2) + move.y);
     sprite.SetCenter((source.width / 2), (source.height / 2));
     sprite.SetSubRect(sf::IntRect(source.x, source.y, source.x + source.width, source.y + source.height));
     sprite.SetRotation(-angle * 57.2957795f);
@@ -248,14 +251,17 @@ void SFML_Backend::destroyText(void *text) {
     text = NULL;
 }
 
-void SFML_Backend::drawText(void *text, float x, float y, FlxVector scale, float angle, int color) {
+void SFML_Backend::drawText(void *text, float x, float y, FlxVector scale, float angle, int color, bool scrool) {
     if(!text) return;
     sf::String *str = (sf::String*) text;
 
     sf::FloatRect rect = str->GetRect();
 
+    FlxVector move = BackendHolder::get().getScroolVector();
+    if(!scrool) { move.x = move.y = 0; }
+
     str->SetCenter(rect.GetWidth() / 2, rect.GetHeight() / 2);
-    str->SetPosition(x + (rect.GetWidth() / 2), y + (rect.GetHeight() / 2));
+    str->SetPosition(x + (rect.GetWidth() / 2) + move.x, y + (rect.GetHeight() / 2) + move.y);
     str->SetScale(scale.x, scale.y);
     str->SetRotation(-angle * 57.2957795f);
     str->SetColor(sf::Color(SFML_GET_R(color), SFML_GET_G(color), SFML_GET_B(color), SFML_GET_A(color)));

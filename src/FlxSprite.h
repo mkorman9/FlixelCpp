@@ -14,7 +14,7 @@
 */
 class FlxSprite : public FlxObject {
 
-private:
+protected:
     FlxBackendImage *graphic;
     int sourceX, sourceY;
     int currentFrame, currentFrameNumber;

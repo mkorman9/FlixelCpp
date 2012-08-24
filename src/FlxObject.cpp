@@ -70,6 +70,8 @@ FlxBasic* FlxObject::collide(FlxBasic *object) {
         FlxObject *obj = (FlxObject*) object;
         float dt = BackendHolder::get().getBackend()->getDeltaTime();
 
+        if(!obj->collidate) return NULL;
+
         // x-axis
         FlxRect rect1;
         rect1.x = hitbox.x + (velocity.x * dt);

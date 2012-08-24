@@ -7,9 +7,31 @@ public:
     FlxSprite *player;
     FlxText *text;
     FlxGroup *obstacles;
+    FlxTilemap *map;
 
     virtual void create() {
         FlxG::bgColor = 0xff9977aa;
+
+        // map
+        int lol[] = {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+            0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
+
+        map = new FlxTilemap();
+        map->loadMap(lol, 28, 12, "data/Tilemap.png", 45, 45);
+        add(map);
 
         // player
         player = new FlxSprite(100, 100);
@@ -29,23 +51,19 @@ public:
 
         add(player);
 
+
+        FlxG::worldBounds = map->bounds;
+        FlxG::followObject(player);
+
+
         // text
         text = new FlxText("Hello world!", "data/comic.ttf", 550, 100, 24, 0xff000000);
         text->angle = FlxU::degreesToRad(45);
         add(text);
 
-        // obstacles
-        obstacles = new FlxGroup();
-        obstacles->add(new FlxSprite(100, 300, "data/player.png", 50, 50));
-        obstacles->add(new FlxSprite(220, 300, "data/player.png", 50, 50));
-        obstacles->add(new FlxSprite(340, 300, "data/player.png", 50, 50));
-        obstacles->add(new FlxSprite(460, 300, "data/player.png", 50, 50));
-        obstacles->add(new FlxSprite(580, 300, "data/player.png", 50, 50));
-        add(obstacles);
-
         player->acceleration.y = 1;
 
-        FlxG::playMusic("data/3.ogg", 0.05f);
+        //FlxG::playMusic("data/3.ogg", 0.05f);
     }
 
     virtual void update() {
@@ -56,7 +74,7 @@ public:
         if(FlxG::key->down(FlxKey::Left)) player->velocity.x = -225;
         if(FlxG::key->pressed(FlxKey::Up)) player->velocity.y = -225;
 
-        player->collide(obstacles);
+        player->collide(map);
 
         if(FlxG::key->pressed(FlxKey::A)) player->visible = !player->visible;
         if(FlxG::key->pressed(FlxKey::S)) FlxG::play("data/ding.ogg");

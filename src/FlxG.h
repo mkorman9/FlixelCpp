@@ -16,6 +16,7 @@
 #include "FlxPreloader.h"
 #include "FlxSound.h"
 #include "FlxMusic.h"
+#include "FlxTilemap.h"
 
 /*
 *  Main static class which holds all functionality
@@ -57,6 +58,16 @@ public:
     // music
     static FlxMusic *music;
 
+    // world's bounds
+    static FlxRect worldBounds;
+
+    // scrool vector (read only)
+    static FlxVector scroolVector;
+
+    // follow object
+    static void followObject(FlxObject *object);
+
+
     // setup game
     static int setup(const char *title, int Width, int Height, FlxState *state);
 
@@ -76,6 +87,9 @@ private:
 
     // draw state
     static void draw();
+
+    // object to follow
+    static FlxObject *toFollow;
 };
 
 #endif

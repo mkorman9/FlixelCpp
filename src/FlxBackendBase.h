@@ -84,10 +84,10 @@ public:
 
     virtual void beginScene(int color) = 0;
     virtual void drawImage(FlxBackendImage *img, float x, float y, FlxVector scale, float angle,
-                        FlxRect source, int color, bool flipped) = 0;
+                        FlxRect source, int color, bool flipped, bool scrool) = 0;
     virtual void* createText(const char *text, void *font, int size) = 0;
     virtual void destroyText(void *text) = 0;
-    virtual void drawText(void *text, float x, float y, FlxVector scale, float angle, int color) = 0;
+    virtual void drawText(void *text, float x, float y, FlxVector scale, float angle, int color, bool scrool) = 0;
     virtual void endScene() = 0;
 
     virtual FlxBackendImage* createImage(int width, int height, int color) = 0;

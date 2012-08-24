@@ -9,6 +9,7 @@ FlxText::FlxText(const char *Text, const char *Font, float X, float Y, int Size,
     font = NULL;
 
     collidate = false;
+    scrool = false;
 
     setFormat(Font, Size, color);
 }
@@ -55,6 +56,6 @@ void FlxText::update() {
 
 
 void FlxText::draw() {
-    BackendHolder::get().getBackend()->drawText(textPtr, x, y, scale, angle, color);
+    BackendHolder::get().getBackend()->drawText(textPtr, x, y, scale, angle, color, scrool);
 }
 

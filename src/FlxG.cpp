@@ -12,6 +12,10 @@ int FlxG::width, FlxG::height;
 int FlxG::screenWidth, FlxG::screenHeight;
 FlxPreloader *FlxG::preloader = NULL;
 FlxMusic *FlxG::music = 0;
+FlxRect FlxG::worldBounds;
+FlxVector FlxG::scroolVector;
+FlxObject *FlxG::toFollow = NULL;
+
 
 int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
@@ -96,6 +100,10 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     return 0;
 }
 
+void FlxG::followObject(FlxObject *object) {
+    toFollow = object;
+}
+
 
 void FlxG::switchState(FlxState *newState) {
     if(!newState) return;
@@ -123,6 +131,27 @@ FlxMusic* FlxG::playMusic(const char *path, float vol) {
 
 
 void FlxG::update() {
+
+    // follow some object?
+    if(toFollow) {
+        FlxVector objectCenter = toFollow->getCenter();
+        FlxVector move(objectCenter.x - (width / 2), objectCenter.y - (height / 2));
+
+        if(move.x < worldBounds.x) move.x = worldBounds.x;
+        if(move.x + width > worldBounds.width) move.x = worldBounds.width - width;
+
+        if(move.y < worldBounds.y) move.y = worldBounds.y;
+        if(move.y + height > worldBounds.height) move.y = worldBounds.height - height;
+
+        scroolVector = move;
+        BackendHolder::get().setScrool(move);
+    }
+    else {
+        scroolVector = FlxVector(0,0);
+        BackendHolder::get().setScrool(scroolVector);
+    }
+
+
     if(state) state->update();
 }
 

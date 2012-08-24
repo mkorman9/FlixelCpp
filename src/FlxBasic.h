@@ -26,12 +26,16 @@ public:
     // is entity active or not?
     bool active;
 
+    // is object scrool-able
+    bool scrool;
+
     // special variables
     std::map<std::string, std::string> vars;
 
     // default contructor
     FlxBasic() {
         active = true;
+        scrool = true;
     }
 
     // base update function (to override)

@@ -13,6 +13,7 @@ private:
     BackendHolder() { }
     FlxBackendBase *backend;
     FlxVector scaleRatio;
+    FlxVector scroolVector;
 public:
 
     static BackendHolder& get() {
@@ -35,6 +36,15 @@ public:
 
     FlxVector getScalingRatio() {
         return scaleRatio;
+    }
+
+    void setScrool(const FlxVector& move) {
+        scroolVector.x = -move.x;
+        scroolVector.y = -move.y;
+    }
+
+    FlxVector getScroolVector() {
+        return scroolVector;
     }
 };
 

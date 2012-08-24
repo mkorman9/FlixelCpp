@@ -1,5 +1,4 @@
-C++ game framework based on Flixel library (by Adam Atomic). Framework is still not finished and may contain many bugs. Keep in mind
-that it's not 1:1 port of Flixel. My library has some differences in API and rendering system.
+C++ game framework based on Flixel library (by Adam Atomic). Framework is still not finished and may contain many bugs. Keep in mind that it's not 1:1 port of Flixel. My library has some differences in API and rendering system.
 
 What is currently ported?
 - State managment based on FlxState class
@@ -9,10 +8,10 @@ What is currently ported?
 - Text rendering via FlxText
 - Basic collisions
 - Playing sounds and music (may contain bugs)
+- Tilemaps
 
 What isn't ported yet
 - Particles system
-- Tilemaps
 - Saves
 - Camera managment
 - Buttons
@@ -23,66 +22,5 @@ What isn't ported and probably will never be.
 - Physics
 - QuadTrees
 
-The biggest advantage of my framework is that the backend part is tottaly separated from the Flixel API. We could write our own 
-window managment/input/rendering/sounding classes by simply overriding FlxBackendBase class. Default built-in PC backend is SFML system. 
+The biggest advantage of my framework is that the backend part is tottaly separated from the Flixel API. We could write our own window managment/input/rendering/sounding classes by simply overriding FlxBackendBase class. Default built-in PC backend is SFML system. 
 This makes my framework portable through all popular devices with no API changes.
-
-Basic example:
-
-#include "FlxG.h"
-#include "backend/sfml/Backend.h"
-
-class MainState : public FlxState {
-
-public:
-    FlxSprite *player;
-    FlxText *text;
-
-    virtual void create() {
-        FlxG::bgColor = 0xff9977aa;
-
-        // player
-        player = new FlxSprite(100, 100);
-        player->loadGraphic("data/player.png", 50, 50);
-
-        std::vector<unsigned int> frames;
-        frames.push_back(0);
-        frames.push_back(1);
-		frames.push_back(2);
-		frames.push_back(3);
-
-        player->addAnimation("anim", frames, 0.5);
-        player->play("anim2");
-
-        add(player);
-
-        // text
-        text = new FlxText("Hello world!", "data/comic_sans.ttf", 550, 100, 24, 0xff000000);
-        text->angle = FlxU::degreesToRad(45);
-		text->collidate = true;
-        add(text);
-
-        FlxG::playMusic("data/music.ogg", 0.05f);
-    }
-
-    virtual void update() {
-
-        player->velocity.x = 0;
-        player->velocity.y = 0;
-        if(FlxG::key->down(FlxKey::Right)) player->velocity.x = 225;
-        if(FlxG::key->down(FlxKey::Left)) player->velocity.x = -225;
-        if(FlxG::key->down(FlxKey::Up)) player->velocity.y = -225;
-		if(FlxG::key->down(FlxKey::Down)) player->velocity.y = 225;
-		
-        player->collide(text);
-
-        if(FlxG::key->pressed(FlxKey::A)) player->visible = !player->visible;
-
-        FlxState::update();
-    }
-};
-
-int main(int argc, char *argv[]) {
-    FlxG::backend = new SFML_Backend();
-    return FlxG::setup("Hello world!", 800, 480, new MainState());
-}
