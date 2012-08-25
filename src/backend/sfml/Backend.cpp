@@ -1,5 +1,6 @@
 #include "Backend.h"
 #include "../BackendHolder.h"
+#include "../../FlxU.h"
 
 /*
 * SFML image class
@@ -121,7 +122,14 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
         keysDown[i] = false;
     }
 
+    touchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
+
     return true;
+}
+
+void SFML_Backend::setCallbacks(void (*onTouchBegin)(int id, float, float), void (*onTouchEnd)(int id, float, float)) {
+    touchBegin = onTouchBegin;
+    touchEnd = onTouchEnd;
 }
 
 FlxVector SFML_Backend::getScreenSize() {
@@ -145,31 +153,10 @@ void SFML_Backend::exitApplication() {
         delete m;
     }
 
+    touchEnd(0, 0, 0);
+
     window->Close();
     delete window;
-}
-
-FlxVector SFML_Backend::getMousePosition(int index) {
-    return FlxVector(window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
-}
-
-bool SFML_Backend::getMouseButtonState(int button, int index) {
-
-    if(button == 0) {
-        return window->GetInput().IsMouseButtonDown(sf::Mouse::Left);
-    }
-    else if(button == 1) {
-        return window->GetInput().IsMouseButtonDown(sf::Mouse::Middle);
-    }
-    else if(button == 2) {
-        return window->GetInput().IsMouseButtonDown(sf::Mouse::Right);
-    }
-
-    return false;
-}
-
-int SFML_Backend::getMousePointers() {
-    return 1;
 }
 
 bool* SFML_Backend::getKeysDown() {
@@ -193,6 +180,8 @@ void SFML_Backend::updateInput() {
         if(event.Type == sf::Event::Closed) {
             exitMsg = true;
         }
+
+        // keyboard events
         else if(event.Type == sf::Event::KeyPressed) {
             keysDown[event.Key.Code] = true;
         }
@@ -201,6 +190,26 @@ void SFML_Backend::updateInput() {
         }
     }
 }
+
+FlxVector SFML_Backend::getMousePosition(int index) {
+    return FlxVector(window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
+}
+
+bool SFML_Backend::getMouseButtonState(int button, int index) {
+
+    if(button == 0) {
+        return window->GetInput().IsMouseButtonDown(sf::Mouse::Left);
+    }
+    else if(button == 1) {
+        return window->GetInput().IsMouseButtonDown(sf::Mouse::Middle);
+    }
+    else if(button == 2) {
+        return window->GetInput().IsMouseButtonDown(sf::Mouse::Right);
+    }
+
+    return false;
+}
+
 
 void SFML_Backend::showMouse(bool show) {
     window->ShowMouseCursor(show);
@@ -223,7 +232,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  FlxVector 
     sprite.SetPosition(x + (source.width / 2) + move.x, y + (source.height / 2) + move.y);
     sprite.SetCenter((source.width / 2), (source.height / 2));
     sprite.SetSubRect(sf::IntRect(source.x, source.y, source.x + source.width, source.y + source.height));
-    sprite.SetRotation(-angle * 57.2957795f);
+    sprite.SetRotation(-FlxU::radToDegrees(angle));
     sprite.SetScale(scale.x, scale.y);
     sprite.FlipX(flipped);
     sprite.SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
@@ -248,7 +257,7 @@ FlxVector SFML_Backend::drawText(const char *text, void *font, int size, float x
     str.SetCenter(rect.GetWidth() / 2, rect.GetHeight() / 2);
     str.SetPosition(x + (rect.GetWidth() / 2) + move.x, y + (rect.GetHeight() / 2) + move.y);
     str.SetScale(scale.x, scale.y);
-    str.SetRotation(-angle * 57.2957795f);
+    str.SetRotation(-FlxU::radToDegrees(angle));
     str.SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
 
     window->Draw(str);

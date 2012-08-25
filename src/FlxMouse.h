@@ -5,6 +5,8 @@
 #ifndef _FLX_MOUSE_H_
 #define _FLX_MOUSE_H_
 
+#include "backend/cpp.h"
+
 /*
 *  Mouse handler
 */
@@ -28,6 +30,10 @@ public:
     void hide();
 
     void updateState();
+
+    // static internal data
+    static void onTouchBegin(int pointer, float, float);
+    static void onTouchEnd(int pointer, float, float);
 };
 
 #endif

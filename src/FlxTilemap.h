@@ -15,16 +15,38 @@ class FlxTilemap : public FlxGroup {
 
 public:
 
+    // raw map data
+    int *mapData;
+
     // bounds of the map (in pixels)
     FlxRect bounds;
+
+    // total map size
+    FlxVector size;
 
     // total size of map (in pixels)
     FlxVector sizeInPixels;
 
 
+    // constructor
+    FlxTilemap();
+
+    // destructor
+    ~FlxTilemap();
+
     // load map to memory
     void loadMap(int *map, int sizeX, int sizeY, const char *tileset, int tileWidth,
                  int tileHeight, int firstCollidate = 1);
+
+    // get tile type from specified index
+    int getTile(int x, int y);
+
+    // get tile by point
+    int getTileFromPoint(float pointX, float pointY);
+
+    // set tile on index
+    void setTile(int x, int y, int value);
+
 
     virtual void update() {
         FlxGroup::update();

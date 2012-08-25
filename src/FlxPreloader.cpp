@@ -78,10 +78,10 @@ void FlxPreloader::draw() {
 void FlxPreloader::update() {
     BackendHolder::get().getBackend()->updateInput();
     FlxG::elapsed = BackendHolder::get().getBackend()->getDeltaTime();
-    FlxG::mouse->updateState();
 
     progress(percent);
-
     FlxGroup::update();
+
+    FlxG::updateMouses();
     FlxG::key->updateState();
 }

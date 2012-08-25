@@ -6,7 +6,6 @@ float FlxG::elapsed;
 bool FlxG::exitMessage = false;
 FlxBackendBase *FlxG::backend;
 int FlxG::bgColor = 0xff000000;
-FlxMouse *FlxG::mouse;
 FlxKeyboard *FlxG::key;
 int FlxG::width, FlxG::height;
 int FlxG::screenWidth, FlxG::screenHeight;
@@ -15,8 +14,7 @@ FlxMusic *FlxG::music = 0;
 FlxRect FlxG::worldBounds;
 FlxVector FlxG::scroolVector;
 FlxObject *FlxG::toFollow = NULL;
-std::vector<FlxMouse*> FlxG::mouses;
-
+std::vector<FlxMouse*> FlxG::mouse;
 
 int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
@@ -29,16 +27,12 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     height = Height;
 
     BackendHolder::get().setBackend(backend);
+    BackendHolder::get().getBackend()->setCallbacks(&FlxMouse::onTouchBegin, &FlxMouse::onTouchEnd);
     BackendHolder::get().getBackend()->setupSurface(title, width, height);
 
     screenWidth = BackendHolder::get().getBackend()->getScreenSize().x;
     screenHeight = BackendHolder::get().getBackend()->getScreenSize().y;
     BackendHolder::get().setScalingRatio(screenWidth / width, screenHeight / height);
-
-    #ifndef FLX_MOBILE
-    mouses.push_back(new FlxMouse(0));
-    mouse = mouses[0];
-    #endif
 
     key = new FlxKeyboard();
     srand(time(0));
@@ -80,9 +74,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
         }
 
         elapsed = BackendHolder::get().getBackend()->getDeltaTime();
-
         BackendHolder::get().getBackend()->updateInput();
-        mouse->updateState();
 
         update();
 
@@ -90,10 +82,10 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
         draw();
         BackendHolder::get().getBackend()->endScene();
 
+        updateMouses();
         key->updateState();
     }
 
-    delete mouse;
     delete key;
 
     BackendHolder::get().getBackend()->exitApplication();
@@ -132,6 +124,26 @@ FlxMusic* FlxG::playMusic(const char *path, float vol) {
 
     music = s;
     return s;
+}
+
+
+void FlxG::updateMouses() {
+
+    for(unsigned int i = 0; i < mouse.size(); i++) {
+
+        #ifdef FLX_MOBILE
+        if(mouse[i]->leftReleased) {
+            mouse.erase(mouse.begin() + i);
+            continue;
+        }
+
+        if(mouse[i]->leftPressed) {
+            mouse[i]->leftPressed = false;
+        }
+        #endif
+
+        mouse[i]->updateState();
+    }
 }
 
 

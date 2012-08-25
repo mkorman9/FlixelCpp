@@ -14,24 +14,26 @@ class FlxU {
 
 public:
 
+    static const float PI = 3.14159265358979323f;
+
     static float random() {
-        return (float)rand() / (float)RAND_MAX;
+        return random(0.0f, 1.0f);
     }
 
     static float random(float min, float max) {
-        return (random() * (max - min)) + min;
+        return (float)rand() / RAND_MAX * (max - min) + min;
     }
 
     static int random(int min, int max) {
-        return floor(random() * (max - min + 1)) + min;
+        return rand() % (max - min + 1) + min;
     }
 
     static float degreesToRad(float deegrees) {
-        return deegrees / 57.2957795f;
+        return deegrees * (PI / 180.f);
     }
 
     static float radToDegrees(float rad) {
-        return rad * 57.2957795f;
+        return rad * (180.f / PI);
     }
 
     static std::string toString(int value) {

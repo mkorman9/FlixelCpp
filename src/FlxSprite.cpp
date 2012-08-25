@@ -4,13 +4,19 @@
 FlxSprite::FlxSprite(float X, float Y, const char *gfx, int Width, int Height) {
     x = X;
     y = Y;
+
+    reset();
+
+    if(gfx) loadGraphic(gfx, Width, Height);
+}
+
+
+void FlxSprite::reset() {
     sourceX = sourceY = 0;
     flipped = false;
     currentFrame = currentFrameNumber = 0;
     frameCounter = 0;
     currentAnimation = NULL;
-
-    if(gfx) loadGraphic(gfx, Width, Height);
 }
 
 

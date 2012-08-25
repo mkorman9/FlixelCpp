@@ -70,14 +70,15 @@ class FlxBackendBase {
 
 public:
     virtual bool setupSurface(const char *title, int width, int height) = 0;
+    virtual void setCallbacks(void (*onTouchBegin)(int id, float, float),
+                              void (*onTouchEnd)(int id, float, float)) = 0;
     virtual FlxVector getScreenSize() = 0;
     virtual bool exitMessage() = 0;
     virtual void exitApplication() = 0;
-    virtual FlxVector getMousePosition(int index) = 0;
-    virtual bool getMouseButtonState(int button, int index) = 0;
-    virtual int getMousePointers() = 0;
     virtual bool* getKeysDown() = 0;
     virtual bool isKeyDown(int code) = 0;
+    virtual FlxVector getMousePosition(int index) = 0;
+    virtual bool getMouseButtonState(int button, int index) = 0;
     virtual float getDeltaTime() = 0;
     virtual void updateInput() = 0;
     virtual void showMouse(bool show) = 0;

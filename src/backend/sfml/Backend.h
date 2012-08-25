@@ -25,16 +25,20 @@ private:
     std::map<std::string, void*> fonts;
     std::map<std::string, FlxBackendMusic*> music;
     std::map<std::string, void*> sounds;
+
+    void (*touchBegin)(int id, float, float);
+    void (*touchEnd)(int id, float, float);
 public:
     virtual bool setupSurface(const char *title, int width, int height);
+    virtual void setCallbacks(void (*onTouchBegin)(int id, float, float),
+                              void (*onTouchEnd)(int id, float, float));
     virtual FlxVector getScreenSize();
     virtual bool exitMessage();
     virtual void exitApplication();
-    virtual FlxVector getMousePosition(int index);
-    virtual bool getMouseButtonState(int button, int index);
-    virtual int getMousePointers();
     virtual bool* getKeysDown();
     virtual bool isKeyDown(int code);
+    virtual FlxVector getMousePosition(int index);
+    virtual bool getMouseButtonState(int button, int index);
     virtual float getDeltaTime();
     virtual void updateInput();
     virtual void showMouse(bool show);

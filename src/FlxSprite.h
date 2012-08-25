@@ -36,6 +36,9 @@ public:
     // destructor
     ~FlxSprite();
 
+    // reset internal sprite data
+    void reset();
+
     // load image to memory
     bool loadGraphic(const char *gfx, int Width = 0, int Height = 0);
 
@@ -48,9 +51,6 @@ public:
     // plays and stops animation
     void play(const char *animName);
     void stop();
-
-    // is sprite collidation with something
-
 
     virtual void draw();
     virtual void update();

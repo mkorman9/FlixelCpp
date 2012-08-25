@@ -1,5 +1,7 @@
 #include "FlxMouse.h"
 #include "backend/BackendHolder.h"
+#include "FlxG.h"
+
 
 FlxMouse::FlxMouse(int id) {
     lastLeftDown = lastRightDown = lastMiddleDown = false;
@@ -26,37 +28,65 @@ void FlxMouse::hide() {
 
 void FlxMouse::updateState() {
 
-    leftDown = BackendHolder::get().getBackend()->getMouseButtonState(0, index);
-    middleDown = BackendHolder::get().getBackend()->getMouseButtonState(1, index);
-    rightDown = BackendHolder::get().getBackend()->getMouseButtonState(2, index);
+    #ifndef FLX_MOBILE
+        leftDown = BackendHolder::get().getBackend()->getMouseButtonState(0, index);
+        middleDown = BackendHolder::get().getBackend()->getMouseButtonState(1, index);
+        rightDown = BackendHolder::get().getBackend()->getMouseButtonState(2, index);
 
-    // pressed
-    if(leftDown && !lastLeftDown) leftPressed = true;
-    else leftPressed = false;
+        // pressed
+        if(leftDown && !lastLeftDown) leftPressed = true;
+        else leftPressed = false;
 
-    if(middleDown && !lastMiddleDown) middlePressed = true;
-    else middlePressed = false;
+        if(middleDown && !lastMiddleDown) middlePressed = true;
+        else middlePressed = false;
 
-    if(rightDown && !lastRightDown) rightPressed = true;
-    else rightPressed = false;
+        if(rightDown && !lastRightDown) rightPressed = true;
+        else rightPressed = false;
 
-    // released
-    if(!leftDown && lastLeftDown) leftReleased = true;
-    else leftReleased = false;
+        // released
+        if(!leftDown && lastLeftDown) leftReleased = true;
+        else leftReleased = false;
 
-    if(!middleDown && lastMiddleDown) middleReleased = true;
-    else middleReleased = false;
+        if(!middleDown && lastMiddleDown) middleReleased = true;
+        else middleReleased = false;
 
-    if(!rightDown && lastRightDown) rightReleased = true;
-    else rightReleased = false;
+        if(!rightDown && lastRightDown) rightReleased = true;
+        else rightReleased = false;
 
-    // save position
-    FlxVector pos = BackendHolder::get().getBackend()->getMousePosition(index);
-    x = pos.x;
-    y = pos.y;
+        // save last frame buttons state
+        lastLeftDown = leftDown;
+        lastMiddleDown = middleDown;
+        lastRightDown = rightDown;
 
-    // save last frame buttons state
-    lastLeftDown = leftDown;
-    lastMiddleDown = middleDown;
-    lastRightDown = rightDown;
+        // save position
+        FlxVector pos = BackendHolder::get().getBackend()->getMousePosition(index);
+        x = pos.x;
+        y = pos.y;
+    #endif
 }
+
+
+void FlxMouse::onTouchBegin(int pointer, float X, float Y) {
+    FlxMouse *touch = new FlxMouse(pointer);
+
+    touch->x = X;
+    touch->y = Y;
+
+    #ifdef FLX_MOBILE
+    touch->leftPressed = true;
+    touch->leftDown = true;
+    #endif
+
+    FlxG::mouse.push_back(touch);
+}
+
+void FlxMouse::onTouchEnd(int pointer, float X, float Y) {
+
+    for(unsigned int i = 0; i < FlxG::mouse.size(); i++) {
+        if(FlxG::mouse[i]->index == pointer) {
+            FlxG::mouse[i]->leftReleased = true;
+            return;
+        }
+    }
+}
+

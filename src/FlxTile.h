@@ -13,18 +13,17 @@ public:
 
     int indexX;
     int indexY;
+    int type;
 
     FlxTile(float X = 0, float Y = 0, const char *gfx = 0, int Width = 0, int Height = 0) {
 
         indexX = indexY = 0;
+        type = 0;
 
         x = X;
         y = Y;
-        sourceX = sourceY = 0;
-        flipped = false;
-        currentFrame = currentFrameNumber = 0;
-        frameCounter = 0;
-        currentAnimation = NULL;
+
+        reset();
 
         if(gfx) loadGraphic(gfx, Width, Height);
     }
