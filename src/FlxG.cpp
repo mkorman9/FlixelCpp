@@ -15,6 +15,7 @@ FlxMusic *FlxG::music = 0;
 FlxRect FlxG::worldBounds;
 FlxVector FlxG::scroolVector;
 FlxObject *FlxG::toFollow = NULL;
+std::vector<FlxMouse*> FlxG::mouses;
 
 
 int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
@@ -34,7 +35,11 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     screenHeight = BackendHolder::get().getBackend()->getScreenSize().y;
     BackendHolder::get().setScalingRatio(screenWidth / width, screenHeight / height);
 
-    mouse = new FlxMouse(0);
+    #ifndef FLX_MOBILE
+    mouses.push_back(new FlxMouse(0));
+    mouse = mouses[0];
+    #endif
+
     key = new FlxKeyboard();
     srand(time(0));
 
@@ -74,17 +79,12 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
             }
         }
 
-        FlxState *lastState = state;
         elapsed = BackendHolder::get().getBackend()->getDeltaTime();
 
         BackendHolder::get().getBackend()->updateInput();
         mouse->updateState();
 
         update();
-
-        if(lastState != state) {
-            continue;
-        }
 
         BackendHolder::get().getBackend()->beginScene(bgColor);
         draw();
@@ -102,6 +102,11 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
 void FlxG::followObject(FlxObject *object) {
     toFollow = object;
+}
+
+
+void FlxG::setTimeModifier(float mod) {
+    BackendHolder::get().setTimeModifier(mod);
 }
 
 

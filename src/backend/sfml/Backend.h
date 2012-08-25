@@ -41,17 +41,15 @@ public:
 
     virtual void beginScene(int color);
     virtual void drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
-                           FlxRect source, int color, bool flipped, bool scrool);
-    virtual void* createText(const char *text, void *font, int size);
-    virtual void destroyText(void *text);
-    virtual void drawText(void *text, float x, float y, FlxVector scale, float angle, int color, bool scrool);
+                           FlxRect source, int color, bool flipped, bool scrool, float alpha);
+    virtual FlxVector drawText(const char *text, void *font, int size, float x, float y, FlxVector scale, float angle, int color,
+                          bool scrool, float alpha);
     virtual void endScene();
 
-    virtual FlxBackendImage* createImage(int width, int height, int color);
+    virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);
-    virtual void *loadFont(const char *path, int fontSize);
 
-    virtual FlxVector getTextSize(void *text);
+    virtual void *loadFont(const char *path, int fontSize);
 
     virtual void* loadSound(const char *path);
     virtual FlxBackendMusic* loadMusic(const char *path);

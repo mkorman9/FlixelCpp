@@ -47,7 +47,7 @@ public:
     // scale
     FlxVector scale;
 
-    // color
+    // color (in 24-bits) NO ALPHA!!!!1111
     int color;
 
     // is entity visible or not?
@@ -62,9 +62,18 @@ public:
     // is entity collidable?
     bool collidate;
 
+    // opacity (0 - 1)
+    float alpha;
+
 
     // get entity's center point
     FlxVector getCenter();
+
+    // is entity touching floor
+    bool isTouchingFloor(FlxBasic *floor);
+
+    // is entity touching ceiling
+    bool isTouchingCeiling(FlxBasic *ceil);
 
     // entity overlap override
     virtual FlxBasic* overlaps(FlxBasic *object);

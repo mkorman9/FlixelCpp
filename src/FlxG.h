@@ -46,8 +46,11 @@ public:
     // background color
     static int bgColor;
 
-    // mouse state
+    // first mouse pointer
     static FlxMouse *mouse;
+
+    // mouses
+    static std::vector<FlxMouse*> mouses;
 
     // keyboard state
     static FlxKeyboard *key;
@@ -64,9 +67,12 @@ public:
     // scrool vector (read only)
     static FlxVector scroolVector;
 
+
     // follow object
     static void followObject(FlxObject *object);
 
+    // set time modifier
+    static void setTimeModifier(float mod);
 
     // setup game
     static int setup(const char *title, int Width, int Height, FlxState *state);

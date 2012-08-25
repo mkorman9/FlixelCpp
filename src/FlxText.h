@@ -14,19 +14,21 @@
 class FlxText : public FlxObject {
 
 private:
-    void *textPtr;
     void *font;
-    std::string text;
-    int color, size;
-
-    void updateFrame();
 public:
 
+    // text
+    std::string text;
+
+    // size of text
+    int size;
+
+
     // Default constructor
-    FlxText(const char *text, const char *font, float x = 0, float y = 0, int size = 32, int color = 0xff000000);
+    FlxText(const char *text, const char *font, float x = 0, float y = 0, int size = 32, int Color = 0x000000);
 
     // Set text's design
-    void setFormat(const char *font, int size, int color);
+    void setFormat(const char *font, int Size, int Color);
 
     // Set text
     void setText(const char *text);

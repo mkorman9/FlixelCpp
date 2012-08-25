@@ -27,6 +27,7 @@ private:
     std::vector<std::pair<std::string, int> > fontsToLoad;
     std::vector<std::string> musicToLoad;
     std::vector<std::string> soundsToLoad;
+    float percent;
 public:
 
     FlxLoadingState state;
@@ -42,13 +43,12 @@ public:
     virtual void create() {
     }
 
-    virtual void update(float percent) {
-        FlxGroup::update();
+    virtual void progress(float percent) {
+
     }
 
-    void draw() {
-        FlxGroup::draw();
-    }
+    virtual void update();
+    virtual void draw();
 
     void loadImage(const std::string& path) {
         imagesToLoad.push_back(path);

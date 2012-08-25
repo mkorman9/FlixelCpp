@@ -9,7 +9,8 @@ FlxObject::FlxObject() {
     visible = true;
     x = y = angle = angularVelocity = 0.f;
     width = height = 0;
-    color = 0xffffffff;
+    color = 0xffffff;
+    alpha = 1.0f;
 
     maxVelocity.x = 1000;
     maxVelocity.y = 1000;
@@ -40,6 +41,48 @@ void FlxObject::update() {
 
 FlxVector FlxObject::getCenter() {
     return FlxVector(x + (width / 2), y + (height / 2));
+}
+
+
+bool FlxObject::isTouchingFloor(FlxBasic *floor) {
+
+    FlxObject obj1;
+    obj1.hitbox.width = 1;
+    obj1.hitbox.height = 1;
+    obj1.hitbox.x = x;
+    obj1.hitbox.y = y + height + 3;
+
+    FlxObject obj2;
+    obj2.hitbox.width = 1;
+    obj2.hitbox.height = 1;
+    obj2.hitbox.x = x + width;
+    obj2.hitbox.y = y + height + 3;
+
+    FlxObject *col1 = (FlxObject*)obj1.overlaps(floor);
+    FlxObject *col2 = (FlxObject*)obj2.overlaps(floor);
+
+    return (col1 && col1->collidate) || (col2 && col2->collidate);
+}
+
+
+bool FlxObject::isTouchingCeiling(FlxBasic *ceil) {
+
+    FlxObject obj1;
+    obj1.hitbox.width = 1;
+    obj1.hitbox.height = 1;
+    obj1.hitbox.x = x;
+    obj1.hitbox.y = y - 3;
+
+    FlxObject obj2;
+    obj2.hitbox.width = 1;
+    obj2.hitbox.height = 1;
+    obj2.hitbox.x = x + width;
+    obj2.hitbox.y = y - 3;
+
+    FlxObject *col1 = (FlxObject*)obj1.overlaps(ceil);
+    FlxObject *col2 = (FlxObject*)obj2.overlaps(ceil);
+
+    return (col1 && col1->collidate) || (col2 && col2->collidate);
 }
 
 

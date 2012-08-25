@@ -6,11 +6,10 @@ class MainState : public FlxState {
 public:
     FlxSprite *player;
     FlxText *text;
-    FlxGroup *obstacles;
     FlxTilemap *map;
 
     virtual void create() {
-        FlxG::bgColor = 0xff9977aa;
+        FlxG::bgColor = 0x9977aa;
 
         // map
         int lol[] = {
@@ -36,6 +35,7 @@ public:
         // player
         player = new FlxSprite(100, 100);
         player->loadGraphic("data/player.png", 50, 50);
+        player->alpha = 0.5f;
 
         std::vector<unsigned int> frames1;
         frames1.push_back(0);
@@ -57,13 +57,13 @@ public:
 
 
         // text
-        text = new FlxText("Hello world!", "data/comic.ttf", 550, 100, 24, 0xff000000);
+        text = new FlxText("Hello world!", "data/comic.ttf", 550, 100, 24, 0x000000);
         text->angle = FlxU::degreesToRad(45);
         add(text);
 
-        player->acceleration.y = 1;
+        player->acceleration.y = 2;
 
-        //FlxG::playMusic("data/3.ogg", 0.05f);
+        FlxG::playMusic("data/3.ogg", 0.05f);
     }
 
     virtual void update() {
@@ -72,12 +72,16 @@ public:
         //player->velocity.y = 0;
         if(FlxG::key->down(FlxKey::Right)) player->velocity.x = 225;
         if(FlxG::key->down(FlxKey::Left)) player->velocity.x = -225;
-        if(FlxG::key->pressed(FlxKey::Up)) player->velocity.y = -225;
+        if(FlxG::key->pressed(FlxKey::Up) && player->isTouchingFloor(map)) player->velocity.y = -225;
 
         player->collide(map);
 
         if(FlxG::key->pressed(FlxKey::A)) player->visible = !player->visible;
         if(FlxG::key->pressed(FlxKey::S)) FlxG::play("data/ding.ogg");
+
+        // slow-mo
+        if(FlxG::key->down(FlxKey::Space)) FlxG::setTimeModifier(0.4f);
+        else FlxG::setTimeModifier(1.f);
 
         FlxState::update();
     }
@@ -87,6 +91,7 @@ public:
 class Preloader : public FlxPreloader {
 
 public:
+
     Preloader() {
         loadMusic("data/3.ogg");
         loadSound("data/ding.ogg");
@@ -94,11 +99,11 @@ public:
 
     virtual void create() {
         add(new FlxSprite(0, 0, "data/load.png"));
+
     }
 
-    virtual void update(float p) {
+    virtual void progress(float p) {
 
-        FlxPreloader::update(p);
     }
 };
 

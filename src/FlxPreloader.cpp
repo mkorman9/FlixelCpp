@@ -8,10 +8,12 @@ void FlxPreloader::run() {
         soundsToLoad.size();
     unsigned int assetsLoaded = 0;
 
+    percent = 0;
+
     while(assets != assetsLoaded) {
-        BackendHolder::get().getBackend()->updateInput();
-        FlxG::elapsed = BackendHolder::get().getBackend()->getDeltaTime();
-        FlxG::mouse->updateState();
+
+        update();
+        draw();
 
         // load data chunk here
         if(state == FLX_IMAGES_LOADING) {
@@ -19,44 +21,67 @@ void FlxPreloader::run() {
                 BackendHolder::get().getBackend()->loadImage(imagesToLoad[i].c_str());
                 assetsLoaded++;
 
-                update((assetsLoaded / assets) * 100.f);
+                percent = ((float)assetsLoaded / (float)assets) * 100.f;
+                update();
+                draw();
             }
 
             state = FLX_FONTS_LOADING;
         }
-        else if(state == FLX_FONTS_LOADING) {
+
+        if(state == FLX_FONTS_LOADING) {
             for(unsigned int i = 0; i < fontsToLoad.size(); i++) {
                 BackendHolder::get().getBackend()->loadFont(fontsToLoad[i].first.c_str(), fontsToLoad[i].second);
                 assetsLoaded++;
 
-                update((assetsLoaded / assets) * 100.f);
+                percent = ((float)assetsLoaded / (float)assets) * 100.f;
+                update();
+                draw();
             }
 
             state = FLX_MUSIC_LOADING;
         }
-        else if(state == FLX_MUSIC_LOADING) {
+
+        if(state == FLX_MUSIC_LOADING) {
             for(unsigned int i = 0; i < musicToLoad.size(); i++) {
                 BackendHolder::get().getBackend()->loadMusic(musicToLoad[i].c_str());
                 assetsLoaded++;
 
-                update((assetsLoaded / assets) * 100.f);
+                percent = ((float)assetsLoaded / (float)assets) * 100.f;
+                update();
+                draw();
             }
 
             state = FLX_SOUNDS_LOADING;
         }
-        else if(state == FLX_SOUNDS_LOADING) {
+
+        if(state == FLX_SOUNDS_LOADING) {
             for(unsigned int i = 0; i < soundsToLoad.size(); i++) {
                 BackendHolder::get().getBackend()->loadSound(soundsToLoad[i].c_str());
                 assetsLoaded++;
 
-                update((assetsLoaded / assets) * 100.f);
+                percent = ((float)assetsLoaded / (float)assets) * 100.f;
+                update();
+                draw();
             }
         }
-
-        BackendHolder::get().getBackend()->beginScene(0xff000000);
-        draw();
-        BackendHolder::get().getBackend()->endScene();
-
-        FlxG::key->updateState();
     }
+}
+
+void FlxPreloader::draw() {
+
+    BackendHolder::get().getBackend()->beginScene(FlxG::bgColor);
+    FlxGroup::draw();
+    BackendHolder::get().getBackend()->endScene();
+}
+
+void FlxPreloader::update() {
+    BackendHolder::get().getBackend()->updateInput();
+    FlxG::elapsed = BackendHolder::get().getBackend()->getDeltaTime();
+    FlxG::mouse->updateState();
+
+    progress(percent);
+
+    FlxGroup::update();
+    FlxG::key->updateState();
 }
