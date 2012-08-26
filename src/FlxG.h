@@ -18,6 +18,8 @@
 #include "FlxMusic.h"
 #include "FlxTilemap.h"
 #include "FlxSave.h"
+#include "FlxButton.h"
+#include "FlxEmitter.h"
 
 /*
 *  Main static class which holds all functionality
@@ -65,6 +67,9 @@ public:
     // mouses array pointer
     static std::vector<FlxMouse*> mouse;
 
+    // is screen being flashed
+    static bool isFlashing;
+
 
     // follow object
     static void followObject(FlxObject *object);
@@ -86,6 +91,9 @@ public:
 
     // update mouse state (internal)
     static void updateMouses();
+
+    // special camera effect - flash screen
+    static void flash(int color, float time);
 
 private:
 

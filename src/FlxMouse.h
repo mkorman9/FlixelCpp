@@ -19,8 +19,8 @@ public:
     bool leftPressed, middlePressed, rightPressed;
     bool leftReleased, middleReleased, rightReleased;
 
-    float x;
-    float y;
+    float x, endX;
+    float y, endY;
 
     int index;
 

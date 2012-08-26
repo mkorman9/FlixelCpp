@@ -9,8 +9,8 @@ FlxMouse::FlxMouse(int id) {
     leftPressed = middlePressed = rightPressed = false;
     leftReleased = middleReleased = rightReleased = false;
 
-    x = 0.f;
-    y = 0.f;
+    x = endX = 0.f;
+    y = endY = 0.f;
 
     index = id;
 }
@@ -85,6 +85,9 @@ void FlxMouse::onTouchEnd(int pointer, float X, float Y) {
     for(unsigned int i = 0; i < FlxG::mouse.size(); i++) {
         if(FlxG::mouse[i]->index == pointer) {
             FlxG::mouse[i]->leftReleased = true;
+            FlxG::mouse[i]->endX = X;
+            FlxG::mouse[i]->endY = Y;
+
             return;
         }
     }

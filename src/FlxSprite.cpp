@@ -13,7 +13,7 @@ FlxSprite::FlxSprite(float X, float Y, const char *gfx, int Width, int Height) {
 
 void FlxSprite::reset() {
     sourceX = sourceY = 0;
-    flipped = false;
+    flipped = animationFinished = false;
     currentFrame = currentFrameNumber = 0;
     frameCounter = 0;
     currentAnimation = NULL;
@@ -90,6 +90,9 @@ void FlxSprite::stop() {
 
 
 void FlxSprite::updateAnimation() {
+
+    if(animationFinished) animationFinished = false;
+
     if(currentAnimation != NULL) {
 
         frameCounter += BackendHolder::get().getBackend()->getDeltaTime();
@@ -103,7 +106,11 @@ void FlxSprite::updateAnimation() {
                 currentFrameNumber = 0;
                 currentFrame = currentAnimation->frames[0];
 
-                if(!currentAnimation->looped) { stop(); calcFrame(); return; }
+                if(!currentAnimation->looped) {
+                    stop();
+                    animationFinished = true;
+                    return;
+                }
             }
             else {
                 currentFrame = currentAnimation->frames[currentFrameNumber];
@@ -125,8 +132,8 @@ void FlxSprite::calcFrame() {
 
     unsigned int w = graphic->getWidth();
     if(rx >= w) {
-        ry = (rx / w) * width;
-        rx = rx % w;
+        ry = (rx / w) * height;
+        rx %= w;
     }
 
     sourceX = rx;

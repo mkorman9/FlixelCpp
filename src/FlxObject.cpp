@@ -58,10 +58,17 @@ bool FlxObject::isTouchingFloor(FlxBasic *floor) {
     obj2.hitbox.x = x + width;
     obj2.hitbox.y = y + height + 3;
 
+    FlxObject obj3;
+    obj3.hitbox.width = 1;
+    obj3.hitbox.height = 1;
+    obj3.hitbox.x = x + (width / 2);
+    obj3.hitbox.y = y + height + 3;
+
     FlxObject *col1 = (FlxObject*)obj1.overlaps(floor);
     FlxObject *col2 = (FlxObject*)obj2.overlaps(floor);
+    FlxObject *col3 = (FlxObject*)obj3.overlaps(floor);
 
-    return (col1 && col1->collidate) || (col2 && col2->collidate);
+    return (col1 && col1->collidate) || (col2 && col2->collidate) || (col3 && col3->collidate);
 }
 
 
@@ -79,10 +86,17 @@ bool FlxObject::isTouchingCeiling(FlxBasic *ceil) {
     obj2.hitbox.x = x + width;
     obj2.hitbox.y = y - 3;
 
+    FlxObject obj3;
+    obj3.hitbox.width = 1;
+    obj3.hitbox.height = 1;
+    obj3.hitbox.x = x + (width / 2);
+    obj3.hitbox.y = y - 3;
+
     FlxObject *col1 = (FlxObject*)obj1.overlaps(ceil);
     FlxObject *col2 = (FlxObject*)obj2.overlaps(ceil);
+    FlxObject *col3 = (FlxObject*)obj3.overlaps(ceil);
 
-    return (col1 && col1->collidate) || (col2 && col2->collidate);
+    return (col1 && col1->collidate) || (col2 && col2->collidate) || (col3 && col3->collidate);
 }
 
 

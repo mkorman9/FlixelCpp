@@ -32,6 +32,7 @@ public:
     // special variables
     std::map<std::string, std::string> vars;
 
+
     // default contructor
     FlxBasic() {
         active = true;

@@ -176,3 +176,8 @@ void FlxG::update() {
 void FlxG::draw() {
     if(state) state->draw();
 }
+
+
+void FlxG::flash(int color, float time) {
+    // TODO
+}

@@ -7,6 +7,7 @@ FlxGroup::FlxGroup() {
 
 
 FlxBasic* FlxGroup::add(FlxBasic *object) {
+
     if(object)
         members.push_back(object);
 
@@ -14,13 +15,15 @@ FlxBasic* FlxGroup::add(FlxBasic *object) {
 }
 
 
-bool FlxGroup::remove(FlxBasic *object) {
+bool FlxGroup::remove(FlxBasic *object, bool dontDelete) {
 
     if(!object) return false;
 
     for(unsigned int i = 0; i < members.size(); i++) {
         if(members[i] == object) {
-            delete members[i];
+
+            if(!dontDelete) delete members[i];
+
             members.erase(members.begin() + i);
             return true;
         }

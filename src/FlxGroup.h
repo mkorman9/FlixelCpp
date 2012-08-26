@@ -24,7 +24,7 @@ public:
     FlxBasic* add(FlxBasic *object);
 
     // remove entity from group
-    bool remove(FlxBasic *object);
+    bool remove(FlxBasic *object, bool dontDelete = false);
 
     // remove all elements from group and free memory
     void clear();

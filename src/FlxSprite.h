@@ -29,6 +29,9 @@ public:
     // flip sprite horizontaly
     bool flipped;
 
+    // is animation finished?
+    bool animationFinished;
+
 
     // constructor
     FlxSprite(float x = 0, float y = 0, const char *gfx = NULL, int Width = 0, int Height = 0);

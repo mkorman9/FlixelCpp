@@ -7,6 +7,8 @@ public:
     FlxSprite *player;
     FlxText *text;
     FlxTilemap *map;
+    FlxButton *button;
+    FlxEmitter *particles;
 
     virtual void create() {
         FlxG::bgColor = 0x9977aa;
@@ -46,8 +48,8 @@ public:
         frames2.push_back(3);
 
         player->addAnimation("anim1", frames1, 0.5);
-        player->addAnimation("anim2", frames2, 0.5);
-        player->play("anim2");
+        player->addAnimation("anim2", frames2, 0.5, false);
+        player->play("anim1");
 
         add(player);
 
@@ -61,8 +63,19 @@ public:
         text->angle = FlxU::PI / 4;  // PI/4 == 45 degrees
         add(text);
 
-        player->acceleration.y = 2;
+        // button
+        button = new FlxButton(10, 10, "data/button.png", 160, 20, 3);
+        button->setTextFormat("Close me!", "data/comic.ttf", 12, 0xffff00);
+        button->onText->color = 0xff0000;
+        add(button);
 
+        // particle emitter
+        particles = new FlxEmitter(0, 0, FlxVector(-50, 50), FlxVector(-50, 50), FlxVector(1, 2));
+        particles->loadGraphic("data/part.png", 3, 3, 3);
+        particles->gravity = 2;
+        add(particles);
+
+        player->acceleration.y = 2;
         FlxG::playMusic("data/3.ogg", 0.05f);
     }
 
@@ -75,14 +88,27 @@ public:
         if(FlxG::key->pressed(FlxKey::Up) && player->isTouchingFloor(map)) player->velocity.y = -295;
 
         player->collide(map);
+        particles->collide(map);
 
         if(FlxG::key->pressed(FlxKey::A)) player->visible = !player->visible;
         if(FlxG::key->pressed(FlxKey::S)) FlxG::play("data/ding.ogg");
 
         // slow-mo
-        if(FlxG::key->down(FlxKey::Space)) FlxG::setTimeModifier(0.4f);
-        else FlxG::setTimeModifier(1.f);
+        if(FlxG::key->down(FlxKey::Space)) {
+            FlxG::setTimeModifier(0.4f);
+        }
+        else {
+            FlxG::setTimeModifier(1.f);
+        }
 
+        if(FlxG::key->pressed(FlxKey::D)) {
+            // FlxG::flash(0xffffff, 1);
+
+            particles->atCenter(player);
+            particles->emit(50);
+        }
+
+        if(button->released) FlxG::exitMessage = true;
         FlxState::update();
     }
 };
