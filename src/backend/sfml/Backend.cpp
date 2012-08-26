@@ -1,6 +1,7 @@
 #include "Backend.h"
 #include "../BackendHolder.h"
 #include "../../FlxU.h"
+#include <fstream>
 
 /*
 * SFML image class
@@ -352,5 +353,58 @@ void SFML_Backend::playMusic(FlxBackendMusic *buff, float vol) {
     SFML_Music *m = (SFML_Music*) buff;
     m->setVolume(vol);
     m->play();
+}
+
+// standard PC data saving
+void SFML_Backend::saveData(const char *path, const std::map<std::string, std::string>& data) {
+
+    std::ofstream stream(path);
+    if(!stream) return;
+
+    std::string rawData;
+    for(std::map<std::string, std::string>::const_iterator it = data.begin(); it != data.end(); it++) {
+        rawData += it->first + '\n' + it->second + '\n';
+    }
+
+    // encode data to prevent manual save changes
+    // note: this is not an encryption!
+    for(unsigned int i = 0; i < rawData.size(); i++) {
+        rawData[i] = rawData[i] ^ 24;
+    }
+
+    stream.write(rawData.data(), rawData.size());
+    stream.close();
+}
+
+bool SFML_Backend::loadData(const char *path, std::map<std::string, std::string>& data) {
+
+    std::ifstream stream(path);
+    if(!stream) return false;
+
+    std::string rawData;
+    while(!stream.eof()) {
+        rawData += stream.get() ^ 24;
+    }
+
+    rawData = rawData.substr(0, rawData.size() - 1);
+
+    // parse data
+    std::stringstream ss(rawData);
+    std::string name, value;
+
+    while(!ss.eof()) {
+
+        if(name == "") {
+            std::getline(ss, name);
+        }
+        else {
+            std::getline(ss, value);
+
+            data[name] = value;
+            name = value = "";
+        }
+    }
+
+    return true;
 }
 

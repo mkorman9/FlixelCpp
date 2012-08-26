@@ -99,6 +99,9 @@ public:
     virtual FlxBackendMusic* loadMusic(const char *path) = 0;
     virtual FlxBackendSound* playSound(void *sound, float vol) = 0;
     virtual void playMusic(FlxBackendMusic *music, float vol) = 0;
+
+    virtual void saveData(const char *path, const std::map<std::string, std::string>& data) = 0;
+    virtual bool loadData(const char *path, std::map<std::string, std::string>& data) = 0;
 };
 
 #endif

@@ -17,6 +17,7 @@
 #include "FlxSound.h"
 #include "FlxMusic.h"
 #include "FlxTilemap.h"
+#include "FlxSave.h"
 
 /*
 *  Main static class which holds all functionality

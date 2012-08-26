@@ -50,9 +50,17 @@ public:
         return ss.str();
     }
 
-    static float toNumber(const std::string& str) {
+    static int toNumber(const std::string& str) {
         std::stringstream ss(str);
         int value;
+
+        ss >> value;
+        return value;
+    }
+
+    static float toFloatNumber(const std::string& str) {
+        std::stringstream ss(str);
+        float value;
 
         ss >> value;
         return value;
