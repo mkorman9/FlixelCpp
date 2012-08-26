@@ -25,6 +25,7 @@ private:
     std::map<std::string, void*> fonts;
     std::map<std::string, FlxBackendMusic*> music;
     std::map<std::string, void*> sounds;
+    sf::Clock clock;
 
     void (*touchBegin)(int id, float, float);
     void (*touchEnd)(int id, float, float);
@@ -39,7 +40,7 @@ public:
     virtual bool isKeyDown(int code);
     virtual FlxVector getMousePosition(int index);
     virtual bool getMouseButtonState(int button, int index);
-    virtual float getDeltaTime();
+    virtual float getSystemTime();
     virtual void updateInput();
     virtual void showMouse(bool show);
 

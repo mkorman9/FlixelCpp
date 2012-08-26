@@ -1,5 +1,6 @@
 #include "FlxSprite.h"
 #include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 FlxSprite::FlxSprite(float X, float Y, const char *gfx, int Width, int Height) {
     x = X;
@@ -95,7 +96,9 @@ void FlxSprite::updateAnimation() {
 
     if(currentAnimation != NULL) {
 
-        frameCounter += BackendHolder::get().getBackend()->getDeltaTime();
+        //frameCounter += BackendHolder::get().getBackend()->getDeltaTime();
+        frameCounter += FlxG::fixedTime;
+
         if(frameCounter >= currentAnimation->time) {
 
             frameCounter = 0;

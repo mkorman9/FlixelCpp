@@ -79,7 +79,7 @@ public:
     virtual bool isKeyDown(int code) = 0;
     virtual FlxVector getMousePosition(int index) = 0;
     virtual bool getMouseButtonState(int button, int index) = 0;
-    virtual float getDeltaTime() = 0;
+    virtual float getSystemTime() = 0;
     virtual void updateInput() = 0;
     virtual void showMouse(bool show) = 0;
 

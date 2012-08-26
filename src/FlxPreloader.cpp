@@ -77,7 +77,6 @@ void FlxPreloader::draw() {
 
 void FlxPreloader::update() {
     BackendHolder::get().getBackend()->updateInput();
-    FlxG::elapsed = BackendHolder::get().getBackend()->getDeltaTime();
 
     progress(percent);
     FlxGroup::update();

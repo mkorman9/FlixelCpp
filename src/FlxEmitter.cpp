@@ -1,5 +1,6 @@
 #include "FlxEmitter.h"
 #include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 FlxEmitter::FlxEmitter(float X, float Y, const FlxVector &speedRangeX, const FlxVector &speedRangeY,
                        const FlxVector &lifeTime, const FlxVector &partRotation)
@@ -66,7 +67,7 @@ void FlxEmitter::update() {
             continue;
         }
 
-        ((FlxParticle*)members[i])->timeToLife -= BackendHolder::get().getBackend()->getDeltaTime();
+        ((FlxParticle*)members[i])->timeToLife -= FlxG::fixedTime;
     }
 
     FlxGroup::update();

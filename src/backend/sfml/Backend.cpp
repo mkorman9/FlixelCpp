@@ -124,6 +124,7 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
     }
 
     touchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
+    clock.Reset();
 
     return true;
 }
@@ -168,8 +169,8 @@ bool SFML_Backend::isKeyDown(int code) {
     return window->GetInput().IsKeyDown((sf::Key::Code)code);
 }
 
-float SFML_Backend::getDeltaTime() {
-    return window->GetFrameTime() * BackendHolder::get().getTimeModifier();
+float SFML_Backend::getSystemTime() {
+    return (float)clock.GetElapsedTime();
 }
 
 void SFML_Backend::updateInput() {

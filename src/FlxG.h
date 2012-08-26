@@ -37,8 +37,14 @@ public:
     // current state
     static FlxState *state;
 
+    // fixed timestep time
+    static float fixedTime;
+
     // time since last frame
     static float elapsed;
+
+    // time in seconds since last frame
+    static float fps;
 
     // backend
     static FlxBackendBase *backend;
@@ -74,9 +80,6 @@ public:
     // follow object
     static void followObject(FlxObject *object);
 
-    // set time modifier
-    static void setTimeModifier(float mod);
-
     // setup game
     static int setup(const char *title, int Width, int Height, FlxState *state);
 
@@ -105,6 +108,9 @@ private:
 
     // object to follow
     static FlxObject *toFollow;
+
+    // fps stuff
+    static float fpsCounter;
 };
 
 #endif

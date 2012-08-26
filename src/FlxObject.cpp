@@ -1,6 +1,7 @@
 #include "FlxObject.h"
 #include "backend/BackendHolder.h"
 #include "FlxGroup.h"
+#include "FlxG.h"
 
 FlxObject::FlxObject() {
     entityType = FLX_OBJECT;
@@ -20,7 +21,7 @@ FlxObject::FlxObject() {
 void FlxObject::update() {
     if(!active) return;
 
-    float dt = BackendHolder::get().getBackend()->getDeltaTime();
+    float dt = FlxG::fixedTime;
 
     x += velocity.x * dt;
     y += velocity.y * dt;
@@ -125,7 +126,7 @@ FlxBasic* FlxObject::collide(FlxBasic *object) {
     if(object->entityType == FLX_OBJECT) {
         bool col = false;
         FlxObject *obj = (FlxObject*) object;
-        float dt = BackendHolder::get().getBackend()->getDeltaTime();
+        float dt = FlxG::fixedTime;
 
         if(!obj->collidate) return NULL;
 

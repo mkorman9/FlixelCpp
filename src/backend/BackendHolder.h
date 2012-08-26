@@ -10,11 +10,10 @@
 class BackendHolder {
 
 private:
-    BackendHolder() { timeModification = 1; }
+    BackendHolder() { }
     FlxBackendBase *backend;
     FlxVector scaleRatio;
     FlxVector scroolVector;
-    float timeModification;
 public:
 
     static BackendHolder& get() {
@@ -46,16 +45,6 @@ public:
 
     FlxVector getScroolVector() {
         return scroolVector;
-    }
-
-    float getTimeModifier() {
-        return timeModification;
-    }
-
-    void setTimeModifier(float mod) {
-        if(mod == 0) mod = 1;
-
-        timeModification = mod;
     }
 };
 

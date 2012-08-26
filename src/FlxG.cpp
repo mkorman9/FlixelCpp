@@ -15,6 +15,9 @@ FlxRect FlxG::worldBounds;
 FlxVector FlxG::scroolVector;
 FlxObject *FlxG::toFollow = NULL;
 std::vector<FlxMouse*> FlxG::mouse;
+float FlxG::fps = 0;
+float FlxG::fpsCounter = 0;
+float FlxG::fixedTime = 0.01f;
 
 int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
@@ -45,6 +48,9 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
     switchState(state);
 
+    float currentTime = BackendHolder::get().getBackend()->getSystemTime();
+    float accumulator = 0;
+
     // main loop
     while(!backend->exitMessage() && !exitMessage) {
 
@@ -73,17 +79,27 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
             }
         }
 
-        elapsed = BackendHolder::get().getBackend()->getDeltaTime();
-        BackendHolder::get().getBackend()->updateInput();
+        // fixed timestep stuff
+        float newTime = BackendHolder::get().getBackend()->getSystemTime();
+        elapsed = newTime - currentTime;
+        currentTime = newTime;
 
-        update();
+        accumulator += elapsed;
+
+        while(accumulator >= fixedTime) {
+
+            BackendHolder::get().getBackend()->updateInput();
+
+            update();
+
+            accumulator -= fixedTime;
+            updateMouses();
+            key->updateState();
+        }
 
         BackendHolder::get().getBackend()->beginScene(bgColor);
         draw();
         BackendHolder::get().getBackend()->endScene();
-
-        updateMouses();
-        key->updateState();
     }
 
     delete key;
@@ -94,11 +110,6 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
 void FlxG::followObject(FlxObject *object) {
     toFollow = object;
-}
-
-
-void FlxG::setTimeModifier(float mod) {
-    BackendHolder::get().setTimeModifier(mod);
 }
 
 
@@ -148,6 +159,13 @@ void FlxG::updateMouses() {
 
 
 void FlxG::update() {
+
+    // update fps
+    fpsCounter += elapsed;
+    if(fpsCounter >= 1.f) {
+        fps = 1.f / elapsed;
+        fpsCounter = 0;
+    }
 
     // follow some object?
     if(toFollow) {

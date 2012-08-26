@@ -59,7 +59,7 @@ public:
 
 
         // text
-        text = new FlxText("Hello world!", "data/comic.ttf", 550, 100, 24, 0x000000);
+        text = new FlxText("", "data/comic.ttf", 550, 100, 24, 0x000000);
         text->angle = FlxU::PI / 4;  // PI/4 == 45 degrees
         add(text);
 
@@ -85,7 +85,7 @@ public:
         //player->velocity.y = 0;
         if(FlxG::key->down(FlxKey::Right)) player->velocity.x = 225;
         if(FlxG::key->down(FlxKey::Left)) player->velocity.x = -225;
-        if(FlxG::key->pressed(FlxKey::Up) && player->isTouchingFloor(map)) player->velocity.y = -295;
+        if(FlxG::key->pressed(FlxKey::Up) && player->isTouchingFloor(map)) player->velocity.y = -150;
 
         player->collide(map);
         particles->collide(map);
@@ -93,13 +93,6 @@ public:
         if(FlxG::key->pressed(FlxKey::A)) player->visible = !player->visible;
         if(FlxG::key->pressed(FlxKey::S)) FlxG::play("data/ding.ogg");
 
-        // slow-mo
-        if(FlxG::key->down(FlxKey::Space)) {
-            FlxG::setTimeModifier(0.4f);
-        }
-        else {
-            FlxG::setTimeModifier(1.f);
-        }
 
         if(FlxG::key->pressed(FlxKey::D)) {
             // FlxG::flash(0xffffff, 1);
@@ -109,6 +102,8 @@ public:
         }
 
         if(button->released) FlxG::exitMessage = true;
+
+        text->text = std::string("FPS: ") + FlxU::toString((int)FlxG::fps);
         FlxState::update();
     }
 };
