@@ -10,11 +10,12 @@ What is currently ported?
 - Playing sounds and music (may contain bugs)
 - Tilemaps
 - Saves
-- Particles system (a little bit different)
+- Particles system (a little bit different then original)
+- Buttons
 
 What isn't ported yet
 - Camera managment and special effects
-- Buttons
+- Shaders (probably I will implement it)
 
 What isn't ported and probably will never be.
 - Replays
