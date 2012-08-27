@@ -14,7 +14,7 @@ What is currently ported?
 - Buttons
 
 What isn't ported yet
-- Camera managment and special effects
+- Camera managment and special effects (currently only screen flash effect is done) 
 - Shaders (probably I will implement it)
 
 What isn't ported and probably will never be.
