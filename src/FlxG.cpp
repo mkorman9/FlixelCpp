@@ -18,6 +18,9 @@ std::vector<FlxMouse*> FlxG::mouse;
 float FlxG::fps = 0;
 float FlxG::fpsCounter = 0;
 float FlxG::fixedTime = 0.01f;
+FlxSprite FlxG::flashSprite;
+float FlxG::flashCounter = 0, FlxG::flashMaxTime = 0;
+bool FlxG::flashing = false;
 
 int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
@@ -39,6 +42,10 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
     key = new FlxKeyboard();
     srand(time(0));
+
+    // flash screen sprite
+    flashSprite.makeGraphic(width, height, 0xffffff);
+    flashSprite.alpha = 0;
 
     // run preloader
     if(preloader) {
@@ -167,6 +174,25 @@ void FlxG::update() {
         fpsCounter = 0;
     }
 
+    // update flashing screen stuff
+    flashSprite.x = scroolVector.x;
+    flashSprite.y = scroolVector.y;
+
+    if(flashing) {
+        flashCounter += fixedTime;
+
+        if(flashCounter >= flashMaxTime) {
+            flashing = false;
+            flashCounter = flashMaxTime = 0;
+
+            flashSprite.alpha = 0;
+            flashSprite.color = 0xffffff;
+        }
+        else {
+            flashSprite.alpha = flashCounter / flashMaxTime;
+        }
+    }
+
     // follow some object?
     if(toFollow) {
         FlxVector objectCenter = toFollow->getCenter();
@@ -188,14 +214,22 @@ void FlxG::update() {
 
 
     if(state) state->update();
+
+    if(flashing) flashSprite.update();
 }
 
 
 void FlxG::draw() {
     if(state) state->draw();
+
+    if(flashing) flashSprite.draw();
 }
 
 
 void FlxG::flash(int color, float time) {
-    // TODO
+    if(flashing) return;
+    flashing = true;
+
+    flashMaxTime = time;
+    flashSprite.color = color;
 }

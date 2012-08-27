@@ -15,7 +15,7 @@ FlxButton::FlxButton(float X, float Y, const char *buttonImage, int Width, int H
 
     // setup sprite
     sprite = new FlxSprite(x, y, buttonImage, width, height);
-    sprite->collidate = false;
+    sprite->collisions = false;
     sprite->scrool = false;
 
     std::vector<unsigned int> buttonOffFrame;

@@ -7,7 +7,7 @@ FlxText::FlxText(const char *Text, const char *Font, float X, float Y, int Size,
     text = Text;
     font = NULL;
 
-    collidate = false;
+    collisions = false;
     scrool = false;
 
     setFormat(Font, Size, Color);

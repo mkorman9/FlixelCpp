@@ -37,8 +37,8 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
             tile->addAnimation("__default", anim);
             tile->play("__default");
 
-            if(map[i] >= firstCollidate) tile->collidate = true;
-            else tile->collidate = false;
+            if(map[i] >= firstCollidate) tile->collisions = true;
+            else tile->collisions = false;
 
             tile->indexX = x1;
             tile->indexY = y1;

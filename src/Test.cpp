@@ -93,12 +93,13 @@ public:
         if(FlxG::key->pressed(FlxKey::A)) player->visible = !player->visible;
         if(FlxG::key->pressed(FlxKey::S)) FlxG::play("data/ding.ogg");
 
+        if(FlxG::key->pressed(FlxKey::Space)) {
+            FlxG::flash(0xffffff, 0.2f);
+        }
 
-        if(FlxG::key->pressed(FlxKey::D)) {
-            // FlxG::flash(0xffffff, 1);
-
+        if(FlxG::key->down(FlxKey::D)) {
             particles->atCenter(player);
-            particles->emit(50);
+            particles->emit(2);
         }
 
         if(button->released) FlxG::exitMessage = true;

@@ -60,7 +60,7 @@ public:
     FlxVector hitboxMove;
 
     // is entity collidable?
-    bool collidate;
+    bool collisions;
 
     // opacity (0 - 1)
     float alpha;

@@ -74,7 +74,7 @@ public:
     static std::vector<FlxMouse*> mouse;
 
     // is screen being flashed
-    static bool isFlashing;
+    static bool flashing;
 
 
     // follow object
@@ -111,6 +111,10 @@ private:
 
     // fps stuff
     static float fpsCounter;
+
+    // flash screen effect stuff
+    static FlxSprite flashSprite;
+    static float flashCounter, flashMaxTime;
 };
 
 #endif

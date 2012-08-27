@@ -5,7 +5,7 @@
 
 FlxObject::FlxObject() {
     entityType = FLX_OBJECT;
-    collidate = true;
+    collisions = true;
 
     visible = true;
     x = y = angle = angularVelocity = 0.f;
@@ -69,7 +69,7 @@ bool FlxObject::isTouchingFloor(FlxBasic *floor) {
     FlxObject *col2 = (FlxObject*)obj2.overlaps(floor);
     FlxObject *col3 = (FlxObject*)obj3.overlaps(floor);
 
-    return (col1 && col1->collidate) || (col2 && col2->collidate) || (col3 && col3->collidate);
+    return (col1 && col1->collisions) || (col2 && col2->collisions) || (col3 && col3->collisions);
 }
 
 
@@ -97,7 +97,7 @@ bool FlxObject::isTouchingCeiling(FlxBasic *ceil) {
     FlxObject *col2 = (FlxObject*)obj2.overlaps(ceil);
     FlxObject *col3 = (FlxObject*)obj3.overlaps(ceil);
 
-    return (col1 && col1->collidate) || (col2 && col2->collidate) || (col3 && col3->collidate);
+    return (col1 && col1->collisions) || (col2 && col2->collisions) || (col3 && col3->collisions);
 }
 
 
@@ -121,14 +121,14 @@ FlxBasic* FlxObject::overlaps(FlxBasic *object) {
 
 FlxBasic* FlxObject::collide(FlxBasic *object) {
 
-    if(!collidate) return NULL;
+    if(!collisions) return NULL;
 
     if(object->entityType == FLX_OBJECT) {
         bool col = false;
         FlxObject *obj = (FlxObject*) object;
         float dt = FlxG::fixedTime;
 
-        if(!obj->collidate) return NULL;
+        if(!obj->collisions) return NULL;
 
         // x-axis
         FlxRect rect1;
