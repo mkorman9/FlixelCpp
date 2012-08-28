@@ -72,10 +72,10 @@ public:
         // particle emitter
         particles = new FlxEmitter(0, 0, FlxVector(-50, 50), FlxVector(-50, 50), FlxVector(1, 2));
         particles->loadGraphic("data/part.png", 3, 3, 3);
-        particles->gravity = 2;
+        particles->gravity = 220;
         add(particles);
 
-        player->acceleration.y = 2;
+        player->acceleration.y = 220;
         FlxG::playMusic("data/3.ogg", 0.05f);
     }
 
@@ -124,8 +124,10 @@ public:
 
     }
 
-    virtual void progress(float p) {
+    virtual void update() {
+        FlxPreloader::update();
 
+        std::cout << percent << "%" << std::endl;
     }
 };
 

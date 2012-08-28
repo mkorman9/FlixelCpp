@@ -50,64 +50,17 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     // run preloader
     if(preloader) {
         preloader->create();
-        preloader->run();
+        BackendHolder::get().getBackend()->mainLoop(FlxPreloader::onUpdate, FlxPreloader::onDraw);
+
+        delete preloader;
+        FlxG::exitMessage = false;
     }
 
     switchState(state);
 
-    float currentTime = BackendHolder::get().getBackend()->getSystemTime();
-    float accumulator = 0;
-
     // main loop
-    while(!backend->exitMessage() && !exitMessage) {
+    BackendHolder::get().getBackend()->mainLoop(innerUpdate, innerDraw);
 
-        // sounds and music garbage collector
-        for(unsigned int i = 0; i < FlxSound::Sounds.size(); i++) {
-            if(FlxSound::Sounds[i]) {
-                if(!FlxSound::Sounds[i]->isPlaying() && !FlxSound::Sounds[i]->isPaused()) {
-                    delete FlxSound::Sounds[i];
-                    FlxSound::Sounds.erase(FlxSound::Sounds.begin() + i);
-                }
-            }
-            else {
-                FlxSound::Sounds.erase(FlxSound::Sounds.begin() + i);
-            }
-        }
-
-        for(unsigned int i = 0; i < FlxMusic::Music.size(); i++) {
-            if(FlxMusic::Music[i]) {
-                if(!FlxMusic::Music[i]->isPlaying() && !FlxMusic::Music[i]->isPaused()) {
-                    delete FlxMusic::Music[i];
-                    FlxMusic::Music.erase(FlxMusic::Music.begin() + i);
-                }
-            }
-            else {
-                FlxMusic::Music.erase(FlxMusic::Music.begin() + i);
-            }
-        }
-
-        // fixed timestep stuff
-        float newTime = BackendHolder::get().getBackend()->getSystemTime();
-        elapsed = newTime - currentTime;
-        currentTime = newTime;
-
-        accumulator += elapsed;
-
-        while(accumulator >= fixedTime) {
-
-            BackendHolder::get().getBackend()->updateInput();
-
-            update();
-
-            accumulator -= fixedTime;
-            updateMouses();
-            key->updateState();
-        }
-
-        BackendHolder::get().getBackend()->beginScene(bgColor);
-        draw();
-        BackendHolder::get().getBackend()->endScene();
-    }
 
     delete key;
 
@@ -165,7 +118,32 @@ void FlxG::updateMouses() {
 }
 
 
-void FlxG::update() {
+void FlxG::innerUpdate() {
+
+    // sounds and music garbage collector
+    for(unsigned int i = 0; i < FlxSound::Sounds.size(); i++) {
+        if(FlxSound::Sounds[i]) {
+            if(!FlxSound::Sounds[i]->isPlaying() && !FlxSound::Sounds[i]->isPaused()) {
+                delete FlxSound::Sounds[i];
+                FlxSound::Sounds.erase(FlxSound::Sounds.begin() + i);
+            }
+        }
+        else {
+            FlxSound::Sounds.erase(FlxSound::Sounds.begin() + i);
+        }
+    }
+
+    for(unsigned int i = 0; i < FlxMusic::Music.size(); i++) {
+        if(FlxMusic::Music[i]) {
+            if(!FlxMusic::Music[i]->isPlaying() && !FlxMusic::Music[i]->isPaused()) {
+                delete FlxMusic::Music[i];
+                FlxMusic::Music.erase(FlxMusic::Music.begin() + i);
+            }
+        }
+        else {
+            FlxMusic::Music.erase(FlxMusic::Music.begin() + i);
+        }
+    }
 
     // update fps
     fpsCounter += elapsed;
@@ -215,13 +193,19 @@ void FlxG::update() {
 
     if(state) state->update();
 
+    // update input devices
+    updateMouses();
+    key->updateState();
+
+    // handle flashing sprite
     if(flashing) flashSprite.update();
 }
 
 
-void FlxG::draw() {
+void FlxG::innerDraw() {
     if(state) state->draw();
 
+    // handle flashing sprite
     if(flashing) flashSprite.draw();
 }
 

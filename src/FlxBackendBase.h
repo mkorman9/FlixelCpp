@@ -70,25 +70,21 @@ class FlxBackendBase {
 
 public:
     virtual bool setupSurface(const char *title, int width, int height) = 0;
+    virtual void mainLoop(void (*onUpdate)(), void (*onDraw)()) = 0;
     virtual void setCallbacks(void (*onTouchBegin)(int id, float, float),
                               void (*onTouchEnd)(int id, float, float)) = 0;
     virtual FlxVector getScreenSize() = 0;
-    virtual bool exitMessage() = 0;
     virtual void exitApplication() = 0;
     virtual bool* getKeysDown() = 0;
     virtual bool isKeyDown(int code) = 0;
     virtual FlxVector getMousePosition(int index) = 0;
     virtual bool getMouseButtonState(int button, int index) = 0;
-    virtual float getSystemTime() = 0;
-    virtual void updateInput() = 0;
     virtual void showMouse(bool show) = 0;
 
-    virtual void beginScene(int color) = 0;
     virtual void drawImage(FlxBackendImage *img, float x, float y, FlxVector scale, float angle,
                         FlxRect source, int color, bool flipped, bool scrool, float alpha) = 0;
     virtual FlxVector drawText(const char *text, void *font, int size, float x, float y, FlxVector scale, float angle, int color,
                           bool scrool, float alpha) = 0;
-    virtual void endScene() = 0;
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha) = 0;
     virtual FlxBackendImage *loadImage(const char *path) = 0;

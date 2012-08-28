@@ -1,6 +1,7 @@
 #include "Backend.h"
 #include "../BackendHolder.h"
 #include "../../FlxU.h"
+#include "../../FlxG.h"
 #include <fstream>
 
 /*
@@ -113,8 +114,6 @@ public:
 */
 bool SFML_Backend::setupSurface(const char *title, int width, int height) {
 
-    exitMsg = false;
-
     window = new sf::RenderWindow(sf::VideoMode(width, height), title);
     if(!window) return false;
 
@@ -129,6 +128,39 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
     return true;
 }
 
+void SFML_Backend::mainLoop(void (*onUpdate)(), void (*onDraw)()) {
+
+    float currentTime = (float)clock.GetElapsedTime();
+    float accumulator = 0;
+
+    while(window->IsOpened() && !FlxG::exitMessage) {
+
+        // fixed timestep stuff
+        float newTime = (float)clock.GetElapsedTime();
+        float elapsed = newTime - currentTime;
+        currentTime = newTime;
+
+        accumulator += elapsed;
+
+        while(accumulator >= FlxG::fixedTime) {
+
+            // update all stuff
+            updateEvents();
+            onUpdate();
+
+            accumulator -= FlxG::fixedTime;
+        }
+
+        // render
+        window->Clear(sf::Color(COLOR_GET_R(FlxG::bgColor), COLOR_GET_G(FlxG::bgColor),
+                        COLOR_GET_B(FlxG::bgColor), 255));
+        onDraw();
+        window->Display();
+
+        FlxG::elapsed = elapsed;
+    }
+}
+
 void SFML_Backend::setCallbacks(void (*onTouchBegin)(int id, float, float), void (*onTouchEnd)(int id, float, float)) {
     touchBegin = onTouchBegin;
     touchEnd = onTouchEnd;
@@ -137,10 +169,6 @@ void SFML_Backend::setCallbacks(void (*onTouchBegin)(int id, float, float), void
 FlxVector SFML_Backend::getScreenSize() {
     sf::VideoMode screen = sf::VideoMode::GetDesktopMode();
     return FlxVector(screen.Width, screen.Height);
-}
-
-bool SFML_Backend::exitMessage() {
-    return exitMsg;
 }
 
 void SFML_Backend::exitApplication() {
@@ -169,18 +197,14 @@ bool SFML_Backend::isKeyDown(int code) {
     return window->GetInput().IsKeyDown((sf::Key::Code)code);
 }
 
-float SFML_Backend::getSystemTime() {
-    return (float)clock.GetElapsedTime();
-}
-
-void SFML_Backend::updateInput() {
+void SFML_Backend::updateEvents() {
 
     sf::Event event;
     while (window->GetEvent(event)) {
 
-        // window closed
+        // window close
         if(event.Type == sf::Event::Closed) {
-            exitMsg = true;
+            FlxG::exitMessage = true;
         }
 
         // keyboard events
@@ -215,10 +239,6 @@ bool SFML_Backend::getMouseButtonState(int button, int index) {
 
 void SFML_Backend::showMouse(bool show) {
     window->ShowMouseCursor(show);
-}
-
-void SFML_Backend::beginScene(int color) {
-    window->Clear(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), 255));
 }
 
 void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
@@ -265,10 +285,6 @@ FlxVector SFML_Backend::drawText(const char *text, void *font, int size, float x
     window->Draw(str);
 
     return FlxVector(rect.GetWidth(), rect.GetHeight());;
-}
-
-void SFML_Backend::endScene() {
-    window->Display();
 }
 
 FlxBackendImage* SFML_Backend::createImage(int width, int height, int color, float alpha) {

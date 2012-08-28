@@ -5,7 +5,7 @@
 #ifndef _FLX_PRELOADER_H_
 #define _FLX_PRELOADER_H_
 
-#include "FlxGroup.h"
+#include "FlxState.h"
 #include "backend/cpp.h"
 
 // current preloader state
@@ -20,20 +20,27 @@ enum FlxLoadingState {
 /*
 *  Loading screen class
 */
-class FlxPreloader : public FlxGroup {
+class FlxPreloader : public FlxState {
 
 private:
     std::vector<std::string> imagesToLoad;
     std::vector<std::pair<std::string, int> > fontsToLoad;
     std::vector<std::string> musicToLoad;
     std::vector<std::string> soundsToLoad;
-    float percent;
+
+    int currentIterator;
+    unsigned int assetsLoaded;
 public:
+    static FlxPreloader *CurrentInstance;
 
     FlxLoadingState state;
+    float percent;
 
     FlxPreloader() {
         state = FLX_IMAGES_LOADING;
+        CurrentInstance = this;
+        currentIterator = 0;
+        assetsLoaded = 0;
     }
 
     ~FlxPreloader() {
@@ -43,9 +50,6 @@ public:
     virtual void create() {
     }
 
-    virtual void progress(float percent) {
-
-    }
 
     virtual void update();
     virtual void draw();
@@ -66,7 +70,9 @@ public:
         soundsToLoad.push_back(path);
     }
 
-    void run();
+
+    static void onUpdate();
+    static void onDraw();
 };
 
 #endif

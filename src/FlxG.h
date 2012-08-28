@@ -98,13 +98,14 @@ public:
     // special camera effect - flash screen
     static void flash(int color, float time);
 
+
+    // update game state (internal)
+    static void innerUpdate();
+
+    // draw game data (internal)
+    static void innerDraw();
+
 private:
-
-    // update state
-    static void update();
-
-    // draw state
-    static void draw();
 
     // object to follow
     static FlxObject *toFollow;

@@ -20,7 +20,6 @@ class SFML_Backend : public FlxBackendBase {
 private:
     sf::RenderWindow *window;
     bool keysDown[1024];
-    bool exitMsg;
     std::map<std::string, FlxBackendImage*> images;
     std::map<std::string, void*> fonts;
     std::map<std::string, FlxBackendMusic*> music;
@@ -29,27 +28,25 @@ private:
 
     void (*touchBegin)(int id, float, float);
     void (*touchEnd)(int id, float, float);
+
+    void updateEvents();
 public:
     virtual bool setupSurface(const char *title, int width, int height);
+    virtual void mainLoop(void (*onUpdate)(), void (*onDraw)());
     virtual void setCallbacks(void (*onTouchBegin)(int id, float, float),
                               void (*onTouchEnd)(int id, float, float));
     virtual FlxVector getScreenSize();
-    virtual bool exitMessage();
     virtual void exitApplication();
     virtual bool* getKeysDown();
     virtual bool isKeyDown(int code);
     virtual FlxVector getMousePosition(int index);
     virtual bool getMouseButtonState(int button, int index);
-    virtual float getSystemTime();
-    virtual void updateInput();
     virtual void showMouse(bool show);
 
-    virtual void beginScene(int color);
     virtual void drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
                            FlxRect source, int color, bool flipped, bool scrool, float alpha);
     virtual FlxVector drawText(const char *text, void *font, int size, float x, float y, FlxVector scale, float angle, int color,
                           bool scrool, float alpha);
-    virtual void endScene();
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);

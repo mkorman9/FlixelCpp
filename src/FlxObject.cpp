@@ -25,8 +25,8 @@ void FlxObject::update() {
 
     x += velocity.x * dt;
     y += velocity.y * dt;
-    velocity.x += acceleration.x;
-    velocity.y += acceleration.y;
+    velocity.x += acceleration.x * dt;
+    velocity.y += acceleration.y * dt;
 
     angle += angularVelocity * dt;
 
