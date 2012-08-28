@@ -15,13 +15,16 @@ class FlxText : public FlxObject {
 
 private:
     void *font;
+    FlxBaseText *textData;
+    bool needUpdate;
+    int size, lastColor;
+    std::string lastText;
+
+    void updateBuffer();
 public:
 
     // text
     std::string text;
-
-    // size of text
-    int size;
 
 
     // Default constructor

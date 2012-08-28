@@ -262,29 +262,60 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  FlxVector 
     window->Draw(sprite);
 }
 
-FlxVector SFML_Backend::drawText(const char *text, void *font, int size, float x, float y, FlxVector scale, float angle, int color,
-                            bool scrool, float alpha)
+FlxBaseText *SFML_Backend::createText(const char *text, void *font, int size, FlxVector scale, float angle,
+                                   int color, float alpha)
 {
-    if(!font) return FlxVector(0, 0);
+    if(!font) return NULL;
 
-    sf::String str;
-    str.SetFont(*((sf::Font*)font));
-    str.SetText(text);
-    str.SetSize(size);
+    FlxBaseText *data = new FlxBaseText();
 
-    sf::FloatRect rect = str.GetRect();
+    sf::String *str = new sf::String();
+    str->SetFont(*((sf::Font*)font));
+    str->SetText(text);
+    str->SetSize(size);
+    str->SetScale(scale.x, scale.y);
+    str->SetRotation(-FlxU::radToDegrees(angle));
+    str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
+
+    sf::FloatRect rect = str->GetRect();
+    str->SetCenter(rect.GetWidth() / 2, rect.GetHeight() / 2);
+
+    data->data = str;
+    data->font = font;
+    data->size = size;
+    data->scale = scale;
+    data->angle = angle;
+    data->color = color;
+    data->alpha = alpha;
+    data->text = text;
+    data->bounds.x = rect.GetWidth();
+    data->bounds.y = rect.GetHeight();
+
+    return data;
+}
+
+void SFML_Backend::destroyText(FlxBaseText *data) {
+
+    if(data) {
+        sf::String *str = (sf::String*)data->data;
+        if(str) delete str;
+
+        delete data;
+    }
+}
+
+void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool) {
+
+    if(!text) return;
+    if(!text->data) return;
+
     FlxVector move = BackendHolder::get().getScroolVector();
     if(!scrool) { move.x = move.y = 0; }
 
-    str.SetCenter(rect.GetWidth() / 2, rect.GetHeight() / 2);
-    str.SetPosition(x + (rect.GetWidth() / 2) + move.x, y + (rect.GetHeight() / 2) + move.y);
-    str.SetScale(scale.x, scale.y);
-    str.SetRotation(-FlxU::radToDegrees(angle));
-    str.SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
+    sf::String *str = (sf::String*) text->data;
+    str->SetPosition(x + (text->bounds.x / 2) + move.x, y + (text->bounds.y / 2) + move.y);
 
-    window->Draw(str);
-
-    return FlxVector(rect.GetWidth(), rect.GetHeight());;
+    window->Draw(*str);
 }
 
 FlxBackendImage* SFML_Backend::createImage(int width, int height, int color, float alpha) {

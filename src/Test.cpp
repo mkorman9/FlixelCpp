@@ -126,8 +126,6 @@ public:
 
     virtual void update() {
         FlxPreloader::update();
-
-        std::cout << percent << "%" << std::endl;
     }
 };
 

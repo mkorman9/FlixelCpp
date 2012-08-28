@@ -45,8 +45,11 @@ public:
 
     virtual void drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
                            FlxRect source, int color, bool flipped, bool scrool, float alpha);
-    virtual FlxVector drawText(const char *text, void *font, int size, float x, float y, FlxVector scale, float angle, int color,
-                          bool scrool, float alpha);
+
+    virtual FlxBaseText *createText(const char *text, void *font, int size, FlxVector scale, float angle,
+                                   int color, float alpha);
+    virtual void destroyText(FlxBaseText *data);
+    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool);
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);

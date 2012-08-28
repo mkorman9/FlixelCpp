@@ -61,6 +61,17 @@ public:
     virtual bool isPaused() = 0;
 };
 
+// Text struct
+struct FlxBaseText {
+    std::string text;
+    int color, size;
+    float alpha, angle;
+    FlxVector scale;
+    FlxVector bounds;
+
+    void *data, *font;
+};
+
 
 /*
 *  Library backend base class.
@@ -69,6 +80,7 @@ public:
 class FlxBackendBase {
 
 public:
+    // app managment and input
     virtual bool setupSurface(const char *title, int width, int height) = 0;
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)()) = 0;
     virtual void setCallbacks(void (*onTouchBegin)(int id, float, float),
@@ -81,21 +93,30 @@ public:
     virtual bool getMouseButtonState(int button, int index) = 0;
     virtual void showMouse(bool show) = 0;
 
+    // image rendering
     virtual void drawImage(FlxBackendImage *img, float x, float y, FlxVector scale, float angle,
                         FlxRect source, int color, bool flipped, bool scrool, float alpha) = 0;
-    virtual FlxVector drawText(const char *text, void *font, int size, float x, float y, FlxVector scale, float angle, int color,
-                          bool scrool, float alpha) = 0;
 
+    // text rendering
+    virtual FlxBaseText *createText(const char *text, void *font, int size, FlxVector scale, float angle,
+                                   int color, float alpha) = 0;
+    virtual void destroyText(FlxBaseText *data) = 0;
+    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool) = 0;
+
+    // image loading
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha) = 0;
     virtual FlxBackendImage *loadImage(const char *path) = 0;
 
+    // text loading
     virtual void *loadFont(const char *path, int fontSize) = 0;
 
+    // audio
     virtual void* loadSound(const char *path) = 0;
-    virtual FlxBackendMusic* loadMusic(const char *path) = 0;
     virtual FlxBackendSound* playSound(void *sound, float vol) = 0;
+    virtual FlxBackendMusic* loadMusic(const char *path) = 0;
     virtual void playMusic(FlxBackendMusic *music, float vol) = 0;
 
+    // file I/O
     virtual void saveData(const char *path, const std::map<std::string, std::string>& data) = 0;
     virtual bool loadData(const char *path, std::map<std::string, std::string>& data) = 0;
 };

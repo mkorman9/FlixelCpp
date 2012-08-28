@@ -4,8 +4,10 @@
 FlxText::FlxText(const char *Text, const char *Font, float X, float Y, int Size, int Color) {
     x = X;
     y = Y;
-    text = Text;
+    text = lastText = Text;
     font = NULL;
+    textData = NULL;
+    lastColor = Color;
 
     collisions = false;
     scrool = false;
@@ -19,11 +21,25 @@ void FlxText::setFormat(const char *Font, int Size, int Color) {
     font = BackendHolder::get().getBackend()->loadFont(Font, Size);
     color = Color;
     size = Size;
+
+    needUpdate = true;
 }
 
 
 void FlxText::update() {
     if(!active) return;
+
+    if(color != lastColor || lastText != text) {
+        needUpdate = true;
+    }
+
+    hitbox.x = x;
+    hitbox.y = y;
+    hitbox.width = width;
+    hitbox.height = height;
+
+    lastColor = color;
+    lastText = text;
 
     FlxObject::update();
 }
@@ -32,15 +48,24 @@ void FlxText::update() {
 void FlxText::draw() {
     if(!visible) return;
 
-    FlxVector sizeOfText = BackendHolder::get().getBackend()->drawText(text.c_str(), font, size, x, y,
-                                                                       scale, angle, color, scrool, alpha);
+    if(needUpdate) {
+        updateBuffer();
+    }
 
-    width = (int)sizeOfText.x;
-    height = (int)sizeOfText.y;
-
-    hitbox.x = x;
-    hitbox.y = y;
-    hitbox.width = width;
-    hitbox.height = height;
+    BackendHolder::get().getBackend()->drawText(textData, x, y, scrool);
 }
 
+
+void FlxText::updateBuffer() {
+
+    BackendHolder::get().getBackend()->destroyText(textData);
+    textData = BackendHolder::get().getBackend()->createText(text.c_str(), font, size, scale, angle, color,
+                                                        alpha);
+
+    if(textData) {
+        width = (int)textData->bounds.x;
+        height = (int)textData->bounds.y;
+    }
+
+    needUpdate = false;
+}
