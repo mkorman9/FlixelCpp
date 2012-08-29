@@ -38,8 +38,8 @@ void FlxText::update() {
     hitbox.width = width;
     hitbox.height = height;
 
-    lastColor = color;
-    lastText = text;
+    if(lastColor != color) lastColor = color;
+    if(lastText != text) lastText = text;
 
     FlxObject::update();
 }

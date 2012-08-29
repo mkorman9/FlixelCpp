@@ -22,6 +22,21 @@ FlxSprite FlxG::flashSprite;
 float FlxG::flashCounter = 0, FlxG::flashMaxTime = 0;
 bool FlxG::flashing = false;
 
+// quick help function
+static int powerOf2(int input) {
+    int value = 1;
+
+    while (value < input) {
+        value <<= 1;
+    }
+
+    return value;
+}
+
+
+/*
+*  Main functions definitions starts here
+*/
 int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 
     if(!backend) {
@@ -43,8 +58,10 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     key = new FlxKeyboard();
     srand(time(0));
 
-    // flash screen sprite
-    flashSprite.makeGraphic(width, height, 0xffffff);
+    // flash screen sprite (texture size should be pow of 2)
+    flashSprite.makeGraphic(powerOf2(width), powerOf2(height), 0xffffff);
+    flashSprite.width = width;
+    flashSprite.height = height;
     flashSprite.alpha = 0;
 
     // run preloader
