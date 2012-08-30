@@ -122,7 +122,7 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
         keysDown[i] = false;
     }
 
-    touchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
+    FlxMouse::onTouchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
     clock.Reset();
 
     return true;
@@ -161,11 +161,6 @@ void SFML_Backend::mainLoop(void (*onUpdate)(), void (*onDraw)()) {
     }
 }
 
-void SFML_Backend::setCallbacks(void (*onTouchBegin)(int id, float, float), void (*onTouchEnd)(int id, float, float)) {
-    touchBegin = onTouchBegin;
-    touchEnd = onTouchEnd;
-}
-
 FlxVector SFML_Backend::getScreenSize() {
     sf::VideoMode screen = sf::VideoMode::GetDesktopMode();
     return FlxVector(screen.Width, screen.Height);
@@ -183,7 +178,7 @@ void SFML_Backend::exitApplication() {
         delete m;
     }
 
-    touchEnd(0, 0, 0);
+    FlxMouse::onTouchEnd(0, 0, 0);
 
     window->Close();
     delete window;

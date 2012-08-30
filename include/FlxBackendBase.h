@@ -83,8 +83,6 @@ public:
     // app managment and input
     virtual bool setupSurface(const char *title, int width, int height) = 0;
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)()) = 0;
-    virtual void setCallbacks(void (*onTouchBegin)(int id, float, float),
-                              void (*onTouchEnd)(int id, float, float)) = 0;
     virtual FlxVector getScreenSize() = 0;
     virtual void exitApplication() = 0;
     virtual bool* getKeysDown() = 0;

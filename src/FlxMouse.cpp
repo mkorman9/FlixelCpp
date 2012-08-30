@@ -67,6 +67,7 @@ void FlxMouse::updateState() {
 
 
 void FlxMouse::onTouchBegin(int pointer, float X, float Y) {
+
     FlxMouse *touch = new FlxMouse(pointer);
 
     touch->x = X;

@@ -2,30 +2,35 @@
    This file is a part of "Flixel C++ port" project
    Copyrights (c) by Michał Korman 2012
 */
-#ifndef _FLX_BACKEND_SFML_H_
-#define _FLX_BACKEND_SFML_H_
+#ifndef _FLX_BACKEND_SDL_H_
+#define _FLX_BACKEND_SDL_H_
 
 #include "../../FlxBackendBase.h"
 
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
 
 /*
-*  SFML renderer
+*  SDL opengles2 renderer
 */
-class SFML_Backend : public FlxBackendBase {
+class SDL_Mobile_Backend : public FlxBackendBase {
 
 private:
-    sf::RenderWindow *window;
+	SDL_Window* window;
+    SDL_Renderer* renderer;
+	
     bool keysDown[1024];
+	bool exitMsg;
     std::map<std::string, FlxBackendImage*> images;
     std::map<std::string, void*> fonts;
     std::map<std::string, FlxBackendMusic*> music;
     std::map<std::string, void*> sounds;
-    sf::Clock clock;
-
+	
+	int screenWidth;
+	int screenHeight;
+	
     void updateEvents();
 public:
     virtual bool setupSurface(const char *title, int width, int height);

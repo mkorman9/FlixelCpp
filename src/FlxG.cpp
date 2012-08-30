@@ -50,14 +50,14 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     height = Height;
 
     BackendHolder::get().setBackend(backend);
-    BackendHolder::get().getBackend()->setCallbacks(&FlxMouse::onTouchBegin, &FlxMouse::onTouchEnd);
     BackendHolder::get().getBackend()->setupSurface(title, width, height);
 
-    screenWidth = BackendHolder::get().getBackend()->getScreenSize().x;
-    screenHeight = BackendHolder::get().getBackend()->getScreenSize().y;
-    screenScaleVector.x = screenWidth / width;
-    screenScaleVector.y = screenHeight / height;
-
+    FlxVector screenSize = BackendHolder::get().getBackend()->getScreenSize();
+	screenWidth = screenSize.x;
+	screenHeight = screenSize.y;
+    screenScaleVector.x = screenWidth / (float)width;
+    screenScaleVector.y = screenHeight / (float)height;
+	
     key = new FlxKeyboard();
     srand(time(0));
 

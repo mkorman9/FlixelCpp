@@ -4,7 +4,11 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := flixel
 
-LOCAL_C_INCLUDES := jni/flixel/include
+LOCAL_C_INCLUDES := jni/flixel/include \
+	jni/SDL/include \
+	jni/SDL_image \
+	jni/SDL_ttf \
+	jni/SDL_mixer
 
 LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxEmitter.cpp \
@@ -19,7 +23,8 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxSound.cpp \
 	FlxSprite.cpp \
 	FlxText.cpp \
-	FlxTilemap.cpp
+	FlxTilemap.cpp \
+	backend/sdl_mobile/Backend.cpp
 	
 LOCAL_CFLAGS := -DFLX_MOBILE
 
