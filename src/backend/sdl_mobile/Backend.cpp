@@ -294,12 +294,12 @@ void SDL_Mobile_Backend::updateEvents() {
 		
 		// key down
 		else if(event.type == SDL_KEYDOWN) {
-			if(event.key.keysym.sym == SDLK_AC_BACK) keysDown[FlxKey::BackButton] = true;
+			if(event.key.keysym.sym == SDLK_AC_BACK) keysDown[FlxKey::Escape] = true;
 		}
 		
 		// key up
 		else if(event.type == SDL_KEYUP) {
-			if(event.key.keysym.sym == SDLK_AC_BACK) keysDown[FlxKey::BackButton] = false;
+			if(event.key.keysym.sym == SDLK_AC_BACK) keysDown[FlxKey::Escape] = false;
 		}
     }
 }
@@ -572,11 +572,11 @@ bool SDL_Mobile_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& r
 	ss.ignore(10000, '\n');
 	
 	std::string line;
-    while(std::getline(ss, line) && (line.size() > 2))
-    {
+    while(std::getline(ss, line) && (line.size() > 2)) {
+	
         unsigned int pos = line.find(": ");
-        if(pos != std::string::npos)
-        {
+        if(pos != std::string::npos) {
+		
             std::string name = line.substr(0, pos);
             std::string value = line.substr(pos + 2);
 

@@ -113,8 +113,6 @@ namespace FlxKey {
         F15,
         Pause,
 
-        BackButton,
-
         Count
     };
 }
