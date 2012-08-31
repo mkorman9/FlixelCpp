@@ -25,7 +25,7 @@ private:
 	bool exitMsg;
     std::map<std::string, FlxBackendImage*> images;
     std::map<std::string, void*> fonts;
-    std::map<std::string, FlxBackendMusic*> music;
+    std::vector<Mix_Music*> music;
     std::map<std::string, void*> sounds;
 	
 	int screenWidth;
