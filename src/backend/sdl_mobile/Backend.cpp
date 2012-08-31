@@ -159,6 +159,7 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
 	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 	TTF_Init();
 	Mix_Init(MIX_INIT_OGG | MIX_INIT_MOD);
+	SDLNet_Init();
 	
     // create the window
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
@@ -252,6 +253,7 @@ void SDL_Mobile_Backend::exitApplication() {
     }
 	
 	Mix_CloseAudio();
+	SDLNet_Quit();
 	Mix_Quit();
 	TTF_Quit();
 	IMG_Quit();
@@ -511,3 +513,81 @@ bool SDL_Mobile_Backend::loadData(const char *path, std::map<std::string, std::s
     return true;
 }
 
+// android/iphone network
+bool SDL_Mobile_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) {
+
+	IPaddress ip;
+	TCPsocket socket;
+	char *responseBuffer = NULL;
+	
+	// try to open connection
+	if(SDLNet_ResolveHost(&ip, req->host.c_str(), req->port) < 0) {
+		return false;
+	}
+	
+	if(!(socket = SDLNet_TCP_Open(&ip))) {
+		return false;
+	}
+	
+	// add content-lenght and content-type
+	if(req->header.find("Content-Length") == req->header.end() && req->postData.length() != 0) {
+		req->header["Content-Length"] = FlxU::toString((int)req->postData.length());
+	}
+	if(req->header.find("Content-Type") == req->header.end() && req->postData.length() != 0) {
+		req->header["Content-Type"] = "application/octet-stream";
+	}
+	
+	// build request
+	std::stringstream requestBuffer;
+	
+	if(req->method == FLX_HTTP_GET) requestBuffer << "GET ";
+	else requestBuffer << "POST ";
+	
+	requestBuffer << req->resource + " HTTP/1.0\r\n";
+	
+	for(std::map<std::string, std::string>::const_iterator it = req->header.begin(); it != req->header.end(); it++) {
+		requestBuffer << it->first << ": " << it->second << "\r\n";
+	}
+	
+	requestBuffer << "\r\n";
+	requestBuffer << req->postData;
+	
+	SDLNet_TCP_Send(socket, (void*)requestBuffer.str().data(), requestBuffer.str().size());
+	
+	
+	// get response
+	responseBuffer = new char[4096];
+	for(unsigned int i = 0; i < 4096; i++) responseBuffer[i] = 0;
+	
+	int received = SDLNet_TCP_Recv(socket, responseBuffer, 4096);
+	if(received <= 0) return false;
+	
+	std::stringstream ss(std::string(responseBuffer, received));
+	delete responseBuffer;
+	
+	std::string version;
+	ss >> version; // skip protocol version
+	ss >> resp.code;
+	ss.ignore(10000, '\n');
+	
+	std::string line;
+    while(std::getline(ss, line) && (line.size() > 2))
+    {
+        unsigned int pos = line.find(": ");
+        if(pos != std::string::npos)
+        {
+            std::string name = line.substr(0, pos);
+            std::string value = line.substr(pos + 2);
+
+            if (!value.empty() && (*value.rbegin() == '\r'))
+                value.erase(value.size() - 1);
+
+            resp.header[name] = value;
+        }
+    }
+
+    std::copy(std::istreambuf_iterator<char>(ss), std::istreambuf_iterator<char>(), std::back_inserter(resp.data));
+	
+	SDLNet_TCP_Close(socket);
+	return true;
+}

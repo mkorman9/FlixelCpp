@@ -7,6 +7,7 @@
 
 #include "FlxVector.h"
 #include "FlxRect.h"
+#include "FlxHttpRequest.h"
 
 #define FLX_BUTTON_LEFT 0
 #define FLX_BUTTON_MIDDLE 1
@@ -113,6 +114,9 @@ public:
     // file I/O
     virtual void saveData(const char *path, const std::map<std::string, std::string>& data) = 0;
     virtual bool loadData(const char *path, std::map<std::string, std::string>& data) = 0;
+
+    // network
+    virtual bool sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) = 0;
 };
 
 #endif

@@ -46,6 +46,7 @@
 		<Unit filename="include\FlxTilemap.h" />
 		<Unit filename="include\FlxU.h" />
 		<Unit filename="include\FlxVector.h" />
+		<Unit filename="include\FlxHttpRequest.h" />
 		<Unit filename="include\backend\BackendHolder.h" />
 		<Unit filename="include\backend\cpp.h" />
 		<Unit filename="include\backend\sfml\Backend.h" />
@@ -63,6 +64,7 @@
 		<Unit filename="src\FlxSprite.cpp" />
 		<Unit filename="src\FlxText.cpp" />
 		<Unit filename="src\FlxTilemap.cpp" />
+		<Unit filename="src\FlxHttpRequest.cpp" />
 		<Unit filename="src\backend\sfml\Backend.cpp" />
 		<Extensions>
 			<code_completion />

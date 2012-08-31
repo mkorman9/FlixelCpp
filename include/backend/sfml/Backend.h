@@ -11,6 +11,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Network.hpp>
 
 /*
 *  SFML renderer
@@ -58,6 +59,8 @@ public:
 
     virtual void saveData(const char *path, const std::map<std::string, std::string>& data);
     virtual bool loadData(const char *path, std::map<std::string, std::string>& data);
+
+    virtual bool sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp);
 };
 
 #endif

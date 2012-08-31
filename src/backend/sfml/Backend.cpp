@@ -453,3 +453,46 @@ bool SFML_Backend::loadData(const char *path, std::map<std::string, std::string>
     return true;
 }
 
+bool SFML_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) {
+
+    sf::Http http;
+    http.SetHost(req->host, req->port);
+
+    sf::Http::Request request;
+    request.SetMethod(req->method == FLX_HTTP_GET ? sf::Http::Request::Get : sf::Http::Request::Post);
+    request.SetURI(req->resource);
+    request.SetBody(req->postData);
+    request.SetHttpVersion(1, 0);
+
+	// add content-lenght and content-type
+	if(req->header.find("Content-Length") == req->header.end() && req->postData.length() != 0) {
+		req->header["Content-Length"] = FlxU::toString((int)req->postData.length());
+	}
+	if(req->header.find("Content-Type") == req->header.end() && req->postData.length() != 0) {
+		req->header["Content-Type"] = "application/octet-stream";
+	}
+	
+	
+    for(std::map<std::string, std::string>::iterator it = req->header.begin(); it != req->header.end(); it++) {
+        request.SetField(it->first, it->second);
+    }
+	
+    // wait for response
+    sf::Http::Response response = http.SendRequest(request);
+
+    resp.code = response.GetStatus();
+    resp.data = response.GetBody();
+
+    std::string val;
+    if((val = response.GetField("Date")) != "") resp.header["Date"] = val;
+    if((val = response.GetField("Set-Cookie")) != "") resp.header["Set-Cookie"] = val;
+    if((val = response.GetField("Content-Type")) != "") resp.header["Content-Type"] = val;
+    if((val = response.GetField("Content-Length")) != "") resp.header["Content-Length"] = val;
+    if((val = response.GetField("Pragma")) != "") resp.header["Pragma"] = val;
+    if((val = response.GetField("Transfer-Encoding")) != "") resp.header["Transfer-Encoding"] = val;
+    if((val = response.GetField("Server")) != "") resp.header["Server"] = val;
+    if((val = response.GetField("Cache-Control")) != "") resp.header["Cache-Control"] = val;
+    if((val = response.GetField("Expires")) != "") resp.header["Expires"] = val;
+
+    return (resp.code != 1001 && resp.code != 1000);
+}

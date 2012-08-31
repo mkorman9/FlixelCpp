@@ -9,9 +9,10 @@ What is currently ported?
 - Basic collisions
 - Playing sounds and music (may contain bugs)
 - Tilemaps
-- Saves
+- Saves (not ready on mobile devices)
 - Particles system (a little bit different than original)
 - Buttons
+- Basic HTTP request using FlxHttpRequest class.
 
 What isn't ported yet
 - Camera managment and special effects (currently only screen flash effect is done) 
@@ -25,3 +26,13 @@ What isn't ported and probably will never be.
 
 The biggest advantage of my framework is that the backend part is tottaly separated from the Flixel API. We could write our own window managment/input/rendering/sounding classes by simply overriding FlxBackendBase class. Default built-in PC backend is SFML system. 
 This makes my framework portable through all popular devices with no API changes.
+
+Android porting NOTES:
+- FlxSave class requires WRITE_EXTERNAL_STORAGE permission
+- FlxHttpRequest class requires INTERNET and ACCESS_NETWORK_STATE permissions
+- Mobile graphic cards are really slow so be careful using FlxEmitter.
+- Files input/output is still not ready
+
+iPhone NOTES:
+- Framework is untested under iPhone. SDL_Mobile_Backend probably works with Apple-specific devices but I can't check it.
+Also XCode project file is not provided with framework.

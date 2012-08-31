@@ -8,6 +8,7 @@ LOCAL_C_INCLUDES := jni/flixel/include \
 	jni/SDL/include \
 	jni/SDL_image \
 	jni/SDL_ttf \
+	jni/SDL_net \
 	jni/SDL_mixer
 
 LOCAL_SRC_FILES := FlxButton.cpp \
@@ -24,6 +25,7 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxSprite.cpp \
 	FlxText.cpp \
 	FlxTilemap.cpp \
+	FlxHttpRequest.cpp \
 	backend/sdl_mobile/Backend.cpp
 	
 LOCAL_CFLAGS := -DFLX_MOBILE

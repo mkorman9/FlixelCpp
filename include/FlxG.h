@@ -20,6 +20,7 @@
 #include "FlxSave.h"
 #include "FlxButton.h"
 #include "FlxEmitter.h"
+#include "FlxHttpRequest.h"
 
 /*
 *  Main static class which holds all functionality

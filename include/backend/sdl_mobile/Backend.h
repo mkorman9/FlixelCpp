@@ -11,6 +11,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include <SDL_net.h>
 
 /*
 *  SDL opengles2 renderer
@@ -62,6 +63,8 @@ public:
 
     virtual void saveData(const char *path, const std::map<std::string, std::string>& data);
     virtual bool loadData(const char *path, std::map<std::string, std::string>& data);
+	
+	virtual bool sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp);
 };
 
 #endif
