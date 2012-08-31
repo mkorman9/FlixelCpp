@@ -8,7 +8,9 @@ FlxText::FlxText(const char *Text, const char *Font, float X, float Y, int Size,
     font = NULL;
     textData = NULL;
     lastColor = Color;
-
+	lastAlpha = lastScaleX = lastScaleY = 1.f;
+	lastAngle = 0.f;
+	
     collisions = false;
     scrool = false;
 
@@ -29,7 +31,9 @@ void FlxText::setFormat(const char *Font, int Size, int Color) {
 void FlxText::update() {
     if(!active) return;
 
-    if(color != lastColor || lastText != text) {
+    if(color != lastColor || lastText != text || lastAlpha != alpha || lastScaleX != scale.x || 
+		lastScaleY != scale.y || lastAngle != angle) 
+	{
         needUpdate = true;
     }
 
@@ -40,7 +44,11 @@ void FlxText::update() {
 
     if(lastColor != color) lastColor = color;
     if(lastText != text) lastText = text;
-
+	if(alpha != lastAlpha) lastAlpha = alpha;
+	if(lastScaleX != scale.x) lastScaleX = scale.x;
+	if(lastScaleY != scale.y) lastScaleY = scale.y;
+	if(lastAngle != angle) lastAngle = angle;
+	
     FlxObject::update();
 }
 

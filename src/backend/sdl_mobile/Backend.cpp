@@ -161,7 +161,6 @@ void SDL_Mobile_Backend::updateEvents() {
 		// finger up
 		else if(event.type == SDL_FINGERUP) {
 			SDL_Touch *touch = SDL_GetTouch(event.tfinger.touchId);
-			
 			FlxMouse::onTouchEnd(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * screenWidth * FlxG::screenScaleVector.x, 
 				((float)event.tfinger.y / (float)touch->yres) * screenHeight * FlxG::screenScaleVector.y);
 		}
@@ -290,8 +289,12 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 }
 
 FlxBackendImage* SDL_Mobile_Backend::createImage(int width, int height, int color, float alpha) {
-
-    return NULL;
+	SDL_Image *img = new SDL_Image();
+	img->texture = SDL_CreateTexture(renderer, 0, SDL_TEXTUREACCESS_STATIC, width, height);
+	img->width = width;
+	img->height = height;
+	
+    return img;
 }
 
 FlxBackendImage *SDL_Mobile_Backend::loadImage(const char *path) {

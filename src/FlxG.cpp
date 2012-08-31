@@ -57,7 +57,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 	screenHeight = screenSize.y;
     screenScaleVector.x = screenWidth / (float)width;
     screenScaleVector.y = screenHeight / (float)height;
-	
+
     key = new FlxKeyboard();
     srand(time(0));
 
