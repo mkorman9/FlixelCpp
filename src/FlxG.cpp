@@ -57,7 +57,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
 	screenHeight = screenSize.y;
     screenScaleVector.x = screenWidth / (float)width;
     screenScaleVector.y = screenHeight / (float)height;
-
+	
     key = new FlxKeyboard();
     srand(time(0));
 
@@ -157,6 +157,7 @@ void FlxG::innerUpdate() {
         if(FlxMusic::Music[i]) {
             if(!FlxMusic::Music[i]->isPlaying() && !FlxMusic::Music[i]->isPaused()) {
                 delete FlxMusic::Music[i];
+				FlxMusic::Music[i] = NULL;
                 FlxMusic::Music.erase(FlxMusic::Music.begin() + i);
             }
         }

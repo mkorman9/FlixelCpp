@@ -3,7 +3,7 @@
 #include "FlxG.h"
 
 /*
-* SDL image class
+*  SDL image class
 */
 class SDL_Image : public FlxBackendImage {
 
@@ -21,6 +21,105 @@ public:
 
     int getFormat() {
         return 0; // default
+    }
+};
+
+
+/*
+*  SDL music class
+*/
+class SDL_Music : public FlxBackendMusic {
+
+public:
+    Mix_Music *track;
+	
+    virtual ~SDL_Music() {
+        stop();
+    }
+
+    virtual void play() {
+	
+
+    }
+
+    virtual void stop() {
+
+    }
+
+    virtual void pause() {
+
+    }
+
+    virtual void setLoop(bool t) {
+		// not implemented yet
+    }
+
+    virtual void setVolume(float vol) {
+        Mix_VolumeMusic(int(vol * 128.f));
+    }
+
+    virtual bool isPlaying() {
+		return false;
+    }
+
+    virtual bool isPaused() {
+		return false;
+    }
+};
+
+
+/*
+*  SDL sound class
+*/
+class SDL_Sound : public FlxBackendSound {
+
+public:
+    Mix_Chunk *buffer;
+	int channel;
+	
+    virtual ~SDL_Sound() {
+        stop();
+    }
+
+    virtual void play() {
+		
+		if(isPaused()) {
+			Mix_Resume(channel);
+			return;
+		}
+		
+		if(isPlaying()) {
+			stop();
+		}
+		
+		channel = Mix_PlayChannel(-1, buffer, 0);
+    }
+
+    virtual void stop() {
+		if(isPaused()) Mix_Resume(channel);
+		
+		Mix_HaltChannel(channel);
+		channel = -1;
+    }
+
+    virtual void pause() {
+		Mix_Pause(channel);
+    }
+
+    virtual void setLoop(bool t) {
+		// not implemented yet
+    }
+
+    virtual void setVolume(float vol) {
+        if(buffer) Mix_VolumeChunk(buffer, int(vol * 128.f));
+    }
+
+    virtual bool isPlaying() {
+        return Mix_Playing(channel) != 0;
+    }
+
+    virtual bool isPaused() {
+        return Mix_Paused(channel) != 0;
     }
 };
 
@@ -106,6 +205,8 @@ FlxVector SDL_Mobile_Backend::getScreenSize() {
 
 void SDL_Mobile_Backend::exitApplication() {
 
+	Mix_HaltChannel(-1);
+	
 	for(std::map<std::string, FlxBackendImage*>::iterator it = images.begin(); it != images.end(); it++) {
 		if(it->second) {
 			SDL_Image *img = (SDL_Image*)it->second;
@@ -123,8 +224,15 @@ void SDL_Mobile_Backend::exitApplication() {
 	}
 	
     for(std::map<std::string, FlxBackendMusic*>::iterator it = music.begin(); it != music.end(); it++) {
-        FlxBackendMusic *m = (FlxBackendMusic*) it->second;
- 
+        SDL_Music *m = (SDL_Music*) it->second;
+		if(m->track) Mix_FreeMusic(m->track);
+		
+		delete m;
+    }
+	
+	for(std::map<std::string, void*>::iterator it = sounds.begin(); it != sounds.end(); it++) {
+        Mix_Chunk *s = (Mix_Chunk*) it->second;
+		if(s) Mix_FreeChunk(s);
     }
 	
 	Mix_CloseAudio();
@@ -337,8 +445,12 @@ void* SDL_Mobile_Backend::loadSound(const char *path) {
         return sounds[path];
     }
 
-
-    return NULL;
+	Mix_Chunk *buffer = Mix_LoadWAV(path);
+	if(buffer) {
+		sounds[path] = buffer;
+	}
+	
+    return buffer;
 }
 
 FlxBackendMusic* SDL_Mobile_Backend::loadMusic(const char *path) {
@@ -347,18 +459,36 @@ FlxBackendMusic* SDL_Mobile_Backend::loadMusic(const char *path) {
         return music[path];
     }
 
-    return NULL;
+	SDL_Music *m = new SDL_Music();
+	m->track = Mix_LoadMUS(path);
+	
+	if(m->track)
+		music[path] = m;
+	
+    return m;
 }
 
-FlxBackendSound* SDL_Mobile_Backend::playSound(void *sound, float vol) {
-
-
-    return NULL;
+FlxBackendSound* SDL_Mobile_Backend::playSound(void *buffer, float vol) {
+	if(!buffer) return NULL;
+	
+	SDL_Sound *sound = new SDL_Sound();
+	sound->buffer = (Mix_Chunk*) buffer;
+	sound->channel = -1;
+	
+	sound->setVolume(vol);
+	sound->play();
+	
+    return sound;
 }
 
 void SDL_Mobile_Backend::playMusic(FlxBackendMusic *buff, float vol) {
-
-    
+    if(!buff) return;
+	
+	SDL_Music *m = (SDL_Music*) buff; 
+	if(!m->track) return;
+	
+	m->setVolume(vol);
+	m->play();
 }
 
 // android/iphone data saving
