@@ -161,8 +161,14 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
 	Mix_Init(MIX_INIT_OGG | MIX_INIT_MOD);
 	SDLNet_Init();
 	
+	// get screen size
+	SDL_DisplayMode mode;
+	SDL_GetDesktopDisplayMode(0, &mode);
+	screenWidth = mode.w;
+	screenHeight = mode.h;
+	
     // create the window
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
 	SDL_SetWindowFullscreen(window, SDL_TRUE);
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	
@@ -177,11 +183,6 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
     for(int i = 0; i < 1024; i++) {
         keysDown[i] = false;
     }
-	
-	SDL_DisplayMode mode;
-	SDL_GetDesktopDisplayMode(0, &mode);
-	screenWidth = mode.w;
-	screenHeight = mode.h;
 				
 	exitMsg = false;
     return true;
