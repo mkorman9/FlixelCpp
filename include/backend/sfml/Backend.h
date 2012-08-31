@@ -26,9 +26,12 @@ private:
     std::map<std::string, FlxBackendMusic*> music;
     std::map<std::string, void*> sounds;
     sf::Clock clock;
+    bool fullscreen;
 
     void updateEvents();
 public:
+    SFML_Backend(bool fullscreen = false);
+
     virtual bool setupSurface(const char *title, int width, int height);
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)());
     virtual FlxVector getScreenSize();

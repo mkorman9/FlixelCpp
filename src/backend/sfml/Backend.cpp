@@ -96,9 +96,16 @@ public:
 /*
 *  Main backend class definition
 */
+SFML_Backend::SFML_Backend(bool f) {
+    fullscreen = f;
+}
+
 bool SFML_Backend::setupSurface(const char *title, int width, int height) {
 
-    window = new sf::RenderWindow(sf::VideoMode(width, height), title);
+    unsigned long style = sf::Style::Resize | sf::Style::Close;
+    if(fullscreen) style = sf::Style::Fullscreen;
+
+    window = new sf::RenderWindow(sf::VideoMode(width, height), title, style);
     if(!window) return false;
 
     window->EnableKeyRepeat(false);
@@ -471,12 +478,12 @@ bool SFML_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) {
 	if(req->header.find("Content-Type") == req->header.end() && req->postData.length() != 0) {
 		req->header["Content-Type"] = "application/octet-stream";
 	}
-	
-	
+
+
     for(std::map<std::string, std::string>::iterator it = req->header.begin(); it != req->header.end(); it++) {
         request.SetField(it->first, it->second);
     }
-	
+
     // wait for response
     sf::Http::Response response = http.SendRequest(request);
 
