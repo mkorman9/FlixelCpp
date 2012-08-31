@@ -33,13 +33,11 @@ public:
 
     virtual void play() = 0;
     virtual void stop() = 0;
-    virtual void pause() = 0;
 
     virtual void setLoop(bool t) = 0;
     virtual void setVolume(float vol) = 0;
 
     virtual bool isPlaying() = 0;
-    virtual bool isPaused() = 0;
 };
 
 /*
@@ -52,13 +50,11 @@ public:
 
     virtual void play() = 0;
     virtual void stop() = 0;
-    virtual void pause() = 0;
 
     virtual void setLoop(bool t) = 0;
     virtual void setVolume(float vol) = 0;
 
     virtual bool isPlaying() = 0;
-    virtual bool isPaused() = 0;
 };
 
 // Text struct

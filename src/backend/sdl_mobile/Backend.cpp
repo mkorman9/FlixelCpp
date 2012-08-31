@@ -40,11 +40,6 @@ public:
 
     virtual void play() {
 		
-		if(isPaused()) {
-			Mix_Resume(channel);
-			return;
-		}
-		
 		if(isPlaying()) {
 			stop();
 		}
@@ -53,14 +48,8 @@ public:
     }
 
     virtual void stop() {
-		if(isPaused()) Mix_Resume(channel);
-		
 		Mix_HaltChannel(channel);
 		channel = -1;
-    }
-
-    virtual void pause() {
-		Mix_Pause(channel);
     }
 
     virtual void setLoop(bool t) {
@@ -73,10 +62,6 @@ public:
 
     virtual bool isPlaying() {
         return Mix_Playing(channel) != 0;
-    }
-
-    virtual bool isPaused() {
-        return Mix_Paused(channel) != 0;
     }
 };
 
@@ -138,6 +123,7 @@ public:
 	
     virtual ~SDL_Music() {
         stop();
+		Mix_FreeMusic(buffer);
     }
 
     virtual void play() {
@@ -146,9 +132,6 @@ public:
 
     virtual void stop() {
 		MusicHolder::stop(buffer);
-    }
-
-    virtual void pause() {
     }
 
     virtual void setLoop(bool t) {
@@ -160,10 +143,6 @@ public:
 
     virtual bool isPlaying() {
         return MusicHolder::isPlaying(buffer);
-    }
-
-    virtual bool isPaused() {
-        return false;
     }
 };
 
@@ -266,10 +245,6 @@ void SDL_Mobile_Backend::exitApplication() {
 			if(font) TTF_CloseFont(font);
 		}
 	}
-	
-    for(unsigned int i = 0; i < music.size(); i++) {
-		if(music[i]) { Mix_FreeMusic(music[i]); music[i] = NULL; }
-    }
 	
 	for(std::map<std::string, void*>::iterator it = sounds.begin(); it != sounds.end(); it++) {
         Mix_Chunk *s = (Mix_Chunk*) it->second;
@@ -498,10 +473,6 @@ FlxBackendMusic* SDL_Mobile_Backend::loadMusic(const char *path) {
 	
 	SDL_Music *m = new SDL_Music();
 	m->buffer = Mix_LoadMUS(path);
-	
-	if(m->buffer) {
-		music.push_back(m->buffer);
-	}
 	
     return m;
 }

@@ -50,7 +50,10 @@ void FlxPreloader::update() {
             state = FLX_SOUNDS_LOADING;
         }
         else {
-            BackendHolder::get().getBackend()->loadMusic(musicToLoad[currentIterator].c_str());
+			#ifndef FLX_MOBILE
+				BackendHolder::get().getBackend()->loadMusic(musicToLoad[currentIterator].c_str());
+			#endif
+			
             currentIterator++;
             assetsLoaded++;
         }

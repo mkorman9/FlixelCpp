@@ -45,10 +45,6 @@ public:
         Track.Stop();
     }
 
-    virtual void pause() {
-        Track.Pause();
-    }
-
     virtual void setLoop(bool t) {
         Track.SetLoop(t);
     }
@@ -59,10 +55,6 @@ public:
 
     virtual bool isPlaying() {
         return Track.GetStatus() != sf::Sound::Stopped;
-    }
-
-    virtual bool isPaused() {
-        return Track.GetStatus() == sf::Sound::Paused;
     }
 };
 
@@ -86,10 +78,6 @@ public:
         Track.Stop();
     }
 
-    virtual void pause() {
-        Track.Pause();
-    }
-
     virtual void setLoop(bool t) {
         Track.SetLoop(t);
     }
@@ -101,10 +89,6 @@ public:
 
     virtual bool isPlaying() {
         return Track.Playing;
-    }
-
-    virtual bool isPaused() {
-        return Track.Paused;
     }
 };
 

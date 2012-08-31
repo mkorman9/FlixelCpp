@@ -25,21 +25,7 @@ void FlxSound::stop() {
 }
 
 
-void FlxSound::pause() {
-    if(!soundPtr) return;
-
-    soundPtr->pause();
-}
-
-
 bool FlxSound::isPlaying() {
-    if(!soundPtr) return false;
-
-    return soundPtr->isPlaying();
-}
-
-
-bool FlxSound::isPaused() {
     if(!soundPtr) return false;
 
     return soundPtr->isPlaying();

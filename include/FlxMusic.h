@@ -24,11 +24,7 @@ public:
 
     void stop();
 
-    void pause();
-
     bool isPlaying();
-
-    bool isPaused();
 
     void setLooped(bool loop);
 };
