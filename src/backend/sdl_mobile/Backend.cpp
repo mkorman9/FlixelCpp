@@ -168,7 +168,8 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
 	screenHeight = mode.h;
 	
     // create the window
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    window = SDL_CreateWindow(title, 0, 0, screenWidth, screenHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_SHOWN);
 	SDL_SetWindowFullscreen(window, SDL_TRUE);
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	
