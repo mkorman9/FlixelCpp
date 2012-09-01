@@ -78,16 +78,16 @@ void FlxMouse::onTouchBegin(int pointer, float X, float Y) {
     touch->leftDown = true;
     #endif
 
-    FlxG::mouse.push_back(touch);
+    FlxG::mousesList.push_back(touch);
 }
 
 void FlxMouse::onTouchEnd(int pointer, float X, float Y) {
 
-    for(unsigned int i = 0; i < FlxG::mouse.size(); i++) {
-        if(FlxG::mouse[i]->index == pointer) {
-            FlxG::mouse[i]->leftReleased = true;
-            FlxG::mouse[i]->endX = X;
-            FlxG::mouse[i]->endY = Y;
+    for(unsigned int i = 0; i < FlxG::mousesList.size(); i++) {
+        if(FlxG::mousesList[i]->index == pointer) {
+            FlxG::mousesList[i]->leftReleased = true;
+            FlxG::mousesList[i]->endX = X;
+            FlxG::mousesList[i]->endY = Y;
 
             return;
         }

@@ -53,7 +53,7 @@ void FlxButton::update() {
     }
 
     // update button state
-    unsigned int mousesCount = FlxG::mouse.size();
+    unsigned int mousesCount = FlxG::mousesList.size();
     if(mousesCount != 0) {
         if(!multitouch) mousesCount = 1;
 
@@ -63,7 +63,7 @@ void FlxButton::update() {
         released = false;
 
         for(unsigned int i = 0; i < mousesCount; i++) {
-            FlxMouse *m = FlxG::mouse[i];
+            FlxMouse *m = FlxG::mousesList[i];
 
             FlxRect buttonBounds(x, y, width, height);
             FlxRect mouseBounds(m->x, m->y, 1, 1);

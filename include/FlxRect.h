@@ -23,7 +23,7 @@ public:
         height = Height;
     }
 
-    bool overlaps(const FlxRect& second) {
+    bool overlaps(const FlxRect& second) const {
         return !((x >= (second.x + second.width)) || (second.x >= (x + width)) || (y >= (second.y + second.height))
             || (second.y >= (y + height)));
     }

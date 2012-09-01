@@ -14,7 +14,8 @@ FlxMusic *FlxG::music = 0;
 FlxRect FlxG::worldBounds;
 FlxVector FlxG::scroolVector;
 FlxObject *FlxG::toFollow = NULL;
-std::vector<FlxMouse*> FlxG::mouse;
+std::vector<FlxMouse*> FlxG::mousesList;
+FlxMouseHolder FlxG::mouse;
 float FlxG::fps = 0;
 float FlxG::fpsCounter = 0;
 float FlxG::fixedTime = 0.01f;
@@ -120,20 +121,20 @@ FlxMusic* FlxG::playMusic(const char *path, float vol) {
 
 void FlxG::updateMouses() {
 
-    for(unsigned int i = 0; i < mouse.size(); i++) {
+    for(unsigned int i = 0; i < mousesList.size(); i++) {
 
         #ifdef FLX_MOBILE
-        if(mouse[i]->leftReleased) {
-            mouse.erase(mouse.begin() + i);
+        if(mousesList[i]->leftReleased) {
+            mousesList.erase(mousesList.begin() + i);
             continue;
         }
 
-        if(mouse[i]->leftPressed) {
-            mouse[i]->leftPressed = false;
+        if(mousesList[i]->leftPressed) {
+            mousesList[i]->leftPressed = false;
         }
         #endif
 
-        mouse[i]->updateState();
+        mousesList[i]->updateState();
     }
 }
 

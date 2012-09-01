@@ -21,6 +21,7 @@
 #include "FlxButton.h"
 #include "FlxEmitter.h"
 #include "FlxHttpRequest.h"
+#include "FlxMouseHolder.h"
 
 /*
 *  Main static class which holds all functionality
@@ -78,7 +79,10 @@ public:
     static bool scaleToScreen;
 
     // mouses array pointer
-    static std::vector<FlxMouse*> mouse;
+    static std::vector<FlxMouse*> mousesList;
+
+    // mouse abstraction layer
+    static FlxMouseHolder mouse;
 
     // is screen being flashed
     static bool flashing;
