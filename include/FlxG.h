@@ -23,6 +23,8 @@
 #include "FlxHttpRequest.h"
 #include "FlxMouseHolder.h"
 
+#include "tweener/CppTween.h"
+
 /*
 *  Main static class which holds all functionality
 */
@@ -41,6 +43,9 @@ public:
 
     // fixed timestep time
     static float fixedTime;
+
+    // total application time
+    static float totalTime;
 
     // time since last frame
     static float elapsed;
@@ -86,6 +91,9 @@ public:
 
     // is screen being flashed
     static bool flashing;
+
+    // tweener object
+    static tween::Tweener tweener;
 
 
     // follow object

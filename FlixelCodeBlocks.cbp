@@ -50,6 +50,7 @@
 		<Unit filename="include\FlxMouseHolder.h" />
 		<Unit filename="include\backend\BackendHolder.h" />
 		<Unit filename="include\backend\cpp.h" />
+		<Unit filename="include\tweener\CppTween.h" />
 		<Unit filename="include\backend\sfml\Backend.h" />
 		<Unit filename="src\FlxButton.cpp" />
 		<Unit filename="src\FlxEmitter.cpp" />
@@ -67,6 +68,7 @@
 		<Unit filename="src\FlxTilemap.cpp" />
 		<Unit filename="src\FlxHttpRequest.cpp" />
 		<Unit filename="src\FlxMouseHolder.cpp" />
+		<Unit filename="src\tweener\CppTween.cpp" />
 		<Unit filename="src\backend\sfml\Backend.cpp" />
 		<Extensions>
 			<code_completion />

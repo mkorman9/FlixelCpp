@@ -18,12 +18,15 @@ std::vector<FlxMouse*> FlxG::mousesList;
 FlxMouseHolder FlxG::mouse;
 float FlxG::fps = 0;
 float FlxG::fpsCounter = 0;
+float FlxG::totalTime = 0;
 float FlxG::fixedTime = 0.01f;
 FlxSprite FlxG::flashSprite;
 float FlxG::flashCounter = 0, FlxG::flashMaxTime = 0;
 bool FlxG::flashing = false;
 FlxVector FlxG::screenScaleVector;
 bool FlxG::scaleToScreen = false;
+tween::Tweener FlxG::tweener;
+
 
 // quick help function
 static int powerOf2(int input) {
@@ -213,6 +216,10 @@ void FlxG::innerUpdate() {
 
 
     if(state) state->update();
+
+    // update tweener
+    tweener.step(int(totalTime * 1000));
+    totalTime += fixedTime;
 
     // update input devices
     updateMouses();

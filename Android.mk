@@ -27,6 +27,7 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxTilemap.cpp \
 	FlxHttpRequest.cpp \
 	FlxMouseHolder.cpp \
+	tweener/CppTween.cpp \
 	backend/sdl_mobile/Backend.cpp
 	
 LOCAL_CFLAGS := -DFLX_MOBILE

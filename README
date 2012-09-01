@@ -13,6 +13,7 @@ What is currently ported?
 - Particles system (a little bit different than original)
 - Buttons
 - Basic HTTP request using FlxHttpRequest class.
+- Built-in tweener (cpptweener by Wesley Ferreira Marques)
 
 What isn't ported yet
 - Camera managment and special effects (currently only screen flash effect is done) 
