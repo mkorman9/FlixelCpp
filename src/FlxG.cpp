@@ -239,7 +239,7 @@ void FlxG::innerDraw() {
 
     // draw shaders
     for(unsigned int i = 0; i < shaders.members.size(); i++) {
-        if(shaders.members[i]) {
+        if(shaders.members[i] && shaders.members[i]->data) {
             BackendHolder::get().getBackend()->drawShader(shaders.members[i]->data);
         }
     }

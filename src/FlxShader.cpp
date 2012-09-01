@@ -5,6 +5,7 @@ FlxShader::FlxShader(const char *fragmentShaderFile) {
 
     if(!BackendHolder::get().getBackend()->isShadersSupported()) {
         std::cerr << "[Error] Shaders aren't supported on this platform" << std::endl;
+        data = NULL;
         return;
     }
 
