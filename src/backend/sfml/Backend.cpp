@@ -26,6 +26,46 @@ public:
 };
 
 /*
+*  SFML shader class
+*/
+class SFML_Shader : public FlxBackendShader {
+
+public:
+    sf::PostFX *data;
+
+    virtual ~SFML_Shader() {
+        delete data;
+    }
+
+    virtual void setParameter(const char *name, float x) {
+        data->SetParameter(name, x);
+    }
+
+    virtual void setParameter(const char *name, float x, float y) {
+        data->SetParameter(name, x, y);
+    }
+
+    virtual void setParameter(const char *name, float x, float y, float z) {
+        data->SetParameter(name, x, y, z);
+    }
+
+    virtual void setParameter(const char *name, float x, float y, float z, float w) {
+        data->SetParameter(name, x, y, z, w);
+    }
+
+    virtual void setParameter(const char *name, FlxBackendImage *i) {
+        if(i) {
+            SFML_Image *img = (SFML_Image*) i;
+            data->SetTexture(name, &img->Graphic);
+        }
+        else {
+            data->SetTexture(name, NULL);
+        }
+    }
+};
+
+
+/*
 *  SFML Sound class
 */
 class SFML_Sound : public FlxBackendSound {
@@ -167,6 +207,10 @@ void SFML_Backend::exitApplication() {
     for(std::map<std::string, FlxBackendMusic*>::iterator it = music.begin(); it != music.end(); it++) {
         FlxBackendMusic *m = (FlxBackendMusic*) it->second;
         delete m;
+    }
+
+    for(unsigned int i = 0; i < shaders.size(); i++) {
+        if(shaders[i]) delete shaders[i];
     }
 
     FlxMouse::onTouchEnd(0, 0, 0);
@@ -359,6 +403,33 @@ void *SFML_Backend::loadFont(const char *path, int fontSize) {
     fonts[ss.str()] = font;
 
     return font;
+}
+
+bool SFML_Backend::isShadersSupported() {
+    return sf::PostFX::CanUsePostFX();
+}
+
+FlxBackendShader* SFML_Backend::loadShader(const char *path) {
+    SFML_Shader *shader = new SFML_Shader();
+    shaders.push_back(shader);
+
+    shader->data = new sf::PostFX();
+    shader->data->LoadFromFile(path);
+
+    return shader;
+}
+
+void SFML_Backend::drawShader(FlxBackendShader *s) {
+
+    if(!s) return;
+    SFML_Shader *shader = (SFML_Shader*) s;
+
+    FlxVector screenSize = getScreenSize();
+
+    window->SetView(sf::View(sf::FloatRect(FlxG::scroolVector.x, FlxG::scroolVector.y,
+                                           screenSize.x, screenSize.y)));
+    window->Draw(*shader->data);
+    window->SetView(window->GetDefaultView());
 }
 
 void* SFML_Backend::loadSound(const char *path) {

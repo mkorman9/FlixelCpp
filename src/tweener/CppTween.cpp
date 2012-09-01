@@ -304,12 +304,19 @@ namespace tween {
                         total_tweens = tweens.size();
                         tweensIT = tweens.begin();
                         for (int i=0; i <  total_tweens; i++,tweensIT++) {
-                                if ((*param) == (*tweensIT)) {
-                                        (*tweensIT).cleanProperties();
-                                        tweens.erase(tweensIT);
-                                        //std::cout<<"\n-Tween Removed";
-                                        --total_tweens;
-                                        break;
+                                if(param != NULL) {
+                                    if ((*param) == (*tweensIT)) {
+                                            (*tweensIT).cleanProperties();
+                                            tweens.erase(tweensIT);
+                                            //std::cout<<"\n-Tween Removed";
+                                            --total_tweens;
+                                            break;
+                                    }
+                                }
+                                else {
+                                    (*tweensIT).cleanProperties();
+                                    tweens.erase(tweensIT);
+                                    --total_tweens;
                                 }
                         }
 

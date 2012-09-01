@@ -22,6 +22,7 @@
 #include "FlxEmitter.h"
 #include "FlxHttpRequest.h"
 #include "FlxMouseHolder.h"
+#include "FlxShader.h"
 
 #include "tweener/CppTween.h"
 
@@ -94,6 +95,9 @@ public:
 
     // tweener object
     static tween::Tweener tweener;
+
+    // shaders to draw
+    static FlxShadersList shaders;
 
 
     // follow object

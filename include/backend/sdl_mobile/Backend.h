@@ -54,6 +54,10 @@ public:
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);
 
+	virtual bool isShadersSupported();
+    virtual FlxBackendShader* loadShader(const char *path);
+    virtual void drawShader(FlxBackendShader *shader);
+	
     virtual void *loadFont(const char *path, int fontSize);
 
     virtual void* loadSound(const char *path);

@@ -14,10 +14,10 @@ What is currently ported?
 - Buttons
 - Basic HTTP request using FlxHttpRequest class.
 - Built-in tweener (cpptweener by Wesley Ferreira Marques)
+- Shaders (not working on mobile devices yet)
 
 What isn't ported yet
 - Camera managment and special effects (currently only screen flash effect is done) 
-- Shaders (probably I will implement it)
 
 What isn't ported and probably will never be.
 - Replays

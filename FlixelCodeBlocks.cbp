@@ -48,6 +48,7 @@
 		<Unit filename="include\FlxVector.h" />
 		<Unit filename="include\FlxHttpRequest.h" />
 		<Unit filename="include\FlxMouseHolder.h" />
+		<Unit filename="include\FlxShader.h" />
 		<Unit filename="include\backend\BackendHolder.h" />
 		<Unit filename="include\backend\cpp.h" />
 		<Unit filename="include\tweener\CppTween.h" />
@@ -68,6 +69,7 @@
 		<Unit filename="src\FlxTilemap.cpp" />
 		<Unit filename="src\FlxHttpRequest.cpp" />
 		<Unit filename="src\FlxMouseHolder.cpp" />
+		<Unit filename="src\FlxShader.cpp" />
 		<Unit filename="src\tweener\CppTween.cpp" />
 		<Unit filename="src\backend\sfml\Backend.cpp" />
 		<Extensions>

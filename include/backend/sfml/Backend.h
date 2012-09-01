@@ -25,6 +25,7 @@ private:
     std::map<std::string, void*> fonts;
     std::map<std::string, FlxBackendMusic*> music;
     std::map<std::string, void*> sounds;
+    std::vector<FlxBackendShader*> shaders;
     sf::Clock clock;
     bool fullscreen;
 
@@ -52,6 +53,10 @@ public:
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);
+
+    virtual bool isShadersSupported();
+    virtual FlxBackendShader* loadShader(const char *path);
+    virtual void drawShader(FlxBackendShader *shader);
 
     virtual void *loadFont(const char *path, int fontSize);
 

@@ -25,6 +25,21 @@ public:
 };
 
 /*
+*  Template for shader
+*/
+class FlxBackendShader {
+
+public:
+    virtual ~FlxBackendShader() { }
+
+    virtual void setParameter(const char *name, float x) = 0;
+    virtual void setParameter(const char *name, float x, float y) = 0;
+    virtual void setParameter(const char *name, float x, float y, float z) = 0;
+    virtual void setParameter(const char *name, float x, float y, float z, float w) = 0;
+    virtual void setParameter(const char *name, FlxBackendImage *img) = 0;
+};
+
+/*
 *  Template for sound
 */
 class FlxBackendSound {
@@ -97,6 +112,11 @@ public:
                                    int color, float alpha) = 0;
     virtual void destroyText(FlxBaseText *data) = 0;
     virtual void drawText(FlxBaseText *text, float x, float y, bool scrool) = 0;
+
+    // special effects
+    virtual bool isShadersSupported() = 0;
+    virtual FlxBackendShader* loadShader(const char *path) = 0;
+    virtual void drawShader(FlxBackendShader *shader) = 0;
 
     // image loading
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha) = 0;

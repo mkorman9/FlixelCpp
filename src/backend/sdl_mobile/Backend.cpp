@@ -416,6 +416,17 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &destRect, -FlxU::radToDegrees(text->angle), NULL, SDL_FLIP_NONE);
 }
 
+bool SDL_Mobile_Backend::isShadersSupported() {
+    return true;
+}
+
+FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
+    return NULL;
+}
+
+void SDL_Mobile_Backend::drawShader(FlxBackendShader *s) {
+}
+
 FlxBackendImage* SDL_Mobile_Backend::createImage(int width, int height, int color, float alpha) {
 	SDL_Image *img = new SDL_Image();
 	img->texture = SDL_CreateTexture(renderer, 0, SDL_TEXTUREACCESS_STATIC, width, height);

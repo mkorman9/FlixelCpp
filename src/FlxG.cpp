@@ -26,6 +26,7 @@ bool FlxG::flashing = false;
 FlxVector FlxG::screenScaleVector;
 bool FlxG::scaleToScreen = false;
 tween::Tweener FlxG::tweener;
+FlxShadersList FlxG::shaders;
 
 
 // quick help function
@@ -100,6 +101,9 @@ void FlxG::followObject(FlxObject *object) {
 void FlxG::switchState(FlxState *newState) {
     if(!newState) return;
     if(state) delete state;
+
+    shaders.clear();
+    tweener.removeTween(NULL);
 
     state = newState;
     state->create();
@@ -232,6 +236,13 @@ void FlxG::innerUpdate() {
 
 void FlxG::innerDraw() {
     if(state) state->draw();
+
+    // draw shaders
+    for(unsigned int i = 0; i < shaders.members.size(); i++) {
+        if(shaders.members[i]) {
+            BackendHolder::get().getBackend()->drawShader(shaders.members[i]->data);
+        }
+    }
 
     // handle flashing sprite
     if(flashing) flashSprite.draw();
