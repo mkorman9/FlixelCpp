@@ -9,7 +9,7 @@ What is currently ported?
 - Basic collisions
 - Playing sounds and music (may contain bugs)
 - Tilemaps
-- Saves (not ready on mobile devices)
+- Saves
 - Particles system (a little bit different than original)
 - Buttons
 - Basic HTTP request using FlxHttpRequest class.
@@ -32,7 +32,6 @@ Android porting NOTES:
 - FlxSave class requires WRITE_EXTERNAL_STORAGE permission
 - FlxHttpRequest class requires INTERNET and ACCESS_NETWORK_STATE permissions
 - Mobile graphic cards are really slow so be careful using FlxEmitter.
-- Files input/output is still not ready
 
 iPhone NOTES:
 - Framework is untested under iPhone. SDL_Mobile_Backend probably works with Apple-specific devices but I can't check it.

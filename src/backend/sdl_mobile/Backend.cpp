@@ -504,13 +504,82 @@ void SDL_Mobile_Backend::playMusic(FlxBackendMusic *buff, float vol) {
 }
 
 // android/iphone data saving
-void SDL_Mobile_Backend::saveData(const char *path, const std::map<std::string, std::string>& data) {
+// on android it requires WRITE_EXTERNAL_STORAGE permission 
+void SDL_Mobile_Backend::saveData(const char *p, const std::map<std::string, std::string>& data) {
 
-
+	SDL_RWops *file = NULL;
+	std::string path = p;
+	
+	#ifdef __ANDROID__
+	path = std::string("/sdcard/") + p;
+	#endif
+	
+	// open file
+	file = SDL_RWFromFile(path.c_str(), "w");
+	if(!file) return;
+	
+	std::string rawData;
+    for(std::map<std::string, std::string>::const_iterator it = data.begin(); it != data.end(); it++) {
+        rawData += it->first + '\n' + it->second + '\n';
+    }
+	
+    // encode data to prevent manual save changes
+    // note: this is not an encryption!
+    for(unsigned int i = 0; i < rawData.size(); i++) {
+        rawData[i] = rawData[i] ^ 24;
+    }
+	
+	SDL_RWwrite(file, rawData.data(), 1, rawData.size());
+	SDL_RWclose(file);
 }
 
-bool SDL_Mobile_Backend::loadData(const char *path, std::map<std::string, std::string>& data) {
+bool SDL_Mobile_Backend::loadData(const char *p, std::map<std::string, std::string>& data) {
 
+	SDL_RWops *file = NULL;
+	std::string path = p;
+	
+	#ifdef __ANDROID__
+	path = std::string("/sdcard/") + p;
+	#endif
+	
+	file = SDL_RWFromFile(path.c_str(), "r");
+	if(!file) return false;
+	
+	// get file size
+	SDL_RWseek(file, 0, SEEK_END);
+	unsigned int size = SDL_RWtell(file);
+	SDL_RWseek(file, 0, SEEK_SET);
+	
+	char *buffer = new char[size + 1];
+	SDL_RWread(file, buffer, 1, size);
+	
+	std::string rawData(buffer, size - 1);
+	
+	delete buffer;
+	SDL_RWclose(file);
+	
+	// decode data
+	for(unsigned int i = 0; i < rawData.size(); i++) {
+		rawData[i] = rawData[i] ^ 24;
+	}
+	
+	// parse data
+    std::stringstream ss(rawData);
+    std::string name, value;
+
+    while(!ss.eof()) {
+
+        if(name == "") {
+            std::getline(ss, name);
+        }
+        else {
+            std::getline(ss, value);
+
+            data[name] = value;
+            name = value = "";
+        }
+    }
+	
     return true;
 }
 
