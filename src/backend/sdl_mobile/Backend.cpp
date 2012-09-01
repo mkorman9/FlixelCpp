@@ -147,6 +147,19 @@ public:
 };
 
 
+// quick help function
+static int powerOf2(int input) {
+    int value = 1;
+
+    while (value < input) {
+        value <<= 1;
+    }
+
+    return value;
+}
+
+
+
 /*
 *  Main backend class definition
 */
@@ -184,7 +197,20 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
     for(int i = 0; i < 1024; i++) {
         keysDown[i] = false;
     }
-				
+		
+	// allocate memory for framebuffer
+	unsigned char *pixels = new unsigned char[powerOf2(screenWidth) * powerOf2(screenHeight) * 4];
+	for(unsigned int i = 0; i < sizeof(pixels); i++) pixels[i] = 255;
+	
+	glGenTextures(1, &framebuffer);
+	glBindTexture(GL_TEXTURE_2D, framebuffer);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, powerOf2(screenWidth), powerOf2(screenHeight), 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	
+	delete[] pixels;
+	
 	exitMsg = false;
     return true;
 }
@@ -417,7 +443,10 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 }
 
 bool SDL_Mobile_Backend::isShadersSupported() {
-    return false;
+    SDL_RendererInfo info;
+	SDL_GetRendererInfo(renderer, &info);
+	
+	return !strcmp(info.name, "opengles2");
 }
 
 FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
@@ -425,6 +454,11 @@ FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
 }
 
 void SDL_Mobile_Backend::drawShader(FlxBackendShader *s) {
+
+	// get current framebuffer
+	glBindTexture(GL_TEXTURE_2D, framebuffer);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, powerOf2(screenWidth), powerOf2(screenHeight), 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 FlxBackendImage* SDL_Mobile_Backend::createImage(int width, int height, int color, float alpha) {
@@ -567,7 +601,7 @@ bool SDL_Mobile_Backend::loadData(const char *p, std::map<std::string, std::stri
 	
 	std::string rawData(buffer, size - 1);
 	
-	delete buffer;
+	delete[] buffer;
 	SDL_RWclose(file);
 	
 	// decode data
@@ -645,7 +679,7 @@ bool SDL_Mobile_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& r
 	if(received <= 0) return false;
 	
 	std::stringstream ss(std::string(responseBuffer, received));
-	delete responseBuffer;
+	delete[] responseBuffer;
 	
 	std::string version;
 	ss >> version; // skip protocol version
