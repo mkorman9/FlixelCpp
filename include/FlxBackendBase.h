@@ -92,6 +92,8 @@ struct FlxBaseText {
 class FlxBackendBase {
 
 public:
+    virtual std::string getName() = 0;
+
     // app managment and input
     virtual bool setupSurface(const char *title, int width, int height) = 0;
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)()) = 0;

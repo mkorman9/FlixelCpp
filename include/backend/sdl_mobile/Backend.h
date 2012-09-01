@@ -33,6 +33,8 @@ private:
 	
     void updateEvents();
 public:
+	virtual std::string getName() { return "SDL2/mobile"; }
+	
     virtual bool setupSurface(const char *title, int width, int height);
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)());
     virtual FlxVector getScreenSize();

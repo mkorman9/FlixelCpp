@@ -417,7 +417,7 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 }
 
 bool SDL_Mobile_Backend::isShadersSupported() {
-    return true;
+    return false;
 }
 
 FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
