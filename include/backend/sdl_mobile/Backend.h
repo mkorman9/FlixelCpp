@@ -28,8 +28,9 @@ private:
     std::map<std::string, FlxBackendImage*> images;
     std::map<std::string, void*> fonts;
     std::map<std::string, void*> sounds;
+	std::vector<FlxBackendShader*> shaders;
 	
-	GLuint framebuffer;
+	GLenum framebuffer;
 	int screenWidth;
 	int screenHeight;
 	
