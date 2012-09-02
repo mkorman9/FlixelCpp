@@ -12,7 +12,6 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include <SDL_net.h>
-#include <SDL_opengles2.h>
 
 /*
 *  SDL opengles2 renderer
@@ -28,9 +27,7 @@ private:
     std::map<std::string, FlxBackendImage*> images;
     std::map<std::string, void*> fonts;
     std::map<std::string, void*> sounds;
-	std::vector<FlxBackendShader*> shaders;
 	
-	GLenum framebuffer;
 	int screenWidth;
 	int screenHeight;
 	

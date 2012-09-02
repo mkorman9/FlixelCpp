@@ -2,35 +2,6 @@
 #include "backend/BackendHolder.h"
 #include "FlxG.h"
 
-// SDL2 hack starts here 
-extern "C" {
-	#include "../../../../SDL/src/render/SDL_sysrender.h"
-
-	typedef struct GLES2_TextureData {
-		GLenum texture;
-		GLenum texture_type;
-		GLenum pixel_format;
-		GLenum pixel_type;
-		void *pixel_data;
-		unsigned int pitch;
-		void *fbo;
-	} GLES2_TextureData;
-	
-	GLenum getTextureId(SDL_Texture *tex) {
-		GLES2_TextureData *data = (GLES2_TextureData*) tex->driverdata;
-		return data->texture;
-	}
-}
-
-
-// default vertex program
-static const char DefaultVertexShader[] =
-	"void main() {\n"
-	"gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-	"gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-	"}\n";
-	
-
 /*
 *  SDL image class
 */
@@ -56,73 +27,33 @@ public:
 
 /*
 *  SDL shader class
+*  TODO
 */
 class SDL_Shader : public FlxBackendShader {
 
 public:
-	GLenum shaderProgram, vertexShader, fragmentShader;
-	std::vector<std::pair<std::string, SDL_Image*> > textures;
 	
 	virtual ~SDL_Shader() {
-		glDeleteShader(shaderProgram);
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
+
     }
 
     virtual void setParameter(const char *name, float x) {
-		GLint currProgram = 0;
-		glGetIntegerv(GL_CURRENT_PROGRAM, &currProgram);
-		glUseProgram(shaderProgram);
-		
-		int location = glGetUniformLocation(shaderProgram, name);
-		if(location != -1) {
-			glUniform1f(location, x);
-		}
-		
-		glUseProgram(currProgram);
+
     }
 
     virtual void setParameter(const char *name, float x, float y) {
-		GLint currProgram = 0;
-		glGetIntegerv(GL_CURRENT_PROGRAM, &currProgram);
-		glUseProgram(shaderProgram);
-		
-		int location = glGetUniformLocation(shaderProgram, name);
-		if(location != -1) {
-			glUniform2f(location, x, y);
-		}
-		
-		glUseProgram(currProgram);
+
     }
 
     virtual void setParameter(const char *name, float x, float y, float z) {
-		GLint currProgram = 0;
-		glGetIntegerv(GL_CURRENT_PROGRAM, &currProgram);
-		glUseProgram(shaderProgram);
-		
-		int location = glGetUniformLocation(shaderProgram, name);
-		if(location != -1) {
-			glUniform3f(location, x, y, z);
-		}
-		
-		glUseProgram(currProgram);
+
     }
 
     virtual void setParameter(const char *name, float x, float y, float z, float w) {
-		GLint currProgram = 0;
-		glGetIntegerv(GL_CURRENT_PROGRAM, &currProgram);
-		glUseProgram(shaderProgram);
-		
-		int location = glGetUniformLocation(shaderProgram, name);
-		if(location != -1) {
-			glUniform4f(location, x, y, z, w);
-		}
-		
-		glUseProgram(currProgram);
+
     }
 
     virtual void setParameter(const char *name, FlxBackendImage *i) {
-		textures.push_back(std::make_pair(name, (SDL_Image*) i));
     }
 };
 
@@ -300,21 +231,6 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
         keysDown[i] = false;
     }
 	
-	// create framebuffer object
-	if(isShadersSupported()) {
-		unsigned char *pixels = new unsigned char[powerOf2(screenWidth) * powerOf2(screenHeight) * 3];
-		for(unsigned int i = 0; i < sizeof(pixels); i++) pixels[i] = 255;
-
-		glGenTextures(1, &framebuffer);
-		glBindTexture(GL_TEXTURE_2D, framebuffer);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, powerOf2(screenWidth), powerOf2(screenHeight), 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		delete[] pixels;
-	}
-	
 	exitMsg = false;
     return true;
 }
@@ -382,10 +298,6 @@ void SDL_Mobile_Backend::exitApplication() {
 	for(std::map<std::string, void*>::iterator it = sounds.begin(); it != sounds.end(); it++) {
         Mix_Chunk *s = (Mix_Chunk*) it->second;
 		if(s) Mix_FreeChunk(s);
-    }
-	
-	for(unsigned int i = 0; i < shaders.size(); i++) {
-        if(shaders[i]) delete shaders[i];
     }
 	
 	Mix_CloseAudio();
@@ -558,108 +470,11 @@ bool SDL_Mobile_Backend::isShadersSupported() {
 }
 
 FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
-    //return NULL;
-	
-	// load shader source
-	SDL_RWops *file = SDL_RWFromFile(path, "r");
-	if(!file) return NULL;
-	
-	// get file size
-	SDL_RWseek(file, 0, SEEK_END);
-	unsigned int size = SDL_RWtell(file);
-	SDL_RWseek(file, 0, SEEK_SET);
-	
-	char *buffer = new char[size + 1];
-	SDL_RWread(file, buffer, 1, size);
-	
-	std::string shaderData(buffer, size - 1);
-	
-	delete[] buffer;
-	SDL_RWclose(file);
-	
-	// create shader programs
-	SDL_Shader *shader = new SDL_Shader();
-	shaders.push_back(shader);
-	
-	shader->shaderProgram  = glCreateProgram();
-	shader->vertexShader   = glCreateShader(GL_VERTEX_SHADER);
-	shader->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    static int vertexShaderSize = sizeof(DefaultVertexShader);
-    const GLchar *vert = DefaultVertexShader;
-    glShaderSource(shader->vertexShader, 1, &vert, &vertexShaderSize);
-
-	const GLchar *fragmentShaderCode = shaderData.c_str();
-	int framgentShaderSize = (int)shaderData.length();
-	glShaderSource(shader->fragmentShader, 1, &fragmentShaderCode, &framgentShaderSize);
-
-    // compile shaders
-	glCompileShader(shader->vertexShader);
-	glCompileShader(shader->fragmentShader);
-		
-	glAttachShader(shader->shaderProgram, shader->vertexShader);
-	glAttachShader(shader->shaderProgram, shader->fragmentShader);
-	glLinkProgram(shader->shaderProgram);
-	
-	// get result
-	int compiled = 0;
-	glGetShaderiv(shader->fragmentShader, GL_COMPILE_STATUS, &compiled);
-	if(!compiled) return NULL;
-	
-	return shader;
+    return NULL;
 }
 
 void SDL_Mobile_Backend::drawShader(FlxBackendShader *s) {
-	if(!s) return;
-
-	SDL_Shader *shader = (SDL_Shader*) s;
-	
-	// get current framebuffer
-	glBindTexture(GL_TEXTURE_2D, framebuffer);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, powerOf2(screenWidth), powerOf2(screenHeight), 0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-	
-	// bind shader
-	GLint currProgram = 0;
-	glGetIntegerv(GL_CURRENT_PROGRAM, &currProgram);
-	
-	glUseProgram(shader->shaderProgram);
-
-	for(unsigned int i = 0; i < shader->textures.size(); i++) {
-		int location = glGetUniformLocation(shader->shaderProgram, shader->textures[i].first.c_str());
-		glUniform1i(location, i);
-
-		glActiveTexture((GLenum)(GL_TEXTURE0 + i));
-		glEnable(GL_TEXTURE_2D);
-		
-		if(shader->textures[i].second) {
-			glBindTexture(GL_TEXTURE_2D, getTextureId(shader->textures[i].second->texture));
-		}
-		else {
-			glBindTexture(GL_TEXTURE_2D, framebuffer);
-		}
-	}
-	
-	// render effect on fullscreen quad
-	/*
-	float vertices[8] = { 0, 0, screenWidth, 0, screenWidth, screenHeight, 0, screenHeight };
-    float indices[8]   = { 0, powerOf2(screenHeight) / screenHeight, 
-						   powerOf2(screenWidth) / screenWidth, powerOf2(screenHeight) / screenHeight, 
-						   powerOf2(screenWidth) / screenWidth, 0, 
-						   0, 0 };
-	*/
-
-	
-	for(unsigned int i = 0; i < shader->textures.size(); i++) {
-        glActiveTexture((GLenum)(GL_TEXTURE0 + i));
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
-    }
-
-    glActiveTexture(GL_TEXTURE0);
-		
-	// unbind shader
-	glUseProgram(currProgram);
+	//if(!s) return;
 }
 
 FlxBackendImage* SDL_Mobile_Backend::createImage(int width, int height, int color, float alpha) {
