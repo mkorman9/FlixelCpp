@@ -10,13 +10,6 @@
 #include "FlxVector.h"
 #include "FlxRect.h"
 
-// render target
-enum FlxRenderTarget {
-    FLX_BACKBUFFER,
-    FLX_FRAMEBUFFER
-};
-
-
 /*
 *  Base for all drawable entities
 */
