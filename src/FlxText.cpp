@@ -10,6 +10,7 @@ FlxText::FlxText(const char *Text, const char *Font, float X, float Y, int Size,
     lastColor = Color;
 	lastAlpha = lastScaleX = lastScaleY = 1.f;
 	lastAngle = 0.f;
+    isGUI = true;
 
     collisions = false;
     scrool = false;

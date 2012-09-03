@@ -31,6 +31,7 @@ FlxButton::FlxButton(float X, float Y, const char *buttonImage, int Width, int H
     if(statesCount > 1) sprite->addAnimation("down", buttonOnFrame);
     if(statesCount > 2) sprite->addAnimation("mouseOn", buttonMouseOnFrame);
 
+    sprite->isGUI = true;
     sprite->play("default");
 
     onText = offText = 0;
@@ -54,7 +55,7 @@ void FlxButton::update() {
 
     // update button state
     unsigned int mousesCount = FlxG::mousesList.size();
-    if(mousesCount != 0) {
+    if(mousesCount != 0 && active) {
         if(!multitouch) mousesCount = 1;
 
         mouseOver = false;

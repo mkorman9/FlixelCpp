@@ -16,6 +16,8 @@ FlxObject::FlxObject() {
 
     maxVelocity.x = 1000;
     maxVelocity.y = 1000;
+
+    isGUI = false;
 }
 
 

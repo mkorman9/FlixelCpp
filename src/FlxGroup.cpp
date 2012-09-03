@@ -49,10 +49,35 @@ void FlxGroup::update() {
 }
 
 
+void FlxGroup::drawGUI() {
+    for(unsigned int i = 0; i < members.size(); i++) {
+        if(members[i]) {
+            if(members[i]->entityType == FLX_OBJECT) {
+                FlxObject *obj = (FlxObject*) members[i];
+                if(obj->isGUI) obj->draw();
+            }
+            else {
+                FlxGroup *group = (FlxGroup*) members[i];
+                group->drawGUI();
+            }
+        }
+    }
+}
+
+
 void FlxGroup::draw() {
 
     for(unsigned int i = 0; i < members.size(); i++) {
-        if(members[i]) members[i]->draw();
+        if(members[i]) {
+            if(members[i]->entityType == FLX_OBJECT) {
+                FlxObject *obj = (FlxObject*) members[i];
+                if(!obj->isGUI) obj->draw();
+            }
+            else {
+                FlxGroup *group = (FlxGroup*) members[i];
+                group->draw();
+            }
+        }
     }
 }
 

@@ -72,11 +72,8 @@ public:
     // opacity (0 - 1)
     float alpha;
 
-    // default render target
-    FlxRenderTarget renderTarget;
-
-    // render target id
-    int renderTargetId;
+    // is this element of GUI? If true - don't apply post effects
+    bool isGUI;
 
 
     // get entity's center point

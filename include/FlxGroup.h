@@ -36,6 +36,7 @@ public:
     virtual FlxBasic* collide(FlxBasic *object);
 
     virtual void update();
+    virtual void drawGUI();
     virtual void draw();
 };
 

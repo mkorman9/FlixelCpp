@@ -244,6 +244,9 @@ void FlxG::innerDraw() {
         }
     }
 
+    // draw GUI
+    if(state) state->drawGUI();
+
     // handle flashing sprite
     if(flashing) flashSprite.draw();
 }
