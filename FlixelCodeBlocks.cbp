@@ -15,8 +15,12 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-DSFML_DYNAMIC" />
+					<Add option="-DGLEW_STATIC" />
 					<Add directory="include" />
 				</Compiler>
+				<Linker>
+					<Add library="opengl32" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
@@ -52,6 +56,9 @@
 		<Unit filename="include\backend\BackendHolder.h" />
 		<Unit filename="include\backend\cpp.h" />
 		<Unit filename="include\tweener\CppTween.h" />
+		<Unit filename="include\glew\glew.h" />
+		<Unit filename="include\glew\glxew.h" />
+		<Unit filename="include\glew\wglew.h" />
 		<Unit filename="include\backend\sfml\Backend.h" />
 		<Unit filename="src\FlxButton.cpp" />
 		<Unit filename="src\FlxEmitter.cpp" />
@@ -72,6 +79,9 @@
 		<Unit filename="src\FlxShader.cpp" />
 		<Unit filename="src\tweener\CppTween.cpp" />
 		<Unit filename="src\backend\sfml\Backend.cpp" />
+		<Unit filename="src\glew\glew.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />

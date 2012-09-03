@@ -7,6 +7,7 @@
 
 #include "../../FlxBackendBase.h"
 
+#include <glew/glew.h>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -28,6 +29,10 @@ private:
     std::vector<FlxBackendShader*> shaders;
     sf::Clock clock;
     bool fullscreen;
+
+    int windowWidth;
+    int windowHeight;
+    GLuint framebuffer;
 
     void updateEvents();
 public:

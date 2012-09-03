@@ -10,6 +10,13 @@
 #include "FlxVector.h"
 #include "FlxRect.h"
 
+// render target
+enum FlxRenderTarget {
+    FLX_BACKBUFFER,
+    FLX_FRAMEBUFFER
+};
+
+
 /*
 *  Base for all drawable entities
 */
@@ -64,6 +71,12 @@ public:
 
     // opacity (0 - 1)
     float alpha;
+
+    // default render target
+    FlxRenderTarget renderTarget;
+
+    // render target id
+    int renderTargetId;
 
 
     // get entity's center point

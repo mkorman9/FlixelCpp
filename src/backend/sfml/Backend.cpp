@@ -4,6 +4,27 @@
 #include "FlxG.h"
 #include <fstream>
 
+// default vertex shader
+const GLchar DefaultVertexShader[] = \
+    "void main()\n"
+    "{\n"
+       "gl_Position    = gl_ProjectionMatrix * gl_Vertex;\n"
+       "gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+    "}\n";
+
+
+// quick help function
+static int powerOf2(int input) {
+    int value = 1;
+
+    while (value < input) {
+        value <<= 1;
+    }
+
+    return value;
+}
+
+
 /*
 * SFML image class
 */
@@ -31,35 +52,74 @@ public:
 class SFML_Shader : public FlxBackendShader {
 
 public:
-    sf::PostFX *data;
+    GLint shaderProgram, vertexShader, fragmentShader;
+    std::map<std::string, GLint> textures;
 
     virtual ~SFML_Shader() {
-        delete data;
+        glDeleteShader(fragmentShader);
+		glDeleteShader(vertexShader);
+		glDeleteProgram(shaderProgram);
     }
 
     virtual void setParameter(const char *name, float x) {
-        data->SetParameter(name, x);
+        glUseProgram(shaderProgram);
+		GLint location = glGetUniformLocation(shaderProgram, name);
+
+		if(location != -1) {
+		    glUniform1f(location, x);
+        }
+
+		glUseProgram(0);
     }
 
     virtual void setParameter(const char *name, float x, float y) {
-        data->SetParameter(name, x, y);
+        glUseProgram(shaderProgram);
+		GLint location = glGetUniformLocation(shaderProgram, name);
+
+		if(location != -1) {
+		    glUniform2f(location, x, y);
+        }
+
+		glUseProgram(0);
     }
 
     virtual void setParameter(const char *name, float x, float y, float z) {
-        data->SetParameter(name, x, y, z);
+        glUseProgram(shaderProgram);
+		GLint location = glGetUniformLocation(shaderProgram, name);
+
+		if(location != -1) {
+		    glUniform3f(location, x, y, z);
+        }
+
+		glUseProgram(0);
     }
 
     virtual void setParameter(const char *name, float x, float y, float z, float w) {
-        data->SetParameter(name, x, y, z, w);
+        glUseProgram(shaderProgram);
+		GLint location = glGetUniformLocation(shaderProgram, name);
+
+		if(location != -1) {
+		    glUniform4f(location, x, y, z, w);
+        }
+
+		glUseProgram(0);
     }
 
     virtual void setParameter(const char *name, FlxBackendImage *i) {
         if(i) {
             SFML_Image *img = (SFML_Image*) i;
-            data->SetTexture(name, &img->Graphic);
+            img->Graphic.Bind();
+
+            int tex;
+            glGetIntegerv(GL_TEXTURE_BINDING_2D, &tex);
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glDisable(GL_TEXTURE_2D);
+
+            textures[name] = tex;
         }
         else {
-            data->SetTexture(name, NULL);
+            textures[name] = -1;
         }
     }
 };
@@ -156,6 +216,25 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
     FlxMouse::onTouchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
     clock.Reset();
 
+    windowWidth = width;
+    windowHeight = height;
+
+    // create framebuffer if needed
+    if(isShadersSupported()) {
+        unsigned char *pixels = new unsigned char[powerOf2(width) * powerOf2(height) * 3];
+        for(unsigned int i = 0; i < sizeof(pixels); i++) pixels[i] = 255;
+
+        glGenTextures(1, &framebuffer);
+		glBindTexture(GL_TEXTURE_2D, framebuffer);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, powerOf2(width), powerOf2(height), 0, GL_RGB,
+               GL_UNSIGNED_BYTE, pixels);
+
+        delete[] pixels;
+    }
+
+    glewInit();
     return true;
 }
 
@@ -198,6 +277,8 @@ FlxVector SFML_Backend::getScreenSize() {
 }
 
 void SFML_Backend::exitApplication() {
+
+    glDeleteTextures(1, &framebuffer);
 
     for(std::map<std::string, void*>::iterator it = sounds.begin(); it != sounds.end(); it++) {
         sf::SoundBuffer *sound = (sf::SoundBuffer*) it->second;
@@ -411,25 +492,118 @@ bool SFML_Backend::isShadersSupported() {
 
 FlxBackendShader* SFML_Backend::loadShader(const char *path) {
     SFML_Shader *shader = new SFML_Shader();
+
+    // load shader data
+    std::ifstream stream(path);
+    if(!stream) return NULL;
+
+    std::string shaderData;
+    while(!stream.eof()) {
+        shaderData += stream.get();
+    }
+
+    shaderData = shaderData.substr(0, shaderData.size() - 1);
+    stream.close();
+
+    // create shaders
+    shader->shaderProgram  = glCreateProgram();
+    shader->vertexShader   = glCreateShader(GL_VERTEX_SHADER);
+    shader->fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    // set shaders source
+    static int vertexShaderSize = sizeof(DefaultVertexShader);
+    const GLchar *vert = DefaultVertexShader;
+    glShaderSource(shader->vertexShader, 1, &vert, &vertexShaderSize);
+
+    const GLchar *fragmentShaderCode = shaderData.c_str();
+    int framgentShaderSize = (int)shaderData.length();
+    glShaderSource(shader->fragmentShader, 1, &fragmentShaderCode, &framgentShaderSize);
+
+    // compile shaders
+    glCompileShader(shader->vertexShader);
+    glCompileShader(shader->fragmentShader);
+    glAttachShader(shader->shaderProgram, shader->vertexShader);
+    glAttachShader(shader->shaderProgram, shader->fragmentShader);
+    glLinkProgram(shader->shaderProgram);
+
+    int compiled = 0;
+    glGetShaderiv(shader->fragmentShader, GL_COMPILE_STATUS, &compiled);
+    if(!compiled) {
+        int logLen = 0, saved = 0;
+        glGetShaderiv(shader->fragmentShader, GL_INFO_LOG_LENGTH , &logLen);
+
+        GLchar *log = new GLchar[logLen];
+        glGetInfoLogARB(shader->fragmentShader, logLen, &saved, log);
+
+        std::cerr << std::string(log, logLen) << std::endl;
+        delete[] log;
+
+        return NULL;
+    }
+
     shaders.push_back(shader);
-
-    shader->data = new sf::PostFX();
-    shader->data->LoadFromFile(path);
-
     return shader;
 }
 
 void SFML_Backend::drawShader(FlxBackendShader *s) {
-
     if(!s) return;
+
+    // get current framebuffer
+    glBindTexture(GL_TEXTURE_2D, framebuffer);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, powerOf2(windowWidth), powerOf2(windowHeight), 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     SFML_Shader *shader = (SFML_Shader*) s;
+    glUseProgram(shader->shaderProgram);
 
-    FlxVector screenSize = getScreenSize();
+    // bind all textures
+    int i = 0;
+    for(std::map<std::string, GLint>::iterator it = shader->textures.begin(); it != shader->textures.end();
+        it++)
+    {
+        int location = glGetUniformLocation(shader->shaderProgram, it->first.c_str());
+        glUniform1i(location, i);
 
-    window->SetView(sf::View(sf::FloatRect(FlxG::scroolVector.x, FlxG::scroolVector.y,
-                                           screenSize.x, screenSize.y)));
-    window->Draw(*shader->data);
-    window->SetView(window->GetDefaultView());
+        glActiveTexture((GLenum)(GL_TEXTURE0 + i));
+        glEnable(GL_TEXTURE_2D);
+
+        if(it->second != -1) {
+            glBindTexture(GL_TEXTURE_2D, it->second);
+        }
+        else {
+            glBindTexture(GL_TEXTURE_2D, framebuffer);
+        }
+
+        i++;
+    }
+
+    float bottom = (float)windowHeight / (float)powerOf2(windowHeight);
+    float right = (float)windowWidth / (float)powerOf2(windowWidth);
+
+    // draw effect as fullscreen quad
+    glBegin(GL_QUADS);
+         glTexCoord2f(0, bottom);
+         glVertex2f(0, 0);
+
+         glTexCoord2f(right, bottom);
+         glVertex2f(windowWidth, 0);
+
+         glTexCoord2f(right, 0);
+         glVertex2f(windowWidth, windowHeight);
+
+         glTexCoord2f(0, 0);
+         glVertex2f(0, windowHeight);
+    glEnd();
+
+    // unbind shader
+    for(int j = i; j >= 0; j--) {
+        glActiveTexture((GLenum)(GL_TEXTURE0 + j));
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glUseProgram(0);
 }
 
 void* SFML_Backend::loadSound(const char *path) {
