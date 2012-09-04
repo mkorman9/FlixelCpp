@@ -6,10 +6,12 @@
 
 // default vertex shader
 const GLchar DefaultVertexShader[] = \
+    "varying vec2 TexCoords;\n"
+    "\n"
     "void main()\n"
     "{\n"
-       "gl_Position    = gl_ProjectionMatrix * gl_Vertex;\n"
-       "gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+       "gl_Position = gl_ProjectionMatrix * gl_Vertex;\n"
+       "TexCoords   = gl_MultiTexCoord0;\n"
     "}\n";
 
 
