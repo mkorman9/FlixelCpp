@@ -27,24 +27,14 @@ extern "C" {
 
 // default vertex shader
 const GLchar DefaultVertexShader[] = \
-	"attribute vec2 TexCoordIn;\n"
-	"varying vec2 TexCoord;\n\n"
+    "attribute vec2 a_position;\n"
+    "attribute vec2 a_texCoord;\n"
+    "varying vec2 TexCoords;\n"
+    "\n"
     "void main() {\n"
-       "gl_Position = gl_ProjectionMatrix * gl_Vertex;\n"
-       "TexCoord = TexCoordIn;\n"
+        "TexCoords = a_texCoord;\n"
+        "gl_Position = vec4(a_position, 0.0, 1.0);\n"
     "}\n";
-
-
-// quick help function
-static int powerOf2(int input) {
-    int value = 1;
-
-    while (value < input) {
-        value <<= 1;
-    }
-
-    return value;
-}
 
 
 /*
@@ -304,16 +294,15 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
     }
 
     // create framebuffer if needed
-    // TODO: create VBO for fullscreen quad
     if(isShadersSupported()) {
-        unsigned char *pixels = new unsigned char[powerOf2(screenWidth) * powerOf2(screenHeight) * 3];
+        unsigned char *pixels = new unsigned char[screenWidth * screenHeight * 3];
         for(unsigned int i = 0; i < sizeof(pixels); i++) pixels[i] = 255;
 
         glGenTextures(1, &framebuffer);
 		glBindTexture(GL_TEXTURE_2D, framebuffer);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, powerOf2(screenWidth), powerOf2(screenHeight), 0, GL_RGB,
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, screenWidth, screenHeight, 0, GL_RGB,
                GL_UNSIGNED_BYTE, pixels);
 
         delete[] pixels;
@@ -616,7 +605,7 @@ void SDL_Mobile_Backend::drawShader(FlxBackendShader *s) {
 
     // get current framebuffer
     glBindTexture(GL_TEXTURE_2D, framebuffer);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, powerOf2(screenWidth), powerOf2(screenHeight), 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, screenWidth, screenHeight, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     SDL_Shader *shader = (SDL_Shader*) s;
@@ -643,8 +632,29 @@ void SDL_Mobile_Backend::drawShader(FlxBackendShader *s) {
         i++;
     }
 
-    // TODO: Draw effect
-
+    // Draw effect
+	static GLfloat vertices[8] = {
+		-1, -1,
+		1, -1,
+		-1, 1,
+		1, 1
+	};
+    static GLfloat texCoords[8] = {
+	    0, 0,
+		1, 0, 
+		0, 1,
+		1, 1
+	};
+	
+	int positionLocation = glGetAttribLocation(shader->shaderProgram, "a_position");
+	int texcoordLocation = glGetAttribLocation(shader->shaderProgram, "a_texCoord");
+	
+	glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(positionLocation);
+	glVertexAttribPointer(texcoordLocation, 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(texcoordLocation);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	
     // unbind shader
     for(int j = i; j >= 0; j--) {
         glActiveTexture((GLenum)(GL_TEXTURE0 + j));
