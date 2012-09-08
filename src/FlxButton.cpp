@@ -18,18 +18,9 @@ FlxButton::FlxButton(float X, float Y, const char *buttonImage, int Width, int H
     sprite->collisions = false;
     sprite->scrool = false;
 
-    std::vector<unsigned int> buttonOffFrame;
-    buttonOffFrame.push_back(0);
-
-    std::vector<unsigned int> buttonOnFrame;
-    buttonOnFrame.push_back(1);
-
-    std::vector<unsigned int> buttonMouseOnFrame;
-    buttonMouseOnFrame.push_back(2);
-
-    sprite->addAnimation("default", buttonOffFrame);
-    if(statesCount > 1) sprite->addAnimation("down", buttonOnFrame);
-    if(statesCount > 2) sprite->addAnimation("mouseOn", buttonMouseOnFrame);
+    sprite->addAnimation("default", { 0 });
+    if(statesCount > 1) sprite->addAnimation("down", { 1 });
+    if(statesCount > 2) sprite->addAnimation("mouseOn", { 2 });
 
     sprite->isGUI = true;
     sprite->play("default");

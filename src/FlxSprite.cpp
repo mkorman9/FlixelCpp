@@ -65,7 +65,7 @@ void FlxSprite::draw() {
 }
 
 
-void FlxSprite::addAnimation(const char *name, const std::vector<unsigned int>& frames, float time, bool looped) {
+void FlxSprite::addAnimation(const char *name, const std::initializer_list<unsigned int>& frames, float time, bool looped) {
     animations.push_back(new FlxAnim(name, frames, time, looped));
 }
 

@@ -24,10 +24,7 @@ public:
         if(gfx) {
             loadGraphic(gfx, Width, Height);
 
-            std::vector<unsigned int> frames;
-            frames.push_back(tile);
-
-            addAnimation("default", frames);
+            addAnimation("default", { tile });
             play("default");
         }
     }

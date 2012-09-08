@@ -9,7 +9,8 @@ LOCAL_C_INCLUDES := jni/flixel/include \
 	jni/SDL_image \
 	jni/SDL_ttf \
 	jni/SDL_net \
-	jni/SDL_mixer
+	jni/SDL_mixer \
+	E:\android-ndk-r8b\sources\cxx-stl\gnu-libstdc++\4.6\include
 
 LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxEmitter.cpp \
@@ -31,8 +32,8 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxU.cpp \
 	tweener/CppTween.cpp \
 	backend/sdl_mobile/Backend.cpp
-	
-LOCAL_CFLAGS := -DFLX_MOBILE
+
+LOCAL_CFLAGS := -DFLX_MOBILE --std=gnu++0x
 LOCAL_LDLIBS := -llog
 
 include $(BUILD_STATIC_LIBRARY)

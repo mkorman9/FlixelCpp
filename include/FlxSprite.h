@@ -49,7 +49,7 @@ public:
     void makeGraphic(int width, int height, int color);
 
     // Add animation
-    void addAnimation(const char *name, const std::vector<unsigned int>& frames, float time = 0, bool looped = true);
+    void addAnimation(const char *name, const std::initializer_list<unsigned int>& frames, float time = 0, bool looped = true);
 
     // plays and stops animation
     void play(const char *animName);

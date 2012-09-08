@@ -20,4 +20,6 @@
 #include <cstdlib>
 #include <sstream>
 
+#include <initializer_list>
+
 #endif

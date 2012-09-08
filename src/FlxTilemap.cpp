@@ -32,9 +32,7 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
         if(map[i] != -1) {
             FlxTile *tile = new FlxTile(x1 * tileWidth, y1 * tileHeight, tileset, tileWidth, tileHeight);
 
-            std::vector<unsigned int> anim;
-            anim.push_back(map[i]);
-            tile->addAnimation("__default", anim);
+            tile->addAnimation("__default", { map[i] });
             tile->play("__default");
 
             if(map[i] >= firstCollidate) tile->collisions = true;

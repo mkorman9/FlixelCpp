@@ -469,8 +469,8 @@ void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y,  Fl
 	x += source.width - (scale.x * source.width);
 	y += source.height - (scale.y * source.height);
 
-	SDL_Rect srcRect = { source.x, source.y, source.width, source.height };
-	SDL_Rect destRect = { x, y, source.width * scale.x, source.height * scale.y };
+	SDL_Rect srcRect = { (int)source.x, (int)source.y, source.width, source.height };
+	SDL_Rect destRect = { (int)x, (int)y, int(source.width * scale.x), int(source.height * scale.y) };
 
 	SDL_SetTextureColorMod(img->texture, COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color));
 	SDL_SetTextureAlphaMod(img->texture, int(alpha * 255.f));
@@ -482,7 +482,8 @@ FlxBaseText *SDL_Mobile_Backend::createText(const char *text, void *font, int si
 {
 	if(!font) return NULL;
 
-	SDL_Color colour = { COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f };
+	SDL_Color colour = { (unsigned char)COLOR_GET_R(color), (unsigned char)COLOR_GET_G(color), (unsigned char)COLOR_GET_B(color), 
+		(unsigned char)(alpha * 255.f) };
 	SDL_Surface *txtSurface = TTF_RenderText_Solid((TTF_Font*)font, text, colour);
 
 	SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, txtSurface);
@@ -539,7 +540,7 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 	y += int(text->bounds.y - (scale.y * text->bounds.y));
 
 	SDL_Rect srcRect = { 0, 0, int(text->bounds.x), int(text->bounds.y) };
-	SDL_Rect destRect = { x, y, int(text->bounds.x * scale.x), int(text->bounds.y * scale.y) };
+	SDL_Rect destRect = { (int)x, (int)y, int(text->bounds.x * scale.x), int(text->bounds.y * scale.y) };
 
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &destRect, -FlxU::radToDegrees(text->angle), NULL, SDL_FLIP_NONE);
 }
