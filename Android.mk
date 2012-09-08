@@ -28,10 +28,12 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxHttpRequest.cpp \
 	FlxMouseHolder.cpp \
 	FlxShader.cpp \
+	FlxU.cpp \
 	tweener/CppTween.cpp \
 	backend/sdl_mobile/Backend.cpp
 	
 LOCAL_CFLAGS := -DFLX_MOBILE
+LOCAL_LDLIBS := -llog
 
 include $(BUILD_STATIC_LIBRARY)
 

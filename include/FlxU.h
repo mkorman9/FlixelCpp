@@ -14,7 +14,7 @@ class FlxU {
 
 public:
 
-    static const float PI = 3.14159265358979323f;
+    static const float PI;
 
     static float random() {
         return random(0.0f, 1.0f);
