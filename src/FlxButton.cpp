@@ -62,11 +62,22 @@ void FlxButton::update() {
 
             // is mouse over button?
             if(buttonBounds.overlaps(mouseBounds)) {
-                if(!m->leftDown) mouseOver = true;
-                else down = true;
+                if(!m->leftDown) {
+                    mouseOver = true;
+                }
+                else {
+                    down = true;
+                    if(onDown != nullptr) onDown();
+                }
 
-                if(m->leftPressed) pressed = true;
-                else if(m->leftReleased) released = true;
+                if(m->leftPressed) {
+                    pressed = true;
+                    if(onPressed != nullptr) onPressed();
+                }
+                else if(m->leftReleased) {
+                    released = true;
+                    if(onReleased != nullptr) onReleased();
+                }
             }
         }
     }

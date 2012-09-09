@@ -48,6 +48,10 @@ public:
     // button size
     float width, height;
 
+    // callbacks
+    std::function<void()> onDown;
+    std::function<void()> onPressed;
+    std::function<void()> onReleased;
 
     FlxButton(float x, float y, const char *buttonImage, int width, int height, int statesCount = 2);
 

@@ -21,8 +21,8 @@ struct FlxAnim {
         name = Name;
         looped = Looped;
         time = FrameRate;
-		
-		for(std::initializer_list<unsigned int>::const_iterator it = Frames.begin(); it != Frames.end(); it++) {
+
+		for(auto it = Frames.begin(); it != Frames.end(); it++) {
 			frames.push_back(*it);
 		}
     };
