@@ -60,8 +60,10 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     FlxVector screenSize = BackendHolder::get().getBackend()->getScreenSize();
 	screenWidth = screenSize.x;
 	screenHeight = screenSize.y;
-    screenScaleVector.x = screenWidth / (float)width;
-    screenScaleVector.y = screenHeight / (float)height;
+	
+	// deprecated!!!
+    screenScaleVector.x = 1.f;
+    screenScaleVector.y = 1.f;
 
     key = new FlxKeyboard();
     srand(time(0));
@@ -203,14 +205,24 @@ void FlxG::innerUpdate() {
 
     // follow some object?
     if(toFollow) {
+		float w, h;
+		
+		#ifdef FLX_MOBILE
+			w = screenWidth;
+			h = screenHeight;
+		#else
+			w = width;
+			h = height;
+		#endif
+		
         FlxVector objectCenter = toFollow->getCenter();
-        FlxVector move(objectCenter.x - (width / 2), objectCenter.y - (height / 2));
-
+		FlxVector move(objectCenter.x - (w / 2), objectCenter.y - (h / 2));
+		
         if(move.x < worldBounds.x) move.x = worldBounds.x;
-        if(move.x + width > worldBounds.width) move.x = worldBounds.width - width;
+        if(move.x + w > worldBounds.width) move.x = worldBounds.width - w;
 
         if(move.y < worldBounds.y) move.y = worldBounds.y;
-        if(move.y + height > worldBounds.height) move.y = worldBounds.height - height;
+        if(move.y + h > worldBounds.height) move.y = worldBounds.height - h;
 
         scroolVector.x = -move.x;
         scroolVector.y = -move.y;

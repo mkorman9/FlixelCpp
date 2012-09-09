@@ -30,8 +30,8 @@ private:
 	std::vector<FlxBackendShader*> shaders;
 	
 	unsigned int framebuffer;
-	int screenWidth;
-	int screenHeight;
+	int screenWidth, requestedWidth;
+	int screenHeight, requestedHeight;
 	
     void updateEvents();
 public:

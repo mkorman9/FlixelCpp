@@ -273,7 +273,10 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
 	SDL_GetDesktopDisplayMode(0, &mode);
 	screenWidth = mode.w;
 	screenHeight = mode.h;
-
+	
+	requestedWidth = width;
+	requestedHeight = height;
+	
     // create the window
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     window = SDL_CreateWindow(title, 0, 0, screenWidth, screenHeight, SDL_WINDOW_OPENGL |
@@ -410,15 +413,15 @@ void SDL_Mobile_Backend::updateEvents() {
 		// finger down
 		else if(event.type == SDL_FINGERDOWN) {
 			SDL_Touch *touch = SDL_GetTouch(event.tfinger.touchId);
-			FlxMouse::onTouchBegin(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * screenWidth * FlxG::screenScaleVector.x,
-				((float)event.tfinger.y / (float)touch->yres) * screenHeight * FlxG::screenScaleVector.y);
+			FlxMouse::onTouchBegin(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * requestedWidth,
+				((float)event.tfinger.y / (float)touch->yres) * requestedHeight);
 		}
 
 		// finger up
 		else if(event.type == SDL_FINGERUP) {
 			SDL_Touch *touch = SDL_GetTouch(event.tfinger.touchId);
-			FlxMouse::onTouchEnd(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * screenWidth * FlxG::screenScaleVector.x,
-				((float)event.tfinger.y / (float)touch->yres) * screenHeight * FlxG::screenScaleVector.y);
+			FlxMouse::onTouchEnd(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * requestedWidth,
+				((float)event.tfinger.y / (float)touch->yres) * requestedHeight);
 		}
 
 		// key down

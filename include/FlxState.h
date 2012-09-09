@@ -16,7 +16,7 @@ class FlxState : public FlxGroup {
 public:
 
     // desturctor
-    ~FlxState() {
+    virtual ~FlxState() {
         clear();
     }
 
