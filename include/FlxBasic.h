@@ -41,6 +41,7 @@ public:
     FlxBasic() {
         active = true;
         scrool = true;
+        scroolFactor.x = scroolFactor.y = 1.f;
     }
 
     // base update function (to override)

@@ -8,8 +8,10 @@ FlxGroup::FlxGroup() {
 
 FlxBasic* FlxGroup::add(FlxBasic *object) {
 
-    if(object)
+    if(object) {
+        object->scroolFactor = scroolFactor;
         members.push_back(object);
+    }
 
     return object;
 }
