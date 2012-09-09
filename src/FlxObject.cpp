@@ -13,6 +13,7 @@ FlxObject::FlxObject() {
     color = 0xffffff;
     alpha = 1.0f;
     scale.x = scale.y = 1;
+    scroolFactor.x = scroolFactor.y = 1;
 
     maxVelocity.x = 1000;
     maxVelocity.y = 1000;

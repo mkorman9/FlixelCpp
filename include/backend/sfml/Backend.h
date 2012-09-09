@@ -49,13 +49,14 @@ public:
     virtual bool getMouseButtonState(int button, int index);
     virtual void showMouse(bool show);
 
-    virtual void drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
-                           FlxRect source, int color, bool flipped, bool scrool, float alpha);
+    virtual void drawImage(FlxBackendImage *img, float x, float y,  const FlxVector& scale, float angle,
+                           const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
+                           const FlxVector& scroolFactor);
 
-    virtual FlxBaseText *createText(const char *text, void *font, int size, FlxVector scale, float angle,
-                                   int color, float alpha);
+    virtual FlxBaseText *createText(const char *text, void *font, int size, const FlxVector&  scale,
+                                    float angle, int color, float alpha);
     virtual void destroyText(FlxBaseText *data);
-    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool);
+    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor);
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);

@@ -6,6 +6,7 @@
 #define _FLX_BASIC_H_
 
 #include "backend/cpp.h"
+#include "FlxVector.h"
 
 enum FlxEntityType {
     FLX_OBJECT,
@@ -28,6 +29,9 @@ public:
 
     // is object scrool-able
     bool scrool;
+
+    // scrool modifier
+    FlxVector scroolFactor;
 
     // special variables
     std::map<std::string, std::string> vars;

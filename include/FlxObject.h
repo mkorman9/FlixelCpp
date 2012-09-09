@@ -7,7 +7,6 @@
 
 #include "backend/cpp.h"
 #include "FlxBasic.h"
-#include "FlxVector.h"
 #include "FlxRect.h"
 
 /*

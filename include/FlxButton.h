@@ -53,6 +53,7 @@ public:
     std::function<void()> onPressed;
     std::function<void()> onReleased;
 
+
     FlxButton(float x, float y, const char *buttonImage, int width, int height, int statesCount = 2);
 
     // set default text format

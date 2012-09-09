@@ -61,7 +61,7 @@ void FlxText::draw() {
         updateBuffer();
     }
 
-    BackendHolder::get().getBackend()->drawText(textData, x, y, scrool);
+    BackendHolder::get().getBackend()->drawText(textData, x, y, scrool, scroolFactor);
 }
 
 

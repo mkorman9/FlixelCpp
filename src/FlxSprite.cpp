@@ -61,7 +61,7 @@ void FlxSprite::draw() {
     if(!graphic || !visible) return;
 
     BackendHolder::get().getBackend()->drawImage(graphic, x, y, scale, angle, FlxRect(sourceX, sourceY,
-                                                width, height), color, flipped, scrool, alpha);
+                                                width, height), color, flipped, scrool, alpha, scroolFactor);
 }
 
 

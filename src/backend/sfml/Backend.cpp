@@ -354,17 +354,21 @@ void SFML_Backend::showMouse(bool show) {
     window->ShowMouseCursor(show);
 }
 
-void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  FlxVector scale, float angle,
-                             FlxRect source, int color, bool flipped, bool scrool, float alpha)
+void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxVector& scale, float angle,
+                             const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
+                             const FlxVector& scroolFactor)
 {
     SFML_Image *gfx = (SFML_Image*)img;
+    FlxVector s = scale;
 
     FlxVector move = FlxG::scroolVector;
+    move.x *= scroolFactor.x;
+    move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
 
     if(FlxG::scaleToScreen) {
-        scale.x *= FlxG::screenScaleVector.x;
-        scale.y *= FlxG::screenScaleVector.y;
+        s.x *= FlxG::screenScaleVector.x;
+        s.y *= FlxG::screenScaleVector.y;
 
         x *= FlxG::screenScaleVector.x;
         y *= FlxG::screenScaleVector.y;
@@ -376,30 +380,31 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  FlxVector 
     sprite.SetCenter((source.width / 2), (source.height / 2));
     sprite.SetSubRect(sf::IntRect(source.x, source.y, source.x + source.width, source.y + source.height));
     sprite.SetRotation(-FlxU::radToDegrees(angle));
-    sprite.SetScale(scale.x, scale.y);
+    sprite.SetScale(s.x, s.y);
     sprite.FlipX(flipped);
     sprite.SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
 
     window->Draw(sprite);
 }
 
-FlxBaseText *SFML_Backend::createText(const char *text, void *font, int size, FlxVector scale, float angle,
-                                   int color, float alpha)
+FlxBaseText *SFML_Backend::createText(const char *text, void *font, int size, const FlxVector& scale,
+                                      float angle, int color, float alpha)
 {
     if(!font) return NULL;
 
     FlxBaseText *data = new FlxBaseText();
+    FlxVector s = scale;
 
     if(FlxG::scaleToScreen) {
-        scale.x *= FlxG::screenScaleVector.x;
-        scale.y *= FlxG::screenScaleVector.y;
+        s.x *= FlxG::screenScaleVector.x;
+        s.y *= FlxG::screenScaleVector.y;
     }
 
     sf::String *str = new sf::String();
     str->SetFont(*((sf::Font*)font));
     str->SetText(text);
     str->SetSize(size);
-    str->SetScale(scale.x, scale.y);
+    str->SetScale(s.x, s.y);
     str->SetRotation(-FlxU::radToDegrees(angle));
     str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
 
@@ -430,12 +435,14 @@ void SFML_Backend::destroyText(FlxBaseText *data) {
     }
 }
 
-void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool) {
+void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) {
 
     if(!text) return;
     if(!text->data) return;
 
     FlxVector move = FlxG::scroolVector;
+    move.x *= scroolFactor.x;
+    move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
 
     if(FlxG::scaleToScreen) {

@@ -106,14 +106,15 @@ public:
     virtual void showMouse(bool show) = 0;
 
     // image rendering
-    virtual void drawImage(FlxBackendImage *img, float x, float y, FlxVector scale, float angle,
-                        FlxRect source, int color, bool flipped, bool scrool, float alpha) = 0;
+    virtual void drawImage(FlxBackendImage *img, float x, float y, const FlxVector& scale, float angle,
+                        const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
+                        const FlxVector& scroolFactor) = 0;
 
     // text rendering
-    virtual FlxBaseText *createText(const char *text, void *font, int size, FlxVector scale, float angle,
+    virtual FlxBaseText *createText(const char *text, void *font, int size, const FlxVector& scale, float angle,
                                    int color, float alpha) = 0;
     virtual void destroyText(FlxBaseText *data) = 0;
-    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool) = 0;
+    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) = 0;
 
     // special effects
     virtual bool isShadersSupported() = 0;

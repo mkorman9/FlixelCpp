@@ -446,42 +446,44 @@ void SDL_Mobile_Backend::showMouse(bool show) {
     // no action
 }
 
-void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y,  FlxVector scale, float angle,
-                             FlxRect source, int color, bool flipped, bool scrool, float alpha)
+void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, const FlxVector& scale, float angle,
+                             const FlxRect& source, int color, bool flipped, bool scrool, float alpha, const FlxVector& scroolFactor)
 {
 	if(!image) return;
 
 	SDL_Image *img = (SDL_Image*) image;
 	if(!img->texture) return;
 
+	FlxVector s = scale;
+	
 	if(scrool) {
-		x += FlxG::scroolVector.x;
-		y += FlxG::scroolVector.y;
+		x += FlxG::scroolVector.x * scroolFactor.x;
+		y += FlxG::scroolVector.y * scroolFactor.y;
 	}
 
 	if(FlxG::scaleToScreen) {
 		x *= FlxG::screenScaleVector.x;
 		y *= FlxG::screenScaleVector.y;
-		scale.x *= FlxG::screenScaleVector.x;
-		scale.y *= FlxG::screenScaleVector.y;
+		s.x *= FlxG::screenScaleVector.x;
+		s.y *= FlxG::screenScaleVector.y;
 	}
 
-	x += source.width - (scale.x * source.width);
-	y += source.height - (scale.y * source.height);
+	x += source.width - (s.x * source.width);
+	y += source.height - (s.y * source.height);
 
 	SDL_Rect srcRect = { (int)source.x, (int)source.y, source.width, source.height };
-	SDL_Rect destRect = { (int)x, (int)y, int(source.width * scale.x), int(source.height * scale.y) };
+	SDL_Rect destRect = { (int)x, (int)y, int(source.width * s.x), int(source.height * s.y) };
 
 	SDL_SetTextureColorMod(img->texture, COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color));
 	SDL_SetTextureAlphaMod(img->texture, int(alpha * 255.f));
 	SDL_RenderCopyEx(renderer, img->texture, &srcRect, &destRect, -FlxU::radToDegrees(angle), NULL, flipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-FlxBaseText *SDL_Mobile_Backend::createText(const char *text, void *font, int size, FlxVector scale, float angle,
+FlxBaseText *SDL_Mobile_Backend::createText(const char *text, void *font, int size, const FlxVector& scale, float angle,
                                    int color, float alpha)
 {
 	if(!font) return NULL;
-
+	
 	SDL_Color colour = { (unsigned char)COLOR_GET_R(color), (unsigned char)COLOR_GET_G(color), (unsigned char)COLOR_GET_B(color), 
 		(unsigned char)(alpha * 255.f) };
 	SDL_Surface *txtSurface = TTF_RenderText_Solid((TTF_Font*)font, text, colour);
@@ -515,7 +517,7 @@ void SDL_Mobile_Backend::destroyText(FlxBaseText *data) {
     }
 }
 
-void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool) {
+void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) {
 
 	if(!text) return;
 
@@ -523,8 +525,8 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 	if(!tex) return;
 
 	if(scrool) {
-		x += FlxG::scroolVector.x;
-		y += FlxG::scroolVector.y;
+		x += FlxG::scroolVector.x * scroolFactor.x;
+		y += FlxG::scroolVector.y * scroolFactor.y;
 	}
 
 	FlxVector scale = text->scale;
