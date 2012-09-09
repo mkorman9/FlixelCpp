@@ -182,10 +182,11 @@ void FlxG::innerUpdate() {
     }
 
     // update flashing screen stuff
-    flashSprite.x = scroolVector.x;
-    flashSprite.y = scroolVector.y;
+    flashSprite.x = -scroolVector.x;
+    flashSprite.y = -scroolVector.y;
 
     if(flashing) {
+
         flashCounter += fixedTime;
 
         if(flashCounter >= flashMaxTime) {
