@@ -75,14 +75,8 @@ public:
     // world's bounds
     static FlxRect worldBounds;
 
-    // scrool vector (read only)
-    static FlxVector scroolVector;
-
-    // global scale factor
-    static FlxVector screenScaleVector;
-
-    // flixel should scale view to screen size
-    static bool scaleToScreen;
+	// scrooling vector
+	static FlxVector scroolVector;
 
     // mouses array pointer
     static std::vector<FlxMouse*> mousesList;

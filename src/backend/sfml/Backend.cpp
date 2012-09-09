@@ -218,9 +218,6 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
     FlxMouse::onTouchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
     clock.Reset();
 
-    windowWidth = width;
-    windowHeight = height;
-
     // create framebuffer if needed
     if(isShadersSupported()) {
         unsigned char *pixels = new unsigned char[powerOf2(width) * powerOf2(height) * 3];
@@ -359,20 +356,11 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
                              const FlxVector& scroolFactor)
 {
     SFML_Image *gfx = (SFML_Image*)img;
-    FlxVector s = scale;
 
     FlxVector move = FlxG::scroolVector;
     move.x *= scroolFactor.x;
     move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
-
-    if(FlxG::scaleToScreen) {
-        s.x *= FlxG::screenScaleVector.x;
-        s.y *= FlxG::screenScaleVector.y;
-
-        x *= FlxG::screenScaleVector.x;
-        y *= FlxG::screenScaleVector.y;
-    }
 
     sf::Sprite sprite;
     sprite.SetImage(gfx->Graphic);
@@ -380,7 +368,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
     sprite.SetCenter((source.width / 2), (source.height / 2));
     sprite.SetSubRect(sf::IntRect(source.x, source.y, source.x + source.width, source.y + source.height));
     sprite.SetRotation(-FlxU::radToDegrees(angle));
-    sprite.SetScale(s.x, s.y);
+    sprite.SetScale(scale.x, scale.y);
     sprite.FlipX(flipped);
     sprite.SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
 
@@ -393,18 +381,12 @@ FlxBaseText *SFML_Backend::createText(const char *text, void *font, int size, co
     if(!font) return NULL;
 
     FlxBaseText *data = new FlxBaseText();
-    FlxVector s = scale;
-
-    if(FlxG::scaleToScreen) {
-        s.x *= FlxG::screenScaleVector.x;
-        s.y *= FlxG::screenScaleVector.y;
-    }
 
     sf::String *str = new sf::String();
     str->SetFont(*((sf::Font*)font));
     str->SetText(text);
     str->SetSize(size);
-    str->SetScale(s.x, s.y);
+    str->SetScale(scale.x, scale.y);
     str->SetRotation(-FlxU::radToDegrees(angle));
     str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
 
@@ -444,11 +426,6 @@ void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, co
     move.x *= scroolFactor.x;
     move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
-
-    if(FlxG::scaleToScreen) {
-        x *= FlxG::screenScaleVector.x;
-        y *= FlxG::screenScaleVector.y;
-    }
 
     sf::String *str = (sf::String*) text->data;
     str->SetPosition(x + (text->bounds.x / 2) + move.x, y + (text->bounds.y / 2) + move.y);
@@ -559,7 +536,7 @@ void SFML_Backend::drawShader(FlxBackendShader *s) {
 
     // get current framebuffer
     glBindTexture(GL_TEXTURE_2D, framebuffer);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, powerOf2(windowWidth), powerOf2(windowHeight), 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, powerOf2(FlxG::width), powerOf2(FlxG::height), 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     SFML_Shader *shader = (SFML_Shader*) s;
@@ -586,8 +563,8 @@ void SFML_Backend::drawShader(FlxBackendShader *s) {
         i++;
     }
 
-    float bottom = (float)windowHeight / (float)powerOf2(windowHeight);
-    float right = (float)windowWidth / (float)powerOf2(windowWidth);
+    float bottom = (float)FlxG::height / (float)powerOf2(FlxG::height);
+    float right = (float)FlxG::width / (float)powerOf2(FlxG::width);
 
     // draw effect as fullscreen quad
     glBegin(GL_QUADS);
@@ -595,13 +572,13 @@ void SFML_Backend::drawShader(FlxBackendShader *s) {
          glVertex2f(0, 0);
 
          glTexCoord2f(right, bottom);
-         glVertex2f(windowWidth, 0);
+         glVertex2f(FlxG::width, 0);
 
          glTexCoord2f(right, 0);
-         glVertex2f(windowWidth, windowHeight);
+         glVertex2f(FlxG::width, FlxG::height);
 
          glTexCoord2f(0, 0);
-         glVertex2f(0, windowHeight);
+         glVertex2f(0, FlxG::height);
     glEnd();
 
     // unbind shader

@@ -30,8 +30,6 @@ private:
     sf::Clock clock;
     bool fullscreen;
 
-    int windowWidth;
-    int windowHeight;
     GLuint framebuffer;
 
     void updateEvents();

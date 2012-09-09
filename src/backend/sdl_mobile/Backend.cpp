@@ -274,12 +274,9 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
 	screenWidth = mode.w;
 	screenHeight = mode.h;
 	
-	requestedWidth = width;
-	requestedHeight = height;
-	
     // create the window
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    window = SDL_CreateWindow(title, 0, 0, screenWidth, screenHeight, SDL_WINDOW_OPENGL |
+    window = SDL_CreateWindow(title, 0, 0, width, height, SDL_WINDOW_OPENGL |
                               SDL_WINDOW_BORDERLESS | SDL_WINDOW_SHOWN);
 	SDL_SetWindowFullscreen(window, SDL_TRUE);
 	renderer = SDL_CreateRenderer(window, -1, 0);
@@ -298,14 +295,14 @@ bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) 
 
     // create framebuffer if needed
     if(isShadersSupported()) {
-        unsigned char *pixels = new unsigned char[screenWidth * screenHeight * 3];
+        unsigned char *pixels = new unsigned char[width * height * 3];
         for(unsigned int i = 0; i < sizeof(pixels); i++) pixels[i] = 255;
 
         glGenTextures(1, &framebuffer);
 		glBindTexture(GL_TEXTURE_2D, framebuffer);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, screenWidth, screenHeight, 0, GL_RGB,
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB,
                GL_UNSIGNED_BYTE, pixels);
 
         delete[] pixels;
@@ -413,15 +410,15 @@ void SDL_Mobile_Backend::updateEvents() {
 		// finger down
 		else if(event.type == SDL_FINGERDOWN) {
 			SDL_Touch *touch = SDL_GetTouch(event.tfinger.touchId);
-			FlxMouse::onTouchBegin(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * requestedWidth,
-				((float)event.tfinger.y / (float)touch->yres) * requestedHeight);
+			FlxMouse::onTouchBegin(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * FlxG::width,
+				((float)event.tfinger.y / (float)touch->yres) * FlxG::height);
 		}
 
 		// finger up
 		else if(event.type == SDL_FINGERUP) {
 			SDL_Touch *touch = SDL_GetTouch(event.tfinger.touchId);
-			FlxMouse::onTouchEnd(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * requestedWidth,
-				((float)event.tfinger.y / (float)touch->yres) * requestedHeight);
+			FlxMouse::onTouchEnd(event.tfinger.fingerId, ((float)event.tfinger.x / (float)touch->xres) * FlxG::width,
+				((float)event.tfinger.y / (float)touch->yres) * FlxG::height);
 		}
 
 		// key down
@@ -462,13 +459,6 @@ void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, con
 	if(scrool) {
 		x += FlxG::scroolVector.x * scroolFactor.x;
 		y += FlxG::scroolVector.y * scroolFactor.y;
-	}
-
-	if(FlxG::scaleToScreen) {
-		x *= FlxG::screenScaleVector.x;
-		y *= FlxG::screenScaleVector.y;
-		s.x *= FlxG::screenScaleVector.x;
-		s.y *= FlxG::screenScaleVector.y;
 	}
 
 	x += source.width - (s.x * source.width);
@@ -532,20 +522,11 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 		y += FlxG::scroolVector.y * scroolFactor.y;
 	}
 
-	FlxVector scale = text->scale;
-
-	if(FlxG::scaleToScreen) {
-		x *= FlxG::screenScaleVector.x;
-		y *= FlxG::screenScaleVector.y;
-		scale.x *= FlxG::screenScaleVector.x;
-		scale.y *= FlxG::screenScaleVector.y;
-	}
-
-	x += int(text->bounds.x - (scale.x * text->bounds.x));
-	y += int(text->bounds.y - (scale.y * text->bounds.y));
+	x += int(text->bounds.x - (text->scale.x * text->bounds.x));
+	y += int(text->bounds.y - (text->scale.y * text->bounds.y));
 
 	SDL_Rect srcRect = { 0, 0, int(text->bounds.x), int(text->bounds.y) };
-	SDL_Rect destRect = { (int)x, (int)y, int(text->bounds.x * scale.x), int(text->bounds.y * scale.y) };
+	SDL_Rect destRect = { (int)x, (int)y, int(text->bounds.x * text->scale.x), int(text->bounds.y * text->scale.y) };
 
 	SDL_RenderCopyEx(renderer, tex, &srcRect, &destRect, -FlxU::radToDegrees(text->angle), NULL, SDL_FLIP_NONE);
 }
@@ -611,7 +592,7 @@ void SDL_Mobile_Backend::drawShader(FlxBackendShader *s) {
 
     // get current framebuffer
     glBindTexture(GL_TEXTURE_2D, framebuffer);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, screenWidth, screenHeight, 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, FlxG::width, FlxG::height, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     SDL_Shader *shader = (SDL_Shader*) s;
