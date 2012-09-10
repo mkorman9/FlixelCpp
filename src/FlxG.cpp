@@ -200,6 +200,7 @@ void FlxG::innerUpdate() {
     // follow some object?
     if(toFollow) {
         FlxVector objectCenter = toFollow->getCenter();
+		
 		FlxVector move(objectCenter.x - (width / 2), objectCenter.y - (height / 2));
 		
         if(move.x < worldBounds.x) move.x = worldBounds.x;

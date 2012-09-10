@@ -455,15 +455,17 @@ void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, con
 	if(!img->texture) return;
 
 	FlxVector s = scale;
+	s.x *= ((float)screenWidth / FlxG::width);
+	s.y *= ((float)screenHeight / FlxG::height);
 	
 	if(scrool) {
 		x += FlxG::scroolVector.x * scroolFactor.x;
 		y += FlxG::scroolVector.y * scroolFactor.y;
 	}
 
-	x += source.width - (s.x * source.width);
-	y += source.height - (s.y * source.height);
-
+	x *= ((float)screenWidth / FlxG::width);
+	y *= ((float)screenHeight / FlxG::height);
+	
 	SDL_Rect srcRect = { (int)source.x, (int)source.y, source.width, source.height };
 	SDL_Rect destRect = { (int)x, (int)y, int(source.width * s.x), int(source.height * s.y) };
 
@@ -487,11 +489,15 @@ FlxBaseText *SDL_Mobile_Backend::createText(const char *text, void *font, int si
 	int w = 0, h = 0;
 	SDL_QueryTexture(tex, NULL, NULL, &w, &h);
 
+	FlxVector s = scale;
+	s.x *= ((float)screenWidth / FlxG::width);
+	s.y *= ((float)screenHeight / FlxG::height);
+	
 	FlxBaseText *data = new FlxBaseText();
 	data->data = tex;
     data->font = font;
     data->size = size;
-    data->scale = scale;
+    data->scale = s;
     data->angle = angle;
     data->color = color;
     data->alpha = alpha;
@@ -522,9 +528,9 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 		y += FlxG::scroolVector.y * scroolFactor.y;
 	}
 
-	x += int(text->bounds.x - (text->scale.x * text->bounds.x));
-	y += int(text->bounds.y - (text->scale.y * text->bounds.y));
-
+	x *= ((float)screenWidth / FlxG::width);
+	y *= ((float)screenHeight / FlxG::height);
+	
 	SDL_Rect srcRect = { 0, 0, int(text->bounds.x), int(text->bounds.y) };
 	SDL_Rect destRect = { (int)x, (int)y, int(text->bounds.x * text->scale.x), int(text->bounds.y * text->scale.y) };
 
