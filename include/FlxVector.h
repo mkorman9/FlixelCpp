@@ -22,6 +22,11 @@ public:
         x = y = 0.f;
     }
 
+    FlxVector(const FlxVector& other) {
+        x = other.x;
+        y = other.y;
+    }
+
     FlxVector(float X, float Y) {
         x = X;
         y = Y;
@@ -50,7 +55,154 @@ public:
     }
 
     float getAngle() {
-        return atan2(y, x);
+        return std::atan2(y, x);
+    }
+
+    FlxVector& rotate(float angle) {
+        FlxVector other(*this);
+
+        other.x = (x * std::cos(angle)) - (y * std::sin(angle));
+        other.y = (x * std::sin(angle)) + (y * std::cos(angle));
+
+        x = other.x;
+        y = other.y;
+
+        return *this;
+    }
+
+    FlxVector& rotateAroundPoint(float angle, const FlxVector& point) {
+        FlxVector other(*this);
+
+        other.x = (((x - point.x) * std::cos(angle)) -
+                   ((y - point.y) * std::sin(angle))) + point.x;
+        other.y = (((x - point.x) * std::sin(angle)) +
+                   ((y - point.y) * std::cos(angle))) + point.y;
+
+        x = other.x;
+        y = other.y;
+
+        return *this;
+    }
+
+    // operators
+    FlxVector operator+ (const FlxVector& other) {
+        FlxVector product(*this);
+
+        product.x += other.x;
+        product.y += other.y;
+        return product;
+    }
+
+    FlxVector operator- (const FlxVector& other) {
+        FlxVector product(*this);
+
+        product.x -= other.x;
+        product.y -= other.y;
+        return product;
+    }
+
+    FlxVector operator* (const FlxVector& other) {
+        FlxVector product(*this);
+
+        product.x *= other.x;
+        product.y *= other.y;
+        return product;
+    }
+
+    FlxVector operator/ (const FlxVector& other) {
+        FlxVector product(*this);
+
+        product.x /= other.x;
+        product.y /= other.y;
+        return product;
+    }
+
+    FlxVector operator! () {
+        FlxVector product(*this);
+
+        product.x = -x;
+        product.y = -y;
+        return product;
+    }
+
+    FlxVector& operator+= (const FlxVector& other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    FlxVector& operator-= (const FlxVector& other) {
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
+
+    FlxVector& operator*= (const FlxVector& other) {
+        x *= other.x;
+        y *= other.y;
+        return *this;
+    }
+
+    FlxVector& operator/= (const FlxVector& other) {
+        x /= other.x;
+        y /= other.y;
+        return *this;
+    }
+
+    FlxVector operator+ (float scalar) {
+        FlxVector product(*this);
+
+        product.x += scalar;
+        product.y += scalar;
+        return product;
+    }
+
+    FlxVector operator- (float scalar) {
+        FlxVector product(*this);
+
+        product.x -= scalar;
+        product.y -= scalar;
+        return product;
+    }
+
+    FlxVector operator* (float scalar) {
+        FlxVector product(*this);
+
+        product.x *= scalar;
+        product.y *= scalar;
+        return product;
+    }
+
+    FlxVector operator/ (float scalar) {
+        FlxVector product(*this);
+
+        product.x /= scalar;
+        product.y /= scalar;
+        return product;
+    }
+
+    FlxVector& operator+= (float scalar) {
+        x += scalar;
+        y += scalar;
+        return *this;
+    }
+
+    FlxVector& operator-= (float scalar) {
+        x -= scalar;
+        y -= scalar;
+        return *this;
+    }
+
+    FlxVector& operator*= (float scalar) {
+        x *= scalar;
+        y *= scalar;
+        return *this;
+    }
+
+    FlxVector& operator/= (float scalar) {
+        x /= scalar;
+        y /= scalar;
+        return *this;
     }
 };
 
