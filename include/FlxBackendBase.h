@@ -75,7 +75,7 @@ public:
 
 // Text struct
 struct FlxBaseText {
-    std::string text;
+    std::wstring text;
     int color, size;
     float alpha, angle;
     FlxVector scale;
@@ -111,7 +111,7 @@ public:
                         const FlxVector& scroolFactor) = 0;
 
     // text rendering
-    virtual FlxBaseText *createText(const char *text, void *font, int size, const FlxVector& scale, float angle,
+    virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, const FlxVector& scale, float angle,
                                    int color, float alpha) = 0;
     virtual void destroyText(FlxBaseText *data) = 0;
     virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) = 0;

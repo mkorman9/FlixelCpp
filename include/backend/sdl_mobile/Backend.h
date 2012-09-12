@@ -51,7 +51,7 @@ public:
                            const FlxRect& source, int color, bool flipped, bool scrool, float alpha, 
 						   const FlxVector& scroolFactor);
 
-    virtual FlxBaseText *createText(const char *text, void *font, int size, const FlxVector& scale, float angle,
+    virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, const FlxVector& scale, float angle,
                                    int color, float alpha);
     virtual void destroyText(FlxBaseText *data);
     virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor);

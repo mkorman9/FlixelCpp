@@ -19,6 +19,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <sstream>
+#include <limits>
 
 #include <initializer_list>
 #include <functional>

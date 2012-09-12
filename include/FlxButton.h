@@ -57,7 +57,7 @@ public:
     FlxButton(float x, float y, const char *buttonImage, int width, int height, int statesCount = 2);
 
     // set default text format
-    void setTextFormat(const char *text, const char *font, int size, int color);
+    void setTextFormat(const wchar_t *text, const char *font, int size, int color);
 
     virtual void update();
     virtual void draw();

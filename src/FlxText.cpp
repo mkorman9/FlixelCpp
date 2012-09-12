@@ -1,7 +1,7 @@
 #include "FlxText.h"
 #include "backend/BackendHolder.h"
 
-FlxText::FlxText(const char *Text, const char *Font, float X, float Y, int Size, int Color) {
+FlxText::FlxText(const wchar_t *Text, const char *Font, float X, float Y, int Size, int Color) {
     x = X;
     y = Y;
     text = lastText = Text;
@@ -26,6 +26,11 @@ void FlxText::setFormat(const char *Font, int Size, int Color) {
     size = Size;
 
     needUpdate = true;
+}
+
+
+void FlxText::setText(const wchar_t *Text) {
+    text = Text;
 }
 
 

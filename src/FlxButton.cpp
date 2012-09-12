@@ -101,7 +101,7 @@ void FlxButton::update() {
 }
 
 
-void FlxButton::setTextFormat(const char *text, const char *font, int size, int color) {
+void FlxButton::setTextFormat(const wchar_t *text, const char *font, int size, int color) {
 
     if(onText) {
         remove(onText);

@@ -17,7 +17,7 @@ public:
     // y value of vector
     float y;
 
-    // default contructor
+
     FlxVector() {
         x = y = 0.f;
     }
@@ -43,7 +43,7 @@ public:
     }
 
     float length() {
-        return (float) sqrt(pow(x, 2) + pow(y, 2));
+        return (float) std::sqrt(std::pow(x, 2) + std::pow(y, 2));
     }
 
     FlxVector& normalize() {

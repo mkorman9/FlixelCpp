@@ -15,6 +15,7 @@ What is currently ported?
 - Basic HTTP request using FlxHttpRequest class.
 - Built-in tweener (cpptweener by Wesley Ferreira Marques)
 - Shaders (low performance on mobile platforms)
+- Unicode support
 
 What isn't ported yet
 - Camera managment and special effects (currently only screen flash effect is done) 

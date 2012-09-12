@@ -375,7 +375,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
     window->Draw(sprite);
 }
 
-FlxBaseText *SFML_Backend::createText(const char *text, void *font, int size, const FlxVector& scale,
+FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size, const FlxVector& scale,
                                       float angle, int color, float alpha)
 {
     if(!font) return NULL;
@@ -465,8 +465,15 @@ void *SFML_Backend::loadFont(const char *path, int fontSize) {
         return fonts[ss.str()];
     }
 
+    static const std::wstring charset = L"abcdefghijklmnopqrstuvwxyz"
+        L"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        L"0123456789"
+        L"ąćęłńóśźż"
+        L"ĄĆĘŁŃÓŚŹŻ"
+        L"!@#$%^&*()_-+=|\\<,>.?/:;\"\'{}~` ";
+
     sf::Font *font = new sf::Font();
-    font->LoadFromFile(path, fontSize);
+    font->LoadFromFile(path, fontSize, charset);
     fonts[ss.str()] = font;
 
     return font;

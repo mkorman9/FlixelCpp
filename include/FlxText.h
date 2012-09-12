@@ -18,24 +18,24 @@ private:
     FlxBaseText *textData;
     bool needUpdate;
     int size, lastColor;
-    std::string lastText;
+    std::wstring lastText;
 	float lastAngle, lastAlpha, lastScaleX, lastScaleY;
-	
+
     void updateBuffer();
 public:
 
     // text
-    std::string text;
+    std::wstring text;
 
 
     // Default constructor
-    FlxText(const char *text, const char *font, float x = 0, float y = 0, int size = 32, int Color = 0x000000);
+    FlxText(const wchar_t *text, const char *font, float x = 0, float y = 0, int size = 32, int Color = 0x000000);
 
     // Set text's design
     void setFormat(const char *font, int Size, int Color);
 
     // Set text
-    void setText(const char *text);
+    void setText(const wchar_t *text);
 
     virtual void update();
     virtual void draw();

@@ -50,6 +50,20 @@ public:
         return ss.str();
     }
 
+    static std::wstring toStringUTF8(int value) {
+        std::wstringstream ss;
+        ss << value;
+
+        return ss.str();
+    }
+
+    static std::wstring toStringUTF8(float value) {
+        std::wstringstream ss;
+        ss << value;
+
+        return ss.str();
+    }
+
     static int toNumber(const std::string& str) {
         std::stringstream ss(str);
         int value;
@@ -60,6 +74,22 @@ public:
 
     static float toFloatNumber(const std::string& str) {
         std::stringstream ss(str);
+        float value;
+
+        ss >> value;
+        return value;
+    }
+
+    static int toNumberUTF8(const std::wstring& str) {
+        std::wstringstream ss(str);
+        int value;
+
+        ss >> value;
+        return value;
+    }
+
+    static float toFloatNumberUTF8(const std::wstring& str) {
+        std::wstringstream ss(str);
         float value;
 
         ss >> value;

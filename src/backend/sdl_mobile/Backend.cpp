@@ -474,14 +474,14 @@ void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, con
 	SDL_RenderCopyEx(renderer, img->texture, &srcRect, &destRect, -FlxU::radToDegrees(angle), NULL, flipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-FlxBaseText *SDL_Mobile_Backend::createText(const char *text, void *font, int size, const FlxVector& scale, float angle,
+FlxBaseText *SDL_Mobile_Backend::createText(const wchar_t *text, void *font, int size, const FlxVector& scale, float angle,
                                    int color, float alpha)
 {
 	if(!font) return NULL;
 	
 	SDL_Color colour = { (unsigned char)COLOR_GET_R(color), (unsigned char)COLOR_GET_G(color), (unsigned char)COLOR_GET_B(color), 
 		(unsigned char)(alpha * 255.f) };
-	SDL_Surface *txtSurface = TTF_RenderText_Solid((TTF_Font*)font, text, colour);
+	SDL_Surface *txtSurface = TTF_RenderUNICODE_Solid((TTF_Font*)font, (Uint16*)text, colour);
 
 	SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, txtSurface);
 	SDL_FreeSurface(txtSurface);
