@@ -21,7 +21,10 @@ void FlxPreloader::update() {
             state = FLX_FONTS_LOADING;
         }
         else {
-            BackendHolder::get().getBackend()->loadImage(imagesToLoad[currentIterator].c_str());
+            if(!BackendHolder::get().getBackend()->loadImage(imagesToLoad[currentIterator].c_str())) {
+                onError(imagesToLoad[currentIterator]);
+            }
+
             currentIterator++;
             assetsLoaded++;
         }
@@ -35,8 +38,12 @@ void FlxPreloader::update() {
             state = FLX_MUSIC_LOADING;
         }
         else {
-            BackendHolder::get().getBackend()->loadFont(fontsToLoad[currentIterator].first.c_str(),
-                                                        fontsToLoad[currentIterator].second);
+            if(!BackendHolder::get().getBackend()->loadFont(fontsToLoad[currentIterator].first.c_str(),
+                                                    fontsToLoad[currentIterator].second))
+            {
+               onError(fontsToLoad[currentIterator].first);
+            }
+
             currentIterator++;
             assetsLoaded++;
         }
@@ -50,10 +57,12 @@ void FlxPreloader::update() {
             state = FLX_SOUNDS_LOADING;
         }
         else {
-			#ifndef FLX_MOBILE
-				BackendHolder::get().getBackend()->loadMusic(musicToLoad[currentIterator].c_str());
-			#endif
-			
+			// don't load music now. music files should be streamed,
+			// not loaded on the begining. Check file's existance
+			if(!BackendHolder::get().getBackend()->internalFileExists(musicToLoad[currentIterator].c_str())) {
+                onError(musicToLoad[currentIterator]);
+			}
+
             currentIterator++;
             assetsLoaded++;
         }
@@ -67,7 +76,10 @@ void FlxPreloader::update() {
             FlxG::exitMessage = true;
         }
         else {
-            BackendHolder::get().getBackend()->loadSound(soundsToLoad[currentIterator].c_str());
+            if(!BackendHolder::get().getBackend()->loadSound(soundsToLoad[currentIterator].c_str())) {
+                onError(soundsToLoad[currentIterator]);
+            }
+
             currentIterator++;
             assetsLoaded++;
         }

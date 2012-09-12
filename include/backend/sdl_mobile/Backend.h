@@ -72,6 +72,7 @@ public:
 
     virtual void saveData(const char *path, const std::map<std::string, std::string>& data);
     virtual bool loadData(const char *path, std::map<std::string, std::string>& data);
+	virtual bool internalFileExists(const char *path);
 	
 	virtual bool sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp);
 };

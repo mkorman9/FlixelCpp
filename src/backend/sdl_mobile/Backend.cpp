@@ -690,7 +690,10 @@ FlxBackendImage *SDL_Mobile_Backend::loadImage(const char *path) {
 		SDL_QueryTexture(img->texture, NULL, NULL, &img->width, &img->height);
 		images[path] = img;
 	}
-
+	else {
+		return NULL;
+	}
+	
     return img;
 }
 
@@ -729,7 +732,8 @@ FlxBackendMusic* SDL_Mobile_Backend::loadMusic(const char *path) {
 
 	SDL_Music *m = new SDL_Music();
 	m->buffer = Mix_LoadMUS(path);
-
+	if(m->buffer == NULL) return NULL;
+	
     return m;
 }
 
@@ -834,6 +838,15 @@ bool SDL_Mobile_Backend::loadData(const char *p, std::map<std::string, std::stri
 
     return true;
 }
+
+bool SDL_Mobile_Backend::internalFileExists(const char *path) {
+	SDL_RWops *file = SDL_RWFromFile(path, "r");
+	if(!file) return false;
+	
+	SDL_RWclose(file);
+	return true;
+}
+
 
 // android/iphone network
 bool SDL_Mobile_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) {

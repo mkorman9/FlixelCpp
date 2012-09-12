@@ -449,10 +449,10 @@ FlxBackendImage *SFML_Backend::loadImage(const char *path) {
     }
 
     SFML_Image *img = new SFML_Image();
-    img->Graphic.LoadFromFile(path);
+    if(!img->Graphic.LoadFromFile(path)) return false;
+
     img->Graphic.SetSmooth(false);
     images[path] = img;
-
     return img;
 }
 
@@ -473,9 +473,9 @@ void *SFML_Backend::loadFont(const char *path, int fontSize) {
         L"!@#$%^&*()_-+=|\\<,>.?/:;\"\'{}~` ";
 
     sf::Font *font = new sf::Font();
-    font->LoadFromFile(path, fontSize, charset);
-    fonts[ss.str()] = font;
+    if(!font->LoadFromFile(path, fontSize, charset)) return false;
 
+    fonts[ss.str()] = font;
     return font;
 }
 
@@ -606,9 +606,9 @@ void* SFML_Backend::loadSound(const char *path) {
     }
 
     sf::SoundBuffer *buffer = new sf::SoundBuffer();
-    buffer->LoadFromFile(path);
-    sounds[path] = buffer;
+    if(!buffer->LoadFromFile(path)) return NULL;
 
+    sounds[path] = buffer;
     return buffer;
 }
 
@@ -619,9 +619,9 @@ FlxBackendMusic* SFML_Backend::loadMusic(const char *path) {
     }
 
     SFML_Music *m = new SFML_Music();
-    m->Track.OpenFromFile(path);
-    music[path] = m;
+    if(!m->Track.OpenFromFile(path)) return NULL;
 
+    music[path] = m;
     return m;
 }
 
@@ -697,6 +697,15 @@ bool SFML_Backend::loadData(const char *path, std::map<std::string, std::string>
 
     return true;
 }
+
+bool SFML_Backend::internalFileExists(const char *path) {
+    std::ifstream stream(path);
+    if(!stream) return false;
+
+    stream.close();
+    return true;
+}
+
 
 bool SFML_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) {
 

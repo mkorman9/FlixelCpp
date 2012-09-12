@@ -36,6 +36,7 @@ public:
     FlxLoadingState state;
     float percent;
 
+
     FlxPreloader() {
         state = FLX_IMAGES_LOADING;
         CurrentInstance = this;
@@ -49,10 +50,6 @@ public:
 
     virtual void create() {
     }
-
-
-    virtual void update();
-    virtual void draw();
 
     void loadImage(const std::string& path) {
         imagesToLoad.push_back(path);
@@ -70,6 +67,11 @@ public:
         soundsToLoad.push_back(path);
     }
 
+    virtual void onError(const std::string& resourceName) {
+    }
+
+    virtual void update();
+    virtual void draw();
 
     static void onUpdate();
     static void onDraw();
