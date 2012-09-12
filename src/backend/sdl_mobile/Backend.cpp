@@ -479,10 +479,19 @@ FlxBaseText *SDL_Mobile_Backend::createText(const wchar_t *text, void *font, int
 {
 	if(!font) return NULL;
 	
+	// convert 8-bit string to 16-bit string
+	std::wstring str(text);
+	Uint16 *wstr = new Uint16[str.size()];
+	for(unsigned int i = 0; i < str.size(); i++) wstr[i] = (Uint16)str[i];
+	wstr[str.size()] = 0;
+	
+	// create surface with text
 	SDL_Color colour = { (unsigned char)COLOR_GET_R(color), (unsigned char)COLOR_GET_G(color), (unsigned char)COLOR_GET_B(color), 
 		(unsigned char)(alpha * 255.f) };
-	SDL_Surface *txtSurface = TTF_RenderUNICODE_Solid((TTF_Font*)font, (Uint16*)text, colour);
+	SDL_Surface *txtSurface = TTF_RenderUNICODE_Solid((TTF_Font*)font, wstr, colour);
 
+	delete[] wstr;
+	
 	SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, txtSurface);
 	SDL_FreeSurface(txtSurface);
 
@@ -869,10 +878,12 @@ bool SDL_Mobile_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& r
 
 
 	// get response
-	responseBuffer = new char[4096];
-	for(unsigned int i = 0; i < 4096; i++) responseBuffer[i] = 0;
+	static const unsigned int recvBufferSize = 8192;
+	
+	responseBuffer = new char[recvBufferSize];
+	for(unsigned int i = 0; i < recvBufferSize; i++) responseBuffer[i] = 0;
 
-	int received = SDLNet_TCP_Recv(socket, responseBuffer, 4096);
+	int received = SDLNet_TCP_Recv(socket, responseBuffer, recvBufferSize);
 	if(received <= 0) return false;
 
 	std::stringstream ss(std::string(responseBuffer, received));
