@@ -30,6 +30,7 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxMouseHolder.cpp \
 	FlxShader.cpp \
 	FlxU.cpp \
+	FlxVirtualKeyboard.cpp \
 	tweener/CppTween.cpp \
 	backend/sdl_mobile/Backend.cpp
 

@@ -69,7 +69,7 @@ namespace FlxKey {
         Equal,        ///< =
         Dash,         ///< -
         Space,
-        Return,
+        Enter,
         Back,
         Tab,
         PageUp,

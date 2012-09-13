@@ -23,6 +23,7 @@
 #include "FlxHttpRequest.h"
 #include "FlxMouseHolder.h"
 #include "FlxShader.h"
+#include "FlxVirtualKeyboard.h"
 
 #include "tweener/CppTween.h"
 

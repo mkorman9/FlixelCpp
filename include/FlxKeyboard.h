@@ -15,12 +15,16 @@ class FlxKeyboard {
 
 private:
     bool lastState[1024];
+    bool simulate[1024];
 public:
 
     FlxKeyboard();
     bool down(FlxKey::KeyCode code);
     bool pressed(FlxKey::KeyCode code);
     bool released(FlxKey::KeyCode code);
+
+    void simulateKeyDown(FlxKey::KeyCode code);
+    void simulateKeyUp(FlxKey::KeyCode code);
 
     void updateState();
 };

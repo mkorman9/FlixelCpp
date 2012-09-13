@@ -67,16 +67,16 @@ void FlxButton::update() {
                 }
                 else {
                     down = true;
-                    if(onDown != nullptr) onDown();
+                    if(onDown != nullptr) onDown(this);
                 }
 
                 if(m->leftPressed) {
                     pressed = true;
-                    if(onPressed != nullptr) onPressed();
+                    if(onPressed != nullptr) onPressed(this);
                 }
                 else if(m->leftReleased) {
                     released = true;
-                    if(onReleased != nullptr) onReleased();
+                    if(onReleased != nullptr) onReleased(this);
                 }
             }
         }

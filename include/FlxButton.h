@@ -49,9 +49,9 @@ public:
     float width, height;
 
     // callbacks
-    std::function<void()> onDown;
-    std::function<void()> onPressed;
-    std::function<void()> onReleased;
+    std::function<void(FlxButton*)> onDown;
+    std::function<void(FlxButton*)> onPressed;
+    std::function<void(FlxButton*)> onReleased;
 
 
     FlxButton(float x, float y, const char *buttonImage, int width, int height, int statesCount = 2);
