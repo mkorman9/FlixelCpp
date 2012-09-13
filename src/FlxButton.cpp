@@ -43,16 +43,16 @@ void FlxButton::update() {
         offText->x = x + ((width - offText->width) / 2);
         offText->y = y + ((height - offText->height) / 2);
     }
-
+		
     // update button state
+	mouseOver = false;
+    down = false;
+    pressed = false;
+    released = false;
+	
     unsigned int mousesCount = FlxG::mousesList.size();
     if(mousesCount != 0 && active) {
         if(!multitouch) mousesCount = 1;
-
-        mouseOver = false;
-        down = false;
-        pressed = false;
-        released = false;
 
         for(unsigned int i = 0; i < mousesCount; i++) {
             FlxMouse *m = FlxG::mousesList[i];
