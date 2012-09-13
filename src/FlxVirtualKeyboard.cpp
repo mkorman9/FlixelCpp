@@ -105,7 +105,7 @@ void FlxVirtualKeyboard::pressedCallback(FlxButton *button) {
         FlxG::key->simulateKeyDown(FlxKey::Back);
     }
     else {
-        FlxG::key->simulateKeyDown((FlxKey::KeyCode)button->onText->text[0]);
+        FlxG::key->simulateKeyDown((FlxKey::KeyCode) std::tolower(button->onText->text[0]));
     }
 }
 
@@ -123,7 +123,7 @@ void FlxVirtualKeyboard::releasedCallback(FlxButton *button) {
         FlxG::key->simulateKeyUp(FlxKey::Back);
     }
     else {
-        FlxG::key->simulateKeyUp((FlxKey::KeyCode)button->onText->text[0]);
+        FlxG::key->simulateKeyUp((FlxKey::KeyCode) std::tolower(button->onText->text[0]));
     }
 }
 
