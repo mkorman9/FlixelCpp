@@ -77,8 +77,7 @@ public:
 struct FlxBaseText {
     std::wstring text;
     int color, size;
-    float alpha, angle;
-    FlxVector scale;
+    float alpha;
     FlxVector bounds;
 
     void *data, *font;
@@ -111,10 +110,10 @@ public:
                         const FlxVector& scroolFactor) = 0;
 
     // text rendering
-    virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, const FlxVector& scale, float angle,
-                                   int color, float alpha) = 0;
+    virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, int color, float alpha) = 0;
     virtual void destroyText(FlxBaseText *data) = 0;
-    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) = 0;
+    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale,
+                          float angle, const FlxVector& scroolFactor) = 0;
 
     // special effects
     virtual bool isShadersSupported() = 0;

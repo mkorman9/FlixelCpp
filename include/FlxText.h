@@ -19,7 +19,7 @@ private:
     bool needUpdate;
     int size, lastColor;
     std::wstring lastText;
-	float lastAngle, lastAlpha, lastScaleX, lastScaleY;
+	float lastAlpha;
 
     void updateBuffer();
 public:

@@ -51,10 +51,10 @@ public:
                            const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
                            const FlxVector& scroolFactor);
 
-    virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, const FlxVector&  scale,
-                                    float angle, int color, float alpha);
+    virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, int color, float alpha);
     virtual void destroyText(FlxBaseText *data);
-    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor);
+    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale,
+                                    float angle, const FlxVector& scroolFactor);
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);

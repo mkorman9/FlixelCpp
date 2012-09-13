@@ -474,9 +474,7 @@ void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, con
 	SDL_RenderCopyEx(renderer, img->texture, &srcRect, &destRect, -FlxU::radToDegrees(angle), NULL, flipped ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-FlxBaseText *SDL_Mobile_Backend::createText(const wchar_t *text, void *font, int size, const FlxVector& scale, float angle,
-                                   int color, float alpha)
-{
+FlxBaseText *SDL_Mobile_Backend::createText(const wchar_t *text, void *font, int size, int color, float alpha) {
 	if(!font) return NULL;
 	
 	// convert 8-bit string to 16-bit string
@@ -497,17 +495,11 @@ FlxBaseText *SDL_Mobile_Backend::createText(const wchar_t *text, void *font, int
 
 	int w = 0, h = 0;
 	SDL_QueryTexture(tex, NULL, NULL, &w, &h);
-
-	FlxVector s = scale;
-	s.x *= ((float)screenWidth / FlxG::width);
-	s.y *= ((float)screenHeight / FlxG::height);
 	
 	FlxBaseText *data = new FlxBaseText();
 	data->data = tex;
     data->font = font;
     data->size = size;
-    data->scale = s;
-    data->angle = angle;
     data->color = color;
     data->alpha = alpha;
     data->text = text;
@@ -525,8 +517,9 @@ void SDL_Mobile_Backend::destroyText(FlxBaseText *data) {
     }
 }
 
-void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) {
-
+void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale, float angle, 
+								const FlxVector& scroolFactor) 
+{
 	if(!text) return;
 
 	SDL_Texture *tex = (SDL_Texture*) text->data;
@@ -537,13 +530,17 @@ void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scro
 		y += FlxG::scroolVector.y * scroolFactor.y;
 	}
 
+	FlxVector s = scale;
+	s.x *= ((float)screenWidth / FlxG::width);
+	s.y *= ((float)screenHeight / FlxG::height);
+	
 	x *= ((float)screenWidth / FlxG::width);
 	y *= ((float)screenHeight / FlxG::height);
 	
 	SDL_Rect srcRect = { 0, 0, int(text->bounds.x), int(text->bounds.y) };
-	SDL_Rect destRect = { (int)x, (int)y, int(text->bounds.x * text->scale.x), int(text->bounds.y * text->scale.y) };
+	SDL_Rect destRect = { (int)x, (int)y, int(text->bounds.x * s.x), int(text->bounds.y * s.y) };
 
-	SDL_RenderCopyEx(renderer, tex, &srcRect, &destRect, -FlxU::radToDegrees(text->angle), NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, tex, &srcRect, &destRect, -FlxU::radToDegrees(angle), NULL, SDL_FLIP_NONE);
 }
 
 bool SDL_Mobile_Backend::isShadersSupported() {

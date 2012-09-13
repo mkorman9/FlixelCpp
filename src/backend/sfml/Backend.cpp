@@ -375,9 +375,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
     window->Draw(sprite);
 }
 
-FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size, const FlxVector& scale,
-                                      float angle, int color, float alpha)
-{
+FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size, int color, float alpha) {
     if(!font) return NULL;
 
     FlxBaseText *data = new FlxBaseText();
@@ -386,8 +384,6 @@ FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size,
     str->SetFont(*((sf::Font*)font));
     str->SetText(text);
     str->SetSize(size);
-    str->SetScale(scale.x, scale.y);
-    str->SetRotation(-FlxU::radToDegrees(angle));
     str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
 
     sf::FloatRect rect = str->GetRect();
@@ -396,8 +392,6 @@ FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size,
     data->data = str;
     data->font = font;
     data->size = size;
-    data->scale = scale;
-    data->angle = angle;
     data->color = color;
     data->alpha = alpha;
     data->text = text;
@@ -417,7 +411,8 @@ void SFML_Backend::destroyText(FlxBaseText *data) {
     }
 }
 
-void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scroolFactor) {
+void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale,
+                                    float angle, const FlxVector& scroolFactor) {
 
     if(!text) return;
     if(!text->data) return;
@@ -428,6 +423,8 @@ void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, co
     if(!scrool) { move.x = move.y = 0; }
 
     sf::String *str = (sf::String*) text->data;
+    str->SetScale(scale.x, scale.y);
+    str->SetRotation(-FlxU::radToDegrees(angle));
     str->SetPosition(x + (text->bounds.x / 2) + move.x, y + (text->bounds.y / 2) + move.y);
 
     window->Draw(*str);
