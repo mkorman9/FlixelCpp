@@ -54,6 +54,7 @@
 		<Unit filename="include\FlxMouseHolder.h" />
 		<Unit filename="include\FlxShader.h" />
 		<Unit filename="include\FlxVirtualKeyboard.h" />
+		<Unit filename="include\FlxPath.h" />
 		<Unit filename="include\backend\BackendHolder.h" />
 		<Unit filename="include\backend\cpp.h" />
 		<Unit filename="include\tweener\CppTween.h" />

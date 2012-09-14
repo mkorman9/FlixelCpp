@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <limits>
+#include <list>
 
 #include <initializer_list>
 #include <functional>

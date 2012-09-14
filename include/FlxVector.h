@@ -42,7 +42,7 @@ public:
         y = vec2.y - vec1.y;
     }
 
-    float length() {
+    float length() const {
         return (float) std::sqrt(std::pow(x, 2) + std::pow(y, 2));
     }
 
@@ -54,7 +54,7 @@ public:
         return *this;
     }
 
-    float getAngle() {
+    float getAngle() const {
         return std::atan2(y, x);
     }
 

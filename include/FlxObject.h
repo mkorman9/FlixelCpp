@@ -8,12 +8,15 @@
 #include "backend/cpp.h"
 #include "FlxBasic.h"
 #include "FlxRect.h"
+#include "FlxPath.h"
 
 /*
 *  Base for all drawable entities
 */
 class FlxObject : public FlxBasic {
 
+private:
+    FlxPath::Node currentNode;
 public:
 
     // X position on screen
@@ -67,6 +70,15 @@ public:
     // is this element of GUI? If true - don't apply post effects
     bool isGUI;
 
+    // is object following some path?
+    bool isFollowingPath;
+
+    // following velocity
+    float followingVelocity;
+
+    // path to follow
+    FlxPath *pathToFollow;
+
 
     // get entity's center point
     FlxVector getCenter();
@@ -82,6 +94,12 @@ public:
 
     // check overlap and make some phycics work
     virtual FlxBasic* collide(FlxBasic *object);
+
+    // follow some path
+    void followPath(FlxPath *toFollow, float speed);
+
+    // stop following path
+    void stopFollowing();
 
     // default contructor
     FlxObject();

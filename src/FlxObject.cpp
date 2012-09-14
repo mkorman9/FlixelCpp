@@ -18,6 +18,10 @@ FlxObject::FlxObject() {
     maxVelocity.y = 1000;
 
     isGUI = false;
+
+    isFollowingPath = false;
+    followingVelocity = 1.f;
+    pathToFollow = NULL;
 }
 
 
@@ -26,17 +30,38 @@ void FlxObject::update() {
 
     float dt = FlxG::fixedTime;
 
-    x += velocity.x * dt;
-    y += velocity.y * dt;
-    velocity.x += acceleration.x * dt;
-    velocity.y += acceleration.y * dt;
+    if(!isFollowingPath) {
+        x += velocity.x * dt;
+        y += velocity.y * dt;
+        velocity.x += acceleration.x * dt;
+        velocity.y += acceleration.y * dt;
+
+        if(velocity.x > maxVelocity.x) velocity.x = maxVelocity.x;
+        if(velocity.y > maxVelocity.y) velocity.y = maxVelocity.y;
+        if(velocity.x < -maxVelocity.x) velocity.x = -maxVelocity.x;
+        if(velocity.y < -maxVelocity.y) velocity.y = -maxVelocity.y;
+    }
+    else {
+        if(pathToFollow) {
+            if((float)std::floor(x) == currentNode.x && (float)std::floor(y) == currentNode.y) {
+                if(pathToFollow->isEnd()) {
+                    stopFollowing();
+                }
+                else {
+                    currentNode = pathToFollow->getNextNode();
+                }
+            }
+            else {
+                FlxVector vec(x, y, currentNode.x, currentNode.y);
+                vec.normalize();
+
+                x += vec.x * followingVelocity * dt;
+                y += vec.y * followingVelocity * dt;
+            }
+        }
+    }
 
     angle += angularVelocity * dt;
-
-    if(velocity.x > maxVelocity.x) velocity.x = maxVelocity.x;
-    if(velocity.y > maxVelocity.y) velocity.y = maxVelocity.y;
-    if(velocity.x < -maxVelocity.x) velocity.x = -maxVelocity.x;
-    if(velocity.y < -maxVelocity.y) velocity.y = -maxVelocity.y;
 
     hitbox.x = x + hitboxMove.x;
     hitbox.y = y + hitboxMove.y;
@@ -171,6 +196,28 @@ FlxBasic* FlxObject::collide(FlxBasic *object) {
     }
 
     return 0;
+}
+
+
+void FlxObject::followPath(FlxPath *toFollow, float speed) {
+    pathToFollow = toFollow;
+    followingVelocity = speed;
+    isFollowingPath = true;
+
+    pathToFollow->setFront();
+
+    if(pathToFollow->isEnd()) {
+        stopFollowing();
+    }
+    else {
+        currentNode = pathToFollow->getNextNode();
+    }
+}
+
+
+void FlxObject::stopFollowing() {
+    pathToFollow = NULL;
+    isFollowingPath = false;
 }
 
 

@@ -24,6 +24,7 @@
 #include "FlxMouseHolder.h"
 #include "FlxShader.h"
 #include "FlxVirtualKeyboard.h"
+#include "FlxPath.h"
 
 #include "tweener/CppTween.h"
 
