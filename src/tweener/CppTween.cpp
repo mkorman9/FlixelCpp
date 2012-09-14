@@ -366,7 +366,7 @@ namespace tween {
                                 }
 
                                 dispatchEvent(&(*tweensIT), ON_STEP);
-                                if ((*tweensIT).onStepCallBack){
+                                if ((*tweensIT).onStepCallBack != nullptr){
                                         (*tweensIT).onStepCallBack();
                                 }
 
@@ -410,10 +410,10 @@ namespace tween {
                                                                 }
                             }*/
                                                         dispatchEvent(&(*tweensIT), ON_COMPLETE);
-                                                        if ((*tweensIT).onCompleteCallBack){
+                                                        if ((*tweensIT).onCompleteCallBack != nullptr){
                                                                 (*tweensIT).onCompleteCallBack();
-                                                                (*tweensIT).onCompleteCallBack = 0;
-                                                                (*tweensIT).onStepCallBack = 0;
+                                                                (*tweensIT).onCompleteCallBack = nullptr;
+                                                                (*tweensIT).onStepCallBack = nullptr;
                                                         }
                                                         removeTween(&(*tweensIT));
                                                         tweensIT = tweens.begin();

@@ -260,3 +260,4 @@ void FlxG::flash(int color, float time) {
     flashMaxTime = time;
     flashSprite.color = color;
 }
+

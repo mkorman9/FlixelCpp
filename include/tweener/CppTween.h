@@ -23,6 +23,7 @@
 #include<list>
 #include<vector>
 #include<iostream>
+#include<functional>
 
 #ifndef _PI
 #define _PI 3.1415926535897932384626433832795
@@ -176,7 +177,7 @@ namespace tween {
     static Back fBack;
 
         //callback temp
-        typedef void (*TweenerCallBack)();
+        typedef std::function<void()> TweenerCallBack;
 
 
         struct TweenerProperty {
@@ -214,8 +215,8 @@ namespace tween {
                         delayFinished = true;
             delay = 0;
             total_properties = 0;
-                        onCompleteCallBack = 0;
-                        onStepCallBack = 0;
+                        onCompleteCallBack = nullptr;
+                        onStepCallBack = nullptr;
                         repeat = -1;
                         reverse = false;
                         reverseCount = -1;
@@ -234,8 +235,8 @@ namespace tween {
                         delayFinished = (pdelay > 0)?false:true;
                         delay = pdelay;
                         total_properties = 0;
-                        onCompleteCallBack = 0;
-                        onStepCallBack = 0;
+                        onCompleteCallBack = nullptr;
+                        onStepCallBack = nullptr;
                         repeat = -1;
                         reverse = false;
                         reverseCount = -1;
