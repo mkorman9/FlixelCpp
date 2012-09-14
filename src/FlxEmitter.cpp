@@ -61,13 +61,14 @@ void FlxEmitter::loadGraphic(const char *Tileset, int Width, int Height, int Til
 void FlxEmitter::update() {
 
     for(unsigned int i = 0; i < members.size(); i++) {
+        FlxParticle *part = (FlxParticle*)members[i];
 
-        if(((FlxParticle*)members[i])->timeToLife <= 0) {
-            remove(members[i]);
+        if(part->timeToLife <= 0) {
+            remove(part);
             continue;
         }
 
-        ((FlxParticle*)members[i])->timeToLife -= FlxG::fixedTime;
+        part->timeToLife -= FlxG::fixedTime;
     }
 
     FlxGroup::update();

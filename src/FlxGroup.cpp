@@ -25,6 +25,7 @@ bool FlxGroup::remove(FlxBasic *object, bool dontDelete) {
         if(members[i] == object) {
 
             if(!dontDelete) delete members[i];
+            members[i] = NULL;
 
             members.erase(members.begin() + i);
             return true;

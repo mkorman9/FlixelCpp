@@ -100,6 +100,9 @@ void FlxG::switchState(FlxState *newState) {
 
     shaders.clear();
     tweener.removeTween(NULL);
+    worldBounds = { 0, 0, width, height };
+    scroolVector = { 0, 0 };
+    toFollow = NULL;
 
     state = newState;
     state->create();
@@ -200,9 +203,9 @@ void FlxG::innerUpdate() {
     // follow some object?
     if(toFollow) {
         FlxVector objectCenter = toFollow->getCenter();
-		
+
 		FlxVector move(objectCenter.x - (width / 2), objectCenter.y - (height / 2));
-		
+
         if(move.x < worldBounds.x) move.x = worldBounds.x;
         if(move.x + width > worldBounds.width) move.x = worldBounds.width - width;
 
