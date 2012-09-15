@@ -17,10 +17,10 @@ What is currently ported?
 - Shaders (low performance on mobile platforms)
 - Unicode support
 - On-screen virtual keyboard (for mobile devices)
+- Pathfinding (astar by Justin Heyes-Jones)
 
 What isn't ported yet
 - Camera managment and special effects (currently only screen flash effect is done) 
-- Pathfinding
 
 What isn't ported and probably will never be.
 - Replays

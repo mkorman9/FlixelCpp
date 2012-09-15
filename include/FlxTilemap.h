@@ -7,6 +7,7 @@
 
 #include "FlxTile.h"
 #include "FlxGroup.h"
+#include "FlxPath.h"
 
 /*
 *  Basic map class
@@ -27,6 +28,9 @@ public:
     // total size of map (in pixels)
     FlxVector sizeInPixels;
 
+    // first solid tile index
+    int firstSolid;
+
 
     // constructor
     FlxTilemap();
@@ -36,7 +40,7 @@ public:
 
     // load map to memory
     void loadMap(int *map, int sizeX, int sizeY, const char *tileset, int tileWidth,
-                 int tileHeight, int firstCollidate = 1);
+                 int tileHeight, int firstCollide = 1);
 
     // get tile type from specified index
     int getTile(int x, int y);
@@ -47,6 +51,9 @@ public:
     // set tile on index
     void setTile(int x, int y, int value);
 
+    // find path from start point to end point.
+    // return NULL if it's unavailable
+    FlxPath* findPath(int startX, int startY, int endX, int endY);
 
     virtual void update() {
         FlxGroup::update();

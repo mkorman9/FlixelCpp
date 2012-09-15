@@ -16,8 +16,8 @@ public:
 
     // single node structure
     struct Node {
-        int x;
-        int y;
+        float x;
+        float y;
     };
 
 

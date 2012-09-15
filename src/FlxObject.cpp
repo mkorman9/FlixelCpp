@@ -200,6 +200,8 @@ FlxBasic* FlxObject::collide(FlxBasic *object) {
 
 
 void FlxObject::followPath(FlxPath *toFollow, float speed) {
+    if(!toFollow) return;
+
     pathToFollow = toFollow;
     followingVelocity = speed;
     isFollowingPath = true;

@@ -80,6 +80,7 @@
 		<Unit filename="src\FlxMouseHolder.cpp" />
 		<Unit filename="src\FlxShader.cpp" />
 		<Unit filename="src\FlxU.cpp" />
+		<Unit filename="src\PathFinder.inl" />
 		<Unit filename="src\FlxVirtualKeyboard.cpp" />
 		<Unit filename="src\tweener\CppTween.cpp" />
 		<Unit filename="src\backend\sfml\Backend.cpp" />
