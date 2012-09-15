@@ -20,6 +20,9 @@ public:
     // constructor
     FlxGroup();
 
+    // destructor
+    virtual ~FlxGroup();
+
     // add new entity to group. Returns new object (for chaining)
     FlxBasic* add(FlxBasic *object);
 

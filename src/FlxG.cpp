@@ -25,6 +25,7 @@ float FlxG::flashCounter = 0, FlxG::flashMaxTime = 0;
 bool FlxG::flashing = false;
 tween::Tweener FlxG::tweener;
 FlxShadersList FlxG::shaders;
+FlxState *FlxG::stateToSwitch = NULL;
 
 
 // quick help function
@@ -96,16 +97,7 @@ void FlxG::followObject(FlxObject *object) {
 
 void FlxG::switchState(FlxState *newState) {
     if(!newState) return;
-    if(state) delete state;
-
-    shaders.clear();
-    tweener.removeTween(NULL);
-    worldBounds = { 0, 0, width, height };
-    scroolVector = { 0, 0 };
-    toFollow = NULL;
-
-    state = newState;
-    state->create();
+    stateToSwitch = newState;
 }
 
 
@@ -146,6 +138,22 @@ void FlxG::updateMouses() {
 
 
 void FlxG::innerUpdate() {
+
+    // switch state?
+    if(stateToSwitch) {
+        if(state) delete state;
+
+        shaders.clear();
+        tweener.removeTween(NULL);
+        worldBounds = { 0, 0, width, height };
+        scroolVector = { 0, 0 };
+        toFollow = NULL;
+
+        state = stateToSwitch;
+        state->create();
+
+        stateToSwitch = NULL;
+    }
 
     // sounds and music garbage collector
     for(unsigned int i = 0; i < FlxSound::Sounds.size(); i++) {

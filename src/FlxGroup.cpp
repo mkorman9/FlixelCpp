@@ -6,6 +6,11 @@ FlxGroup::FlxGroup() {
 }
 
 
+FlxGroup::~FlxGroup() {
+    clear();
+}
+
+
 FlxBasic* FlxGroup::add(FlxBasic *object) {
 
     if(object) {

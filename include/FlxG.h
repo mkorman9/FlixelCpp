@@ -133,6 +133,9 @@ private:
     // fps stuff
     static float fpsCounter;
 
+    // state to switch next frame
+    static FlxState *stateToSwitch;
+
     // flash screen effect stuff
     static FlxSprite flashSprite;
     static float flashCounter, flashMaxTime;
