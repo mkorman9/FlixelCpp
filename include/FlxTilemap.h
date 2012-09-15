@@ -16,6 +16,9 @@ class FlxTilemap : public FlxGroup {
 
 public:
 
+    typedef std::function<void(FlxTilemap*, int, int, int,
+                               int, int, bool, const char*)> InsertionCallback;
+
     // raw map data
     int *mapData;
 
@@ -33,7 +36,7 @@ public:
 
 
     // constructor
-    FlxTilemap();
+    FlxTilemap(const InsertionCallback& callback = nullptr);
 
     // destructor
     ~FlxTilemap();
@@ -62,6 +65,9 @@ public:
     virtual void draw() {
         FlxGroup::draw();
     }
+
+private:
+    InsertionCallback insertionCallback;
 };
 
 #endif
