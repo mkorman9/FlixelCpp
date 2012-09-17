@@ -387,6 +387,11 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
         source.x / gfx->getWidth(), (source.y + source.height) / gfx->getHeight(),
     };
 
+    if(flipped) {
+        std::swap(texCoords[0], texCoords[2]);
+        std::swap(texCoords[4], texCoords[6]);
+    }
+
     unsigned char r = COLOR_GET_R(color);
     unsigned char g = COLOR_GET_G(color);
     unsigned char b = COLOR_GET_B(color);
