@@ -368,10 +368,10 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
 
     gfx->Graphic.Bind();
 
-    glTranslatef(x + move.x - (source.x / 2), y + move.y - (source.y / 2), 0.f);
-    glRotatef(FlxU::radToDegrees(angle), 0.f, 0.f, 1.f);
+    glTranslatef(x + move.x + (source.width / 2), y + move.y + (source.height / 2), 0.f);
     glScalef(scale.x, scale.y, 0);
-    glTranslatef(source.x / 2, source.y / 2, 0.f);
+    glRotatef(FlxU::radToDegrees(angle), 0.f, 0.f, 1.f);
+    glTranslatef(-source.width / 2, -source.height / 2, 0.f);
 
     float vertices[] = {
         0.0f, 0.0f,
