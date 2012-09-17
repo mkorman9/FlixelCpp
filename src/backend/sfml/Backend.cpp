@@ -363,17 +363,59 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxV
     move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
 
-    sf::Sprite sprite;
-    sprite.SetImage(gfx->Graphic);
-    sprite.SetPosition(x + (source.width / 2) + move.x, y + (source.height / 2) + move.y);
-    sprite.SetCenter((source.width / 2), (source.height / 2));
-    sprite.SetSubRect(sf::IntRect(source.x, source.y, source.x + source.width, source.y + source.height));
-    sprite.SetRotation(-FlxU::radToDegrees(angle));
-    sprite.SetScale(scale.x, scale.y);
-    sprite.FlipX(flipped);
-    sprite.SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
 
-    window->Draw(sprite);
+    gfx->Graphic.Bind();
+
+    glTranslatef(x + move.x - (source.x / 2), y + move.y - (source.y / 2), 0.f);
+    glRotatef(FlxU::radToDegrees(angle), 0.f, 0.f, 1.f);
+    glScalef(scale.x, scale.y, 0);
+    glTranslatef(source.x / 2, source.y / 2, 0.f);
+
+    float vertices[] = {
+        0.0f, 0.0f,
+        (float)source.width, 0.0f,
+        (float)source.width, (float)source.height,
+        0.0f, (float)source.height
+    };
+
+    float texCoords[] = {
+        source.x / gfx->getWidth(), source.y / gfx->getHeight(),
+        (source.x + source.width) / gfx->getWidth(),  source.y / gfx->getHeight(),
+        (source.x + source.width) / gfx->getWidth(), (source.y + source.height) / gfx->getHeight(),
+        source.x / gfx->getWidth(), (source.y + source.height) / gfx->getHeight(),
+    };
+
+    unsigned char r = COLOR_GET_R(color);
+    unsigned char g = COLOR_GET_G(color);
+    unsigned char b = COLOR_GET_B(color);
+    unsigned char a = alpha * 255.f;
+
+    unsigned char colors[] = {
+        r, g, b, a,
+        r, g, b, a,
+        r, g, b, a,
+        r, g, b, a,
+    };
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+
+    glDrawArrays(GL_QUADS, 0, 4);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
+
+    glPopMatrix();
 }
 
 FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size, int color, float alpha) {

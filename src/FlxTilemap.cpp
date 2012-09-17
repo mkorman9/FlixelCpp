@@ -7,7 +7,7 @@
 #endif
 
 
-// Default tile insertion callbac. May be replaced with your own,
+// Default tile insertion callback. May be replaced with your own,
 // for example inserting Box2D bodies.
 void defaultTileCallback(FlxTilemap *map, int value, int indexX, int indexY,
                          int width, int height, bool collisions, const char *tileset)
