@@ -510,12 +510,14 @@ void *SFML_Backend::loadFont(const char *path, int fontSize) {
         return fonts[ss.str()];
     }
 
-    static const std::wstring charset = L"abcdefghijklmnopqrstuvwxyz"
+    // default charset
+    static const wchar_t charset[] = L"abcdefghijklmnopqrstuvwxyz"
         L"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         L"0123456789"
-        L"ąćęłńóśźż"
-        L"ĄĆĘŁŃÓŚŹŻ"
-        L"!@#$%^&*()_-+=|\\<,>.?/:;\"\'{}~` ";
+        L"!@#$%^&*()_-+=|\\<,>.?/:;\"\'{}~` "
+        L"ąćęłńóśźżĄĆĘŁŃÓŚŹŻ" // polish extension
+        L"ßÖÜÄäöü" // german extension
+        L"АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя"; // russian extension
 
     sf::Font *font = new sf::Font();
     if(!font->LoadFromFile(path, fontSize, charset)) return false;
