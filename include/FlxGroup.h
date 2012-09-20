@@ -37,16 +37,16 @@ public:
     void clear();
 
     // any of elements collidates with something
-    virtual FlxBasic* overlaps(FlxBasic *object);
+    virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
     // check overlap and do some phycics work
-    virtual FlxBasic* collide(FlxBasic *object);
+    virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
     // check collisions with each other group member
-    EntitiesSet selfOverlaps();
+    EntitiesSet selfOverlaps(const CollisionCallback& callback = nullptr);
 
     // check collisions with each other group member and do some phycics work
-    EntitiesSet selfCollide();
+    EntitiesSet selfCollide(const CollisionCallback& callback = nullptr);
 
     virtual void update();
     virtual void drawGUI();

@@ -9,19 +9,7 @@
 
 // Default tile insertion callback. May be replaced with your own,
 // for example inserting Box2D bodies.
-void defaultTileCallback(FlxTilemap *map, int value, int indexX, int indexY,
-                         int width, int height, bool collisions, const char *tileset)
-{
-    FlxTile *tile = new FlxTile(indexX * width, indexY * height, tileset, width, height);
-
-    tile->addAnimation("__default", { value });
-    tile->play("__default");
-
-    tile->collisions = collisions;
-    tile->indexX = indexX;
-    tile->indexY = indexY;
-    tile->type = value;
-
+extern void FlxDefaultTileCallback(FlxTilemap *map, FlxTile *tile) {
     map->add(tile);
 }
 
@@ -31,7 +19,7 @@ FlxTilemap::FlxTilemap(const InsertionCallback& callback) {
     mapData = NULL;
 
     if(callback == nullptr) {
-        insertionCallback = defaultTileCallback;
+        insertionCallback = FlxDefaultTileCallback;
     }
     else {
         insertionCallback = callback;
@@ -64,8 +52,17 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
         mapData[i] = map[i];
 
         if(map[i] != -1) {
-            insertionCallback(this, map[i], x1, y1, tileWidth, tileHeight,
-                              (map[i] >= firstSolid), tileset);
+            FlxTile *tile = new FlxTile(x1 * tileWidth, y1 * tileHeight, tileset, tileWidth, tileHeight);
+
+            tile->addAnimation("__default", { map[i] });
+            tile->play("__default");
+
+            tile->collisions = (map[i] >= firstSolid);
+            tile->indexX = x1;
+            tile->indexY = y1;
+            tile->type = map[i];
+
+            insertionCallback(this, tile);
         }
 
         if(x1 == sizeX - 1) {

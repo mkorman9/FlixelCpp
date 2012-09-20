@@ -16,12 +16,16 @@ class FlxState : public FlxGroup {
 public:
 
     // desturctor
-    virtual ~FlxState() {
+    ~FlxState() {
         clear();
     }
 
     // on create event (to override)
     virtual void create() {
+    }
+
+    // on state leaving event (to override)
+    virtual void leave() {
     }
 
     // update all scene elements (to override)

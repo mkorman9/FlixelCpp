@@ -21,6 +21,9 @@ class FlxBasic {
 
 public:
 
+    // collision callback typew
+    typedef std::function<void(FlxBasic*, FlxBasic*)> CollisionCallback;
+
     // entity type
     FlxEntityType entityType;
 
@@ -34,7 +37,7 @@ public:
     FlxVector scroolFactor;
 
     // special variables
-    std::map<std::string, std::string> vars;
+    //std::map<std::string, std::string> vars;
 
 
     // default contructor
@@ -52,13 +55,18 @@ public:
     virtual void draw() {
     }
 
+    // kill entity
+    virtual void kill() {
+        active = false;
+    }
+
     // entity collidates with something?
-    virtual FlxBasic* overlaps(FlxBasic *object) {
+    virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr) {
         return NULL;
     }
 
     // check overlap and make some phycics work
-    virtual FlxBasic* collide(FlxBasic *object) {
+    virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr) {
         return NULL;
     }
 };

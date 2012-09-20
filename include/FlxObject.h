@@ -90,16 +90,19 @@ public:
     bool isTouchingCeiling(FlxBasic *ceil);
 
     // entity overlap override
-    virtual FlxBasic* overlaps(FlxBasic *object);
+    virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
     // check overlap and make some phycics work
-    virtual FlxBasic* collide(FlxBasic *object);
+    virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
     // follow some path
     void followPath(FlxPath *toFollow, float speed);
 
     // stop following path
     void stopFollowing();
+
+    // kill entity
+    virtual void kill();
 
     // default contructor
     FlxObject();

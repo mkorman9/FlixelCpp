@@ -20,6 +20,9 @@ private:
     std::string tileset;
 public:
 
+    typedef std::function<void(FlxEmitter*, FlxParticle*)> InsertionCallback;
+
+
     // position of emitter
     float x, y;
 
@@ -50,7 +53,8 @@ public:
 
     // constructor
     FlxEmitter(float X, float Y, const FlxVector &speedRangeX, const FlxVector &speedRangeY,
-               const FlxVector &life, const FlxVector &partRotation = FlxVector(0, 2*FlxU::PI));
+               const FlxVector &life, const FlxVector &partRotation = FlxVector(0, 2*FlxU::PI),
+               const InsertionCallback& callback = nullptr);
 
     // set position of emitter to the position of object
     void at(FlxObject *obj);
@@ -66,6 +70,9 @@ public:
 
     virtual void update();
     virtual void draw();
+
+private:
+    InsertionCallback insertionCallback;
 };
 
 #endif

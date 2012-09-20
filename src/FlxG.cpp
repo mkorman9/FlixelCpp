@@ -84,6 +84,11 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     BackendHolder::get().getBackend()->mainLoop(innerUpdate, innerDraw);
 
 
+    if(state) {
+        state->leave();
+        delete state;
+    }
+
     delete key;
 
     BackendHolder::get().getBackend()->exitApplication();
@@ -141,7 +146,10 @@ void FlxG::innerUpdate() {
 
     // switch state?
     if(stateToSwitch) {
-        if(state) delete state;
+        if(state) {
+            state->leave();
+            delete state;
+        }
 
         shaders.clear();
         tweener.removeTween(NULL);

@@ -92,16 +92,16 @@ void FlxGroup::draw() {
 }
 
 
-FlxBasic* FlxGroup::overlaps(FlxBasic *object) {
+FlxBasic* FlxGroup::overlaps(FlxBasic *object, const CollisionCallback& callback) {
 
     if(object->entityType == FLX_OBJECT) {
-        return object->overlaps(this);
+        return object->overlaps(this, callback);
     }
     else if(object->entityType == FLX_GROUP) {
         FlxGroup *group = (FlxGroup*) object;
 
         for(unsigned int i = 0; i < group->members.size(); i++) {
-            if(overlaps(group->members[i])) return group->members[i];
+            if(overlaps(group->members[i], callback)) return group->members[i];
         }
     }
 
@@ -109,14 +109,14 @@ FlxBasic* FlxGroup::overlaps(FlxBasic *object) {
 }
 
 
-FlxBasic* FlxGroup::collide(FlxBasic *object) {
+FlxBasic* FlxGroup::collide(FlxBasic *object, const CollisionCallback& callback) {
 
     if(object->entityType == FLX_OBJECT) {
         FlxBasic *ent = NULL;
 
         for(int i = members.size() - 1; i >= 0; i--) {
             FlxObject *obj = (FlxObject*)members[i];
-            ent = obj->collide(object);
+            ent = obj->collide(object, callback);
         }
 
         return ent;
@@ -127,7 +127,7 @@ FlxBasic* FlxGroup::collide(FlxBasic *object) {
 
         for(int i = members.size() - 1; i >= 0; i--) {
             for(int j = group->members.size() - 1; j >= 0; j--) {
-                ent = members[i]->collide(group->members[j]);
+                ent = members[i]->collide(group->members[j], callback);
             }
         }
 
@@ -138,7 +138,7 @@ FlxBasic* FlxGroup::collide(FlxBasic *object) {
 }
 
 
-FlxGroup::EntitiesSet FlxGroup::selfOverlaps() {
+FlxGroup::EntitiesSet FlxGroup::selfOverlaps(const CollisionCallback& callback) {
     FlxGroup::EntitiesSet set = { 0, 0 };
 
     for(unsigned int i = 0; i < members.size(); i++) {
@@ -146,6 +146,8 @@ FlxGroup::EntitiesSet FlxGroup::selfOverlaps() {
             if((members[i] != members[j]) && members[i]->overlaps(members[j])) {
                 set.first = members[i];
                 set.second = members[j];
+
+                if(callback != nullptr) callback(set.first, set.second);
             }
         }
     }
@@ -154,7 +156,7 @@ FlxGroup::EntitiesSet FlxGroup::selfOverlaps() {
 }
 
 
-FlxGroup::EntitiesSet FlxGroup::selfCollide() {
+FlxGroup::EntitiesSet FlxGroup::selfCollide(const CollisionCallback& callback) {
     FlxGroup::EntitiesSet set = { 0, 0 };
 
     for(unsigned int i = 0; i < members.size(); i++) {
@@ -162,6 +164,8 @@ FlxGroup::EntitiesSet FlxGroup::selfCollide() {
             if((members[i] != members[j]) && members[i]->collide(members[j])) {
                 set.first = members[i];
                 set.second = members[j];
+
+                if(callback != nullptr) callback(set.first, set.second);
             }
         }
     }

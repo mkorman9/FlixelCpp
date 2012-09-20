@@ -16,8 +16,7 @@ class FlxTilemap : public FlxGroup {
 
 public:
 
-    typedef std::function<void(FlxTilemap*, int, int, int,
-                               int, int, bool, const char*)> InsertionCallback;
+    typedef std::function<void(FlxTilemap*, FlxTile*)> InsertionCallback;
 
     // raw map data
     int *mapData;

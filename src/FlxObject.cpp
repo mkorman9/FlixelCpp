@@ -73,6 +73,12 @@ FlxVector FlxObject::getCenter() {
 }
 
 
+void FlxObject::kill() {
+    visible = false;
+    FlxBasic::kill();
+}
+
+
 bool FlxObject::isTouchingFloor(FlxBasic *floor) {
 
     FlxObject obj1;
@@ -129,25 +135,34 @@ bool FlxObject::isTouchingCeiling(FlxBasic *ceil) {
 }
 
 
-FlxBasic* FlxObject::overlaps(FlxBasic *object) {
+FlxBasic* FlxObject::overlaps(FlxBasic *object, const CollisionCallback& callback) {
 
     if(object->entityType == FLX_OBJECT) {
-        if(hitbox.overlaps(((FlxObject*)object)->hitbox)) return object;
+        if(hitbox.overlaps(((FlxObject*)object)->hitbox)) {
+            if(callback != nullptr) callback(this, object);
+            return object;
+        }
     }
     else if(object->entityType == FLX_GROUP) {
         FlxGroup *group = (FlxGroup*) object;
+        FlxBasic *mem = NULL;
 
         for(unsigned int i = 0; i < group->members.size(); i++) {
             FlxBasic *obj = overlaps(group->members[i]);
-            if(obj != NULL) return obj;
+            if(obj != NULL) {
+                if(callback != nullptr) callback(this, group->members[i]);
+                mem = obj;
+            }
         }
+
+        return mem;
     }
 
     return NULL;
 }
 
 
-FlxBasic* FlxObject::collide(FlxBasic *object) {
+FlxBasic* FlxObject::collide(FlxBasic *object, const CollisionCallback& callback) {
 
     if(!collisions) return NULL;
 
@@ -182,6 +197,7 @@ FlxBasic* FlxObject::collide(FlxBasic *object) {
             col = true;
         }
 
+        if(col && callback != nullptr) callback(this, object);
         return col ? object : NULL;
     }
     else if(object->entityType == FLX_GROUP) {

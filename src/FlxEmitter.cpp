@@ -2,8 +2,17 @@
 #include "backend/BackendHolder.h"
 #include "FlxG.h"
 
+// Default particles insertion callback. May be replaced with your own,
+// for example inserting Box2D bodies.
+extern void FlxDefaultParticleCallback(FlxEmitter *emitter, FlxParticle *particle) {
+    emitter->add(particle);
+}
+
+
+// FlxEmitter members start here
 FlxEmitter::FlxEmitter(float X, float Y, const FlxVector &speedRangeX, const FlxVector &speedRangeY,
-                       const FlxVector &lifeTime, const FlxVector &partRotation)
+                       const FlxVector &lifeTime, const FlxVector &partRotation,
+                       const InsertionCallback& callback)
 {
     x = X;
     y = Y;
@@ -14,6 +23,13 @@ FlxEmitter::FlxEmitter(float X, float Y, const FlxVector &speedRangeX, const Flx
     particleHeight = 0;
     particleTiles = 0;
     timeToLife = lifeTime;
+
+    if(callback == nullptr) {
+        insertionCallback = FlxDefaultParticleCallback;
+    }
+    else {
+        insertionCallback = callback;
+    }
 }
 
 
@@ -49,7 +65,7 @@ void FlxEmitter::emit(int howMany) {
         else
             part->timeToLife = -1.f;
 
-        add(part);
+        insertionCallback(this, part);
     }
 }
 
