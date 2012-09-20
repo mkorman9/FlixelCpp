@@ -43,7 +43,11 @@ void FlxEmitter::emit(int howMany) {
         part->angle = FlxU::random((int)particleRotation.x, (int)particleRotation.y);
         part->velocity.x = FlxU::random((int)particleSpeedX.x, (int)particleSpeedX.y);
         part->velocity.y = FlxU::random((int)particleSpeedY.x, (int)particleSpeedY.y);
-        part->timeToLife = FlxU::random(timeToLife.x, timeToLife.y);
+
+        if(timeToLife.x > 0 && timeToLife.y > 0)
+            part->timeToLife = FlxU::random(timeToLife.x, timeToLife.y);
+        else
+            part->timeToLife = -1.f;
 
         add(part);
     }
@@ -62,6 +66,7 @@ void FlxEmitter::update() {
 
     for(unsigned int i = 0; i < members.size(); i++) {
         FlxParticle *part = (FlxParticle*)members[i];
+        if(part->timeToLife == -1.f) continue;
 
         if(part->timeToLife <= 0) {
             remove(part);

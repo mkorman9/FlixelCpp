@@ -108,6 +108,7 @@ FlxBasic* FlxGroup::overlaps(FlxBasic *object) {
     return NULL;
 }
 
+
 FlxBasic* FlxGroup::collide(FlxBasic *object) {
 
     if(object->entityType == FLX_OBJECT) {
@@ -134,5 +135,37 @@ FlxBasic* FlxGroup::collide(FlxBasic *object) {
     }
 
     return NULL;
+}
+
+
+FlxGroup::EntitiesSet FlxGroup::selfOverlaps() {
+    FlxGroup::EntitiesSet set = { 0, 0 };
+
+    for(unsigned int i = 0; i < members.size(); i++) {
+        for(int j = members.size() - 1; j >= 0; j--) {
+            if((members[i] != members[j]) && members[i]->overlaps(members[j])) {
+                set.first = members[i];
+                set.second = members[j];
+            }
+        }
+    }
+
+    return set;
+}
+
+
+FlxGroup::EntitiesSet FlxGroup::selfCollide() {
+    FlxGroup::EntitiesSet set = { 0, 0 };
+
+    for(unsigned int i = 0; i < members.size(); i++) {
+        for(int j = members.size() - 1; j >= 0; j--) {
+            if((members[i] != members[j]) && members[i]->collide(members[j])) {
+                set.first = members[i];
+                set.second = members[j];
+            }
+        }
+    }
+
+    return set;
 }
 

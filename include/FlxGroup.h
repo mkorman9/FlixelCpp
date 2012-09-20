@@ -16,6 +16,10 @@ class FlxGroup : public FlxBasic {
 public:
     std::vector<FlxBasic*> members;
 
+    struct EntitiesSet {
+        FlxBasic *first;
+        FlxBasic *second;
+    };
 
     // constructor
     FlxGroup();
@@ -35,8 +39,14 @@ public:
     // any of elements collidates with something
     virtual FlxBasic* overlaps(FlxBasic *object);
 
-    // check overlap and make some phycics work
+    // check overlap and do some phycics work
     virtual FlxBasic* collide(FlxBasic *object);
+
+    // check collisions with each other group member
+    EntitiesSet selfOverlaps();
+
+    // check collisions with each other group member and do some phycics work
+    EntitiesSet selfCollide();
 
     virtual void update();
     virtual void drawGUI();
