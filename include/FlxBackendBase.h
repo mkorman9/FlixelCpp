@@ -106,14 +106,13 @@ public:
 
     // image rendering
     virtual void drawImage(FlxBackendImage *img, float x, float y, const FlxVector& scale, float angle,
-                        const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
-                        const FlxVector& scroolFactor) = 0;
+                        const FlxRect& source, int color, bool flipped, float alpha) = 0;
 
     // text rendering
     virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, int color, float alpha) = 0;
     virtual void destroyText(FlxBaseText *data) = 0;
-    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale,
-                          float angle, const FlxVector& scroolFactor) = 0;
+    virtual void drawText(FlxBaseText *text, float x, float y, const FlxVector& scale,
+                          float angle) = 0;
 
     // special effects
     virtual bool isShadersSupported() = 0;

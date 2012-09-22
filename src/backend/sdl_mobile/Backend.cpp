@@ -447,7 +447,7 @@ void SDL_Mobile_Backend::showMouse(bool show) {
 }
 
 void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, const FlxVector& scale, float angle,
-                             const FlxRect& source, int color, bool flipped, bool scrool, float alpha, const FlxVector& scroolFactor)
+                             const FlxRect& source, int color, bool flipped, float alpha)
 {
 	if(!image) return;
 
@@ -458,11 +458,6 @@ void SDL_Mobile_Backend::drawImage(FlxBackendImage *image, float x, float y, con
 	s.x *= ((float)screenWidth / FlxG::width);
 	s.y *= ((float)screenHeight / FlxG::height);
 	
-	if(scrool) {
-		x += FlxG::scroolVector.x * scroolFactor.x;
-		y += FlxG::scroolVector.y * scroolFactor.y;
-	}
-
 	x *= ((float)screenWidth / FlxG::width);
 	y *= ((float)screenHeight / FlxG::height);
 	
@@ -517,18 +512,11 @@ void SDL_Mobile_Backend::destroyText(FlxBaseText *data) {
     }
 }
 
-void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale, float angle, 
-								const FlxVector& scroolFactor) 
-{
+void SDL_Mobile_Backend::drawText(FlxBaseText *text, float x, float y, const FlxVector& scale, float angle) {
 	if(!text) return;
 
 	SDL_Texture *tex = (SDL_Texture*) text->data;
 	if(!tex) return;
-
-	if(scrool) {
-		x += FlxG::scroolVector.x * scroolFactor.x;
-		y += FlxG::scroolVector.y * scroolFactor.y;
-	}
 
 	FlxVector s = scale;
 	s.x *= ((float)screenWidth / FlxG::width);

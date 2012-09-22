@@ -48,13 +48,12 @@ public:
     virtual void showMouse(bool show);
 
     virtual void drawImage(FlxBackendImage *img, float x, float y,  const FlxVector& scale, float angle,
-                           const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
-                           const FlxVector& scroolFactor);
+                           const FlxRect& source, int color, bool flipped, float alpha);
 
     virtual FlxBaseText *createText(const wchar_t *text, void *font, int size, int color, float alpha);
     virtual void destroyText(FlxBaseText *data);
-    virtual void drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale,
-                                    float angle, const FlxVector& scroolFactor);
+    virtual void drawText(FlxBaseText *text, float x, float y, const FlxVector& scale,
+                                    float angle);
 
     virtual FlxBackendImage* createImage(int width, int height, int color, float alpha);
     virtual FlxBackendImage *loadImage(const char *path);

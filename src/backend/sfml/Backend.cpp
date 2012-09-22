@@ -351,22 +351,16 @@ void SFML_Backend::showMouse(bool show) {
 }
 
 void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxVector& scale, float angle,
-                             const FlxRect& source, int color, bool flipped, bool scrool, float alpha,
-                             const FlxVector& scroolFactor)
+                             const FlxRect& source, int color, bool flipped, float alpha)
 {
     SFML_Image *gfx = (SFML_Image*)img;
-
-    FlxVector move = FlxG::scroolVector;
-    move.x *= scroolFactor.x;
-    move.y *= scroolFactor.y;
-    if(!scrool) { move.x = move.y = 0; }
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
     gfx->Graphic.Bind();
 
-    glTranslatef(x + move.x + (source.width / 2), y + move.y + (source.height / 2), 0.f);
+    glTranslatef(x + (source.width / 2), y + (source.height / 2), 0.f);
     glScalef(scale.x, scale.y, 0);
     glRotatef(FlxU::radToDegrees(angle), 0.f, 0.f, 1.f);
     glTranslatef(-source.width / 2, -source.height / 2, 0.f);
@@ -457,21 +451,15 @@ void SFML_Backend::destroyText(FlxBaseText *data) {
     }
 }
 
-void SFML_Backend::drawText(FlxBaseText *text, float x, float y, bool scrool, const FlxVector& scale,
-                                    float angle, const FlxVector& scroolFactor) {
+void SFML_Backend::drawText(FlxBaseText *text, float x, float y, const FlxVector& scale, float angle) {
 
     if(!text) return;
     if(!text->data) return;
 
-    FlxVector move = FlxG::scroolVector;
-    move.x *= scroolFactor.x;
-    move.y *= scroolFactor.y;
-    if(!scrool) { move.x = move.y = 0; }
-
     sf::String *str = (sf::String*) text->data;
     str->SetScale(scale.x, scale.y);
     str->SetRotation(-FlxU::radToDegrees(angle));
-    str->SetPosition(x + (text->bounds.x / 2) + move.x, y + (text->bounds.y / 2) + move.y);
+    str->SetPosition(x + (text->bounds.x / 2), y + (text->bounds.y / 2));
 
     window->Draw(*str);
 }

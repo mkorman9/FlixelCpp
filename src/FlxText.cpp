@@ -1,4 +1,5 @@
 #include "FlxText.h"
+#include "FlxG.h"
 #include "backend/BackendHolder.h"
 
 FlxText::FlxText(const wchar_t *Text, const char *Font, float X, float Y, int Size, int Color) {
@@ -60,7 +61,12 @@ void FlxText::draw() {
         updateBuffer();
     }
 
-    BackendHolder::get().getBackend()->drawText(textData, x, y, scrool, scale, angle, scroolFactor);
+    FlxVector move = FlxG::scroolVector;
+    move.x *= scroolFactor.x;
+    move.y *= scroolFactor.y;
+    if(!scrool) { move.x = move.y = 0; }
+
+    BackendHolder::get().getBackend()->drawText(textData, x + move.x, y + move.y, scale, angle);
 }
 
 

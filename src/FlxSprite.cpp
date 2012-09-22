@@ -42,6 +42,7 @@ bool FlxSprite::loadGraphic(const char *gfx, int Width, int Height) {
     return true;
 }
 
+
 void FlxSprite::makeGraphic(int Width, int Height, int color) {
     graphic = BackendHolder::get().getBackend()->createImage(Width, Height, color, alpha);
     width = hitbox.width = Width;
@@ -60,8 +61,14 @@ void FlxSprite::update() {
 void FlxSprite::draw() {
     if(!graphic || !visible) return;
 
-    BackendHolder::get().getBackend()->drawImage(graphic, x, y, scale, angle, FlxRect(sourceX, sourceY,
-                                                width, height), color, flipped, scrool, alpha, scroolFactor);
+    FlxVector move = FlxG::scroolVector;
+    move.x *= scroolFactor.x;
+    move.y *= scroolFactor.y;
+    if(!scrool) { move.x = move.y = 0; }
+
+    BackendHolder::get().getBackend()->drawImage(graphic, x + move.x, y + move.y, scale, angle,
+                                                 FlxRect(sourceX, sourceY, width, height), color,
+                                                 flipped, alpha);
 }
 
 
