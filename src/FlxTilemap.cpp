@@ -45,32 +45,35 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
 
     mapData = new int[sizeX * sizeY];
 
-    // fill map
-    int x1 = 0, y1 = 0;
+    // copy tiles to map data
+    for(int i = 0; i < sizeX * sizeY; i++) {
+        mapData[i] = map[i];
+    }
+
+    // fill map data
+    int x = 0, y = 0;
     for(int i = 0; i < sizeX * sizeY; i++) {
 
-        mapData[i] = map[i];
+        if(mapData[i] != -1) {
+            FlxTile *tile = new FlxTile(x * tileWidth, y * tileHeight, tileset, tileWidth, tileHeight);
 
-        if(map[i] != -1) {
-            FlxTile *tile = new FlxTile(x1 * tileWidth, y1 * tileHeight, tileset, tileWidth, tileHeight);
-
-            tile->addAnimation("__default", { map[i] });
+            tile->addAnimation("__default", { mapData[i] });
             tile->play("__default");
 
-            tile->collisions = (map[i] >= firstSolid);
-            tile->indexX = x1;
-            tile->indexY = y1;
-            tile->type = map[i];
+            tile->collisions = (mapData[i] >= firstSolid);
+            tile->indexX = x;
+            tile->indexY = y;
+            tile->type = mapData[i];
 
             insertionCallback(this, tile);
         }
 
-        if(x1 == sizeX - 1) {
-            y1++;
-            x1 = -1;
+        if(x == sizeX - 1) {
+            y++;
+            x = -1;
         }
 
-        x1++;
+        x++;
     }
 }
 
@@ -79,7 +82,7 @@ int FlxTilemap::getTile(int x, int y) {
 
     if(x < 0 || y < 0 || x >= (int)size.x || y >= (int)size.y) return -1;
 
-    return mapData[y * (int)size.x + x];
+    return mapData[(y * (int)size.x) + x];
 }
 
 
@@ -94,7 +97,7 @@ int FlxTilemap::getTileFromPoint(float pointX, float pointY) {
 void FlxTilemap::setTile(int x, int y, int value) {
 
     if(x < 0 || y < 0 || x >= (int)size.x || y >= (int)size.y) return;
-    mapData[y * (int)size.x + x] = value;
+    mapData[(y * (int)size.x) + x] = value;
 }
 
 

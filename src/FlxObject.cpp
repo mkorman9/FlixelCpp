@@ -205,7 +205,7 @@ FlxBasic* FlxObject::collide(FlxBasic *object, const CollisionCallback& callback
         FlxBasic *ent = 0;
 
         for(int i = group->members.size() - 1; i >= 0; i--) {
-            ent = collide(group->members[i]);
+            ent = collide(group->members[i], callback);
         }
 
         return ent;
