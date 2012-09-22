@@ -37,7 +37,7 @@ public:
     SFML_Backend(bool fullscreen = false);
     virtual std::string getName() { return "SFML"; }
 
-    virtual bool setupSurface(const char *title, int width, int height);
+    virtual bool setupSurface(const char *title, int width, int height, const char *icon);
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)());
     virtual FlxVector getScreenSize();
     virtual void exitApplication();

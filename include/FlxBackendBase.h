@@ -94,7 +94,7 @@ public:
     virtual std::string getName() = 0;
 
     // app managment and input
-    virtual bool setupSurface(const char *title, int width, int height) = 0;
+    virtual bool setupSurface(const char *title, int width, int height, const char *icon) = 0;
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)()) = 0;
     virtual FlxVector getScreenSize() = 0;
     virtual void exitApplication() = 0;

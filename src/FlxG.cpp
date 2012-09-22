@@ -43,7 +43,8 @@ static int powerOf2(int input) {
 /*
 *  Main functions definitions starts here
 */
-int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
+int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
+                const char *icon) {
 
     if(!backend) {
         std::cerr << "[Error] Backend is null" << std::endl;
@@ -54,7 +55,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state) {
     height = Height;
 
     BackendHolder::get().setBackend(backend);
-    BackendHolder::get().getBackend()->setupSurface(title, width, height);
+    BackendHolder::get().getBackend()->setupSurface(title, width, height, icon);
 
     FlxVector screenSize = BackendHolder::get().getBackend()->getScreenSize();
 	screenWidth = screenSize.x;

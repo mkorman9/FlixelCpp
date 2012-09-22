@@ -257,7 +257,7 @@ public:
 /*
 *  Main backend class definition
 */
-bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height) {
+bool SDL_Mobile_Backend::setupSurface(const char *title, int width, int height, const char*) {
 
     // initialize SDL
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);

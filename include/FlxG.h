@@ -101,7 +101,8 @@ public:
     static void followObject(FlxObject *object);
 
     // setup game
-    static int setup(const char *title, int Width, int Height, FlxState *state);
+    static int setup(const char *title, int Width, int Height, FlxState *state,
+                     const char *icon = NULL);
 
     // plays a specified sound
     static FlxSound play(const char *path, float volume = 1.0f);

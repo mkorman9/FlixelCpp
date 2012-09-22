@@ -203,7 +203,7 @@ SFML_Backend::SFML_Backend(bool f) {
     fullscreen = f;
 }
 
-bool SFML_Backend::setupSurface(const char *title, int width, int height) {
+bool SFML_Backend::setupSurface(const char *title, int width, int height, const char *icon) {
 
     unsigned long style = sf::Style::Resize | sf::Style::Close;
     if(fullscreen) style = sf::Style::Fullscreen;
@@ -214,6 +214,13 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height) {
     window->EnableKeyRepeat(false);
     for(int i = 0; i < 1024; i++) {
         keysDown[i] = false;
+    }
+
+    if(icon) {
+        sf::Image iconImg;
+        if(iconImg.LoadFromFile(icon)) {
+            window->SetIcon(iconImg.GetWidth(), iconImg.GetHeight(), iconImg.GetPixelsPtr());
+        }
     }
 
     FlxMouse::onTouchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());

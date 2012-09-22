@@ -37,7 +37,7 @@ private:
 public:
 	virtual std::string getName() { return "SDL2/mobile"; }
 	
-    virtual bool setupSurface(const char *title, int width, int height);
+    virtual bool setupSurface(const char *title, int width, int height, const char *icon);
     virtual void mainLoop(void (*onUpdate)(), void (*onDraw)());
     virtual FlxVector getScreenSize();
     virtual void exitApplication();
