@@ -15,16 +15,7 @@ const GLchar DefaultVertexShader[] = \
     "}\n";
 
 
-// quick help function
-static int powerOf2(int input) {
-    int value = 1;
-
-    while (value < input) {
-        value <<= 1;
-    }
-
-    return value;
-}
+extern int FlxPowerOf2(int input);
 
 
 /*
@@ -228,14 +219,14 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height, const 
 
     // create framebuffer if needed
     if(isShadersSupported()) {
-        unsigned char *pixels = new unsigned char[powerOf2(width) * powerOf2(height) * 3];
+        unsigned char *pixels = new unsigned char[FlxPowerOf2(width) * FlxPowerOf2(height) * 3];
         for(unsigned int i = 0; i < sizeof(pixels); i++) pixels[i] = 255;
 
         glGenTextures(1, &framebuffer);
 		glBindTexture(GL_TEXTURE_2D, framebuffer);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, powerOf2(width), powerOf2(height), 0, GL_RGB,
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, FlxPowerOf2(width), FlxPowerOf2(height), 0, GL_RGB,
                GL_UNSIGNED_BYTE, pixels);
 
         delete[] pixels;
@@ -597,7 +588,7 @@ void SFML_Backend::drawShader(FlxBackendShader *s) {
 
     // get current framebuffer
     glBindTexture(GL_TEXTURE_2D, framebuffer);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, powerOf2(FlxG::width), powerOf2(FlxG::height), 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, FlxPowerOf2(FlxG::width), FlxPowerOf2(FlxG::height), 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     SFML_Shader *shader = (SFML_Shader*) s;
@@ -624,8 +615,8 @@ void SFML_Backend::drawShader(FlxBackendShader *s) {
         i++;
     }
 
-    float bottom = (float)FlxG::height / (float)powerOf2(FlxG::height);
-    float right = (float)FlxG::width / (float)powerOf2(FlxG::width);
+    float bottom = (float)FlxG::height / (float)FlxPowerOf2(FlxG::height);
+    float right = (float)FlxG::width / (float)FlxPowerOf2(FlxG::width);
 
     // draw effect as fullscreen quad
     glBegin(GL_QUADS);
