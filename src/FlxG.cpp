@@ -143,6 +143,20 @@ void FlxG::updateMouses() {
 }
 
 
+FlxBasic* FlxG::overlaps(FlxBasic *one, FlxBasic *two, const FlxBasic::CollisionCallback&
+                         collisionCallback)
+{
+    return one->overlaps(two, collisionCallback);
+}
+
+
+FlxBasic* FlxG::collide(FlxBasic *one, FlxBasic *two, const FlxBasic::CollisionCallback&
+                         collisionCallback)
+{
+    return one->collide(two, collisionCallback);
+}
+
+
 void FlxG::innerUpdate() {
 
     // switch state?

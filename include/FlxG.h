@@ -119,6 +119,14 @@ public:
     // special camera effect - flash screen
     static void flash(int color, float time);
 
+    // check objects collision
+    static FlxBasic* overlaps(FlxBasic *one, FlxBasic *two, const FlxBasic::CollisionCallback&
+                         collisionCallback = nullptr);
+
+    // check objects collision and do some physics work
+    static FlxBasic* collide(FlxBasic *one, FlxBasic *two, const FlxBasic::CollisionCallback&
+                         collisionCallback = nullptr);
+
 
     // update game state (internal)
     static void innerUpdate();
