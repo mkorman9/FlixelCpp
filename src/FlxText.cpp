@@ -19,6 +19,10 @@ FlxText::FlxText(const wchar_t *Text, const char *Font, float X, float Y, int Si
 }
 
 
+FlxText::~FlxText() {
+}
+
+
 void FlxText::setFormat(const char *Font, int Size, int Color) {
 
     font = BackendHolder::get().getBackend()->loadFont(Font, Size);

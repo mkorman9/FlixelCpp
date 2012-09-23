@@ -56,6 +56,9 @@ public:
                const FlxVector &life, const FlxVector &partRotation = FlxVector(0, 2*FlxU::PI),
                const InsertionCallback& callback = nullptr);
 
+    // destructor
+    virtual ~FlxEmitter();
+
     // set position of emitter to the position of object
     void at(FlxObject *obj);
 

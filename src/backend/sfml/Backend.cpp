@@ -350,7 +350,7 @@ void SFML_Backend::showMouse(bool show) {
     window->ShowMouseCursor(show);
 }
 
-void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y,  const FlxVector& scale, float angle,
+void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y, const FlxVector& scale, float angle,
                              const FlxRect& source, int color, bool flipped, float alpha)
 {
     SFML_Image *gfx = (SFML_Image*)img;

@@ -24,6 +24,7 @@
 					<Add library="sfml-graphics" />
 					<Add library="sfml-audio" />
 					<Add library="sfml-network" />
+					<Add library="sfml-main" />
 					<Add library="opengl32" />
 				</Linker>
 			</Target>

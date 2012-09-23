@@ -38,7 +38,7 @@ public:
     FlxTilemap(const InsertionCallback& callback = nullptr);
 
     // destructor
-    ~FlxTilemap();
+    virtual ~FlxTilemap();
 
     // load map to memory
     void loadMap(int *map, int sizeX, int sizeY, const char *tileset, int tileWidth,

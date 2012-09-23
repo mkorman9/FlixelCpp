@@ -33,6 +33,10 @@ FlxEmitter::FlxEmitter(float X, float Y, const FlxVector &speedRangeX, const Flx
 }
 
 
+FlxEmitter::~FlxEmitter() {
+}
+
+
 void FlxEmitter::at(FlxObject *obj) {
     if(!obj) return;
 

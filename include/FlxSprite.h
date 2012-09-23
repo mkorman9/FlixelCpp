@@ -37,7 +37,7 @@ public:
     FlxSprite(float x = 0, float y = 0, const char *gfx = NULL, int Width = 0, int Height = 0);
 
     // destructor
-    ~FlxSprite();
+    virtual ~FlxSprite();
 
     // reset internal sprite data
     void reset();

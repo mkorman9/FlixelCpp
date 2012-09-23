@@ -76,6 +76,10 @@ FlxVirtualKeyboard::FlxVirtualKeyboard(float x, float y, const char *backgroundI
 }
 
 
+FlxVirtualKeyboard::~FlxVirtualKeyboard() {
+}
+
+
 void FlxVirtualKeyboard::pressedCallback(FlxButton *button) {
     if(button->onText->text == L"ENT") {
         FlxG::key->simulateKeyDown(FlxKey::Enter);

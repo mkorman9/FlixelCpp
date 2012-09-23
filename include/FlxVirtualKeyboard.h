@@ -27,6 +27,8 @@ public:
     FlxVirtualKeyboard(float x, float y, const char *backgroundImg, const char *buttonImg, int buttonW, int buttonH,
                        const char *buttonFont, int buttonFontSize, int buttonFontColor,
                        float spacingX = 20.f, float spacingY = 20.f);
+
+    virtual ~FlxVirtualKeyboard();
 };
 
 #endif

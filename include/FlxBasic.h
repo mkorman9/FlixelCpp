@@ -47,6 +47,10 @@ public:
         scroolFactor.x = scroolFactor.y = 1.f;
     }
 
+    // destructor's template
+    virtual ~FlxBasic() {
+    }
+
     // base update function (to override)
     virtual void update() {
     }

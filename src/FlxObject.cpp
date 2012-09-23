@@ -25,6 +25,10 @@ FlxObject::FlxObject() {
 }
 
 
+FlxObject::~FlxObject() {
+}
+
+
 void FlxObject::update() {
     if(!active) return;
 

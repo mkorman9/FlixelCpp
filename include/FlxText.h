@@ -31,6 +31,9 @@ public:
     // Default constructor
     FlxText(const wchar_t *text, const char *font, float x = 0, float y = 0, int size = 32, int Color = 0x000000);
 
+    // destructor
+    virtual ~FlxText();
+
     // Set text's design
     void setFormat(const char *font, int Size, int Color);
 

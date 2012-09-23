@@ -107,6 +107,9 @@ public:
     // default contructor
     FlxObject();
 
+    // default destructor
+    virtual ~FlxObject();
+
     // base update function (to override)
     virtual void update();
 
