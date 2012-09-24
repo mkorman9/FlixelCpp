@@ -21,6 +21,7 @@
 #include <sstream>
 #include <limits>
 #include <list>
+#include <cctype>
 
 #include <initializer_list>
 #include <functional>
