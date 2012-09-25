@@ -1,5 +1,4 @@
 #include "FlxPreloader.h"
-#include "backend/BackendHolder.h"
 #include "FlxG.h"
 
 FlxPreloader *FlxPreloader::CurrentInstance;
@@ -21,7 +20,7 @@ void FlxPreloader::update() {
             state = FLX_FONTS_LOADING;
         }
         else {
-            if(!BackendHolder::get().getBackend()->loadImage(imagesToLoad[currentIterator].c_str())) {
+            if(!FlxG::backend->loadImage(imagesToLoad[currentIterator].c_str())) {
                 onError(imagesToLoad[currentIterator]);
             }
 
@@ -38,7 +37,7 @@ void FlxPreloader::update() {
             state = FLX_MUSIC_LOADING;
         }
         else {
-            if(!BackendHolder::get().getBackend()->loadFont(fontsToLoad[currentIterator].first.c_str(),
+            if(!FlxG::backend->loadFont(fontsToLoad[currentIterator].first.c_str(),
                                                     fontsToLoad[currentIterator].second))
             {
                onError(fontsToLoad[currentIterator].first);
@@ -59,7 +58,7 @@ void FlxPreloader::update() {
         else {
 			// don't load music now. music files should be streamed,
 			// not loaded on the begining. Check file's existance
-			if(!BackendHolder::get().getBackend()->internalFileExists(musicToLoad[currentIterator].c_str())) {
+			if(!FlxG::backend->internalFileExists(musicToLoad[currentIterator].c_str())) {
                 onError(musicToLoad[currentIterator]);
 			}
 
@@ -76,7 +75,7 @@ void FlxPreloader::update() {
             FlxG::exitMessage = true;
         }
         else {
-            if(!BackendHolder::get().getBackend()->loadSound(soundsToLoad[currentIterator].c_str())) {
+            if(!FlxG::backend->loadSound(soundsToLoad[currentIterator].c_str())) {
                 onError(soundsToLoad[currentIterator]);
             }
 

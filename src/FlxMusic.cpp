@@ -1,17 +1,17 @@
 #include "FlxMusic.h"
-#include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 std::vector<FlxBackendMusic*> FlxMusic::Music;
 
 FlxMusic::FlxMusic(const char *path) {
-    musicPtr = BackendHolder::get().getBackend()->loadMusic(path);
+    musicPtr = FlxG::backend->loadMusic(path);
 }
 
 
 void FlxMusic::play(float vol) {
 
     if(musicPtr) {
-        BackendHolder::get().getBackend()->playMusic(musicPtr, vol);
+        FlxG::backend->playMusic(musicPtr, vol);
         Music.push_back(musicPtr);
     }
 }

@@ -1,16 +1,16 @@
 #include "FlxShader.h"
-#include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 FlxShader::FlxShader(const char *fragmentShaderFile) {
 
 	data = NULL;
-	
-    if(!BackendHolder::get().getBackend()->isShadersSupported()) {
+
+    if(!FlxG::backend->isShadersSupported()) {
         std::cerr << "[Error] Shaders aren't supported on this platform" << std::endl;
         return;
     }
 
-    data = BackendHolder::get().getBackend()->loadShader(fragmentShaderFile);
+    data = FlxG::backend->loadShader(fragmentShaderFile);
 }
 
 
@@ -63,7 +63,7 @@ void FlxShader::setTexture(const char *name, const char *texFile) {
         data->setParameter(name, (FlxBackendImage*) NULL);
     }
     else {
-        FlxBackendImage *img = BackendHolder::get().getBackend()->loadImage(texFile);
+        FlxBackendImage *img = FlxG::backend->loadImage(texFile);
         data->setParameter(name, img);
     }
 }

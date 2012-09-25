@@ -1,5 +1,5 @@
 #include "FlxHttpRequest.h"
-#include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 FlxHttpRequest::FlxHttpRequest(FlxRequestType m, const std::string& r, const std::string& h, int p) {
     method = m;
@@ -13,5 +13,5 @@ FlxHttpRequest::FlxHttpRequest(FlxRequestType m, const std::string& r, const std
 
 
 bool FlxHttpRequest::send(FlxHttpResponse& resp) {
-    return BackendHolder::get().getBackend()->sendHttpRequest(this, resp);
+    return FlxG::backend->sendHttpRequest(this, resp);
 }

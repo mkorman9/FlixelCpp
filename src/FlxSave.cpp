@@ -1,6 +1,6 @@
 #include "FlxSave.h"
 #include "FlxU.h"
-#include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 void FlxSave::set(const char *name, const char *Data) {
     data[name] = Data;
@@ -33,11 +33,11 @@ float FlxSave::getFloatNumber(const char *name) {
 
 
 void FlxSave::save(const char *path) {
-    BackendHolder::get().getBackend()->saveData(path, data);
+    FlxG::backend->saveData(path, data);
 }
 
 
 bool FlxSave::load(const char *path) {
-    return BackendHolder::get().getBackend()->loadData(path, data);
+    return FlxG::backend->loadData(path, data);
 }
 

@@ -1,6 +1,5 @@
 #include "FlxText.h"
 #include "FlxG.h"
-#include "backend/BackendHolder.h"
 
 FlxText::FlxText(const wchar_t *Text, const char *Font, float X, float Y, int Size, int Color) {
     x = X;
@@ -25,7 +24,7 @@ FlxText::~FlxText() {
 
 void FlxText::setFormat(const char *Font, int Size, int Color) {
 
-    font = BackendHolder::get().getBackend()->loadFont(Font, Size);
+    font = FlxG::backend->loadFont(Font, Size);
     color = Color;
     size = Size;
 
@@ -70,14 +69,14 @@ void FlxText::draw() {
     move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
 
-    BackendHolder::get().getBackend()->drawText(textData, x + move.x, y + move.y, scale, angle);
+    FlxG::backend->drawText(textData, x + move.x, y + move.y, scale, angle);
 }
 
 
 void FlxText::updateBuffer() {
 
-    BackendHolder::get().getBackend()->destroyText(textData);
-    textData = BackendHolder::get().getBackend()->createText(text.c_str(), font, size, color, alpha);
+    FlxG::backend->destroyText(textData);
+    textData = FlxG::backend->createText(text.c_str(), font, size, color, alpha);
 
     if(textData) {
         width = (int)textData->bounds.x;

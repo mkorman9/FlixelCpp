@@ -1,10 +1,10 @@
 #include "FlxSound.h"
-#include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 std::vector<FlxBackendSound*> FlxSound::Sounds;
 
 FlxSound::FlxSound(const char *path) {
-    soundBufferPtr = BackendHolder::get().getBackend()->loadSound(path);
+    soundBufferPtr = FlxG::backend->loadSound(path);
     soundPtr = NULL;
 }
 
@@ -12,7 +12,7 @@ FlxSound::FlxSound(const char *path) {
 void FlxSound::play(float vol) {
     if(soundPtr) stop();
 
-    soundPtr = BackendHolder::get().getBackend()->playSound(soundBufferPtr, vol);
+    soundPtr = FlxG::backend->playSound(soundBufferPtr, vol);
     Sounds.push_back(soundPtr);
 }
 

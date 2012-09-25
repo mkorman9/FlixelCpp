@@ -1,5 +1,4 @@
 #include "FlxSprite.h"
-#include "backend/BackendHolder.h"
 #include "FlxG.h"
 
 FlxSprite::FlxSprite(float X, float Y, const char *gfx, int Width, int Height) {
@@ -30,7 +29,7 @@ FlxSprite::~FlxSprite() {
 
 bool FlxSprite::loadGraphic(const char *gfx, int Width, int Height) {
 
-    graphic = BackendHolder::get().getBackend()->loadImage(gfx);
+    graphic = FlxG::backend->loadImage(gfx);
     width = (Width == 0 ? graphic->getWidth() : Width);
     height = (Height == 0 ? graphic->getHeight() : Height);
 
@@ -44,7 +43,7 @@ bool FlxSprite::loadGraphic(const char *gfx, int Width, int Height) {
 
 
 void FlxSprite::makeGraphic(int Width, int Height, int color) {
-    graphic = BackendHolder::get().getBackend()->createImage(Width, Height, color, alpha);
+    graphic = FlxG::backend->createImage(Width, Height, color, alpha);
     width = hitbox.width = Width;
     height = hitbox.height = Height;
 }
@@ -66,9 +65,9 @@ void FlxSprite::draw() {
     move.y *= scroolFactor.y;
     if(!scrool) { move.x = move.y = 0; }
 
-    BackendHolder::get().getBackend()->drawImage(graphic, x + move.x, y + move.y, scale, angle,
-                                                 FlxRect(sourceX, sourceY, width, height), color,
-                                                 flipped, alpha);
+    FlxG::backend->drawImage(graphic, x + move.x, y + move.y, scale, angle,
+                            FlxRect(sourceX, sourceY, width, height), color,
+                            flipped, alpha);
 }
 
 

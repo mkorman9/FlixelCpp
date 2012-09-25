@@ -1,5 +1,4 @@
 #include "FlxEmitter.h"
-#include "backend/BackendHolder.h"
 #include "FlxG.h"
 
 // Default particles insertion callback. May be replaced with your own,

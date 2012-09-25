@@ -1,5 +1,4 @@
 #include "FlxMouse.h"
-#include "backend/BackendHolder.h"
 #include "FlxG.h"
 
 
@@ -17,21 +16,21 @@ FlxMouse::FlxMouse(int id) {
 
 
 void FlxMouse::show() {
-    BackendHolder::get().getBackend()->showMouse(true);
+    FlxG::backend->showMouse(true);
 }
 
 
 void FlxMouse::hide() {
-    BackendHolder::get().getBackend()->showMouse(false);
+    FlxG::backend->showMouse(false);
 }
 
 
 void FlxMouse::updateState() {
 
     #ifndef FLX_MOBILE
-        leftDown = BackendHolder::get().getBackend()->getMouseButtonState(0, index);
-        middleDown = BackendHolder::get().getBackend()->getMouseButtonState(1, index);
-        rightDown = BackendHolder::get().getBackend()->getMouseButtonState(2, index);
+        leftDown = FlxG::backend->getMouseButtonState(0, index);
+        middleDown = FlxG::backend->getMouseButtonState(1, index);
+        rightDown = FlxG::backend->getMouseButtonState(2, index);
 
         // pressed
         if(leftDown && !lastLeftDown) leftPressed = true;
@@ -59,7 +58,7 @@ void FlxMouse::updateState() {
         lastRightDown = rightDown;
 
         // save position
-        FlxVector pos = BackendHolder::get().getBackend()->getMousePosition(index);
+        FlxVector pos = FlxG::backend->getMousePosition(index);
         x = pos.x;
         y = pos.y;
     #endif

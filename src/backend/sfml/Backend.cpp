@@ -1,5 +1,4 @@
 #include "backend/sfml/Backend.h"
-#include "backend/BackendHolder.h"
 #include "FlxU.h"
 #include "FlxG.h"
 #include <fstream>

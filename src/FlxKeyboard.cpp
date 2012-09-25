@@ -1,5 +1,5 @@
 #include "FlxKeyboard.h"
-#include "backend/BackendHolder.h"
+#include "FlxG.h"
 
 FlxKeyboard::FlxKeyboard() {
     for(unsigned int i = 0; i < 1024; i++) {
@@ -8,7 +8,7 @@ FlxKeyboard::FlxKeyboard() {
 }
 
 bool FlxKeyboard::down(FlxKey::KeyCode code) {
-    return BackendHolder::get().getBackend()->isKeyDown(code) || simulate[code];
+    return FlxG::backend->isKeyDown(code) || simulate[code];
 }
 
 bool FlxKeyboard::pressed(FlxKey::KeyCode code) {
@@ -28,7 +28,7 @@ void FlxKeyboard::simulateKeyUp(FlxKey::KeyCode code) {
 }
 
 void FlxKeyboard::updateState() {
-    bool *state = BackendHolder::get().getBackend()->getKeysDown();
+    bool *state = FlxG::backend->getKeysDown();
 
     for(unsigned int i = 0; i < 1024; i++) {
         lastState[i] = state[i];

@@ -1,5 +1,4 @@
 #include "FlxG.h"
-#include "backend/BackendHolder.h"
 
 FlxState *FlxG::state;
 float FlxG::elapsed;
@@ -54,10 +53,9 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     width = Width;
     height = Height;
 
-    BackendHolder::get().setBackend(backend);
-    BackendHolder::get().getBackend()->setupSurface(title, width, height, icon);
+    backend->setupSurface(title, width, height, icon);
 
-    FlxVector screenSize = BackendHolder::get().getBackend()->getScreenSize();
+    FlxVector screenSize = backend->getScreenSize();
 	screenWidth = screenSize.x;
 	screenHeight = screenSize.y;
 
@@ -73,7 +71,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     // run preloader
     if(preloader) {
         preloader->create();
-        BackendHolder::get().getBackend()->mainLoop(FlxPreloader::onUpdate, FlxPreloader::onDraw);
+        backend->mainLoop(FlxPreloader::onUpdate, FlxPreloader::onDraw);
 
         delete preloader;
         FlxG::exitMessage = false;
@@ -82,7 +80,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     switchState(state);
 
     // main loop
-    BackendHolder::get().getBackend()->mainLoop(innerUpdate, innerDraw);
+    backend->mainLoop(innerUpdate, innerDraw);
 
 
     if(state) {
@@ -92,7 +90,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
 
     delete key;
 
-    BackendHolder::get().getBackend()->exitApplication();
+    backend->exitApplication();
     return 0;
 }
 
@@ -272,7 +270,7 @@ void FlxG::innerDraw() {
     // draw shaders
     for(unsigned int i = 0; i < shaders.members.size(); i++) {
         if(shaders.members[i] && shaders.members[i]->data) {
-            BackendHolder::get().getBackend()->drawShader(shaders.members[i]->data);
+            backend->drawShader(shaders.members[i]->data);
         }
     }
 
