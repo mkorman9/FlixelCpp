@@ -24,7 +24,7 @@ public:
         if(gfx) {
             loadGraphic(gfx, Width, Height);
 
-            addAnimation("default", { tile });
+            addAnimation("default", FlxInitializerList<unsigned int>(tile));
             play("default");
         }
     }

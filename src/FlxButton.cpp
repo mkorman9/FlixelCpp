@@ -18,9 +18,9 @@ FlxButton::FlxButton(float X, float Y, const char *buttonImage, int Width, int H
     sprite->collisions = false;
     sprite->scrool = false;
 
-    sprite->addAnimation("default", { 0 });
-    if(statesCount > 1) sprite->addAnimation("down", { 1 });
-    if(statesCount > 2) sprite->addAnimation("mouseOn", { 2 });
+    sprite->addAnimation("default", FlxInitializerList<unsigned int>(0));
+    if(statesCount > 1) sprite->addAnimation("down", FlxInitializerList<unsigned int>(1));
+    if(statesCount > 2) sprite->addAnimation("mouseOn", FlxInitializerList<unsigned int>(2));
 
     sprite->isGUI = true;
     sprite->play("default");
@@ -43,13 +43,13 @@ void FlxButton::update() {
         offText->x = x + ((width - offText->width) / 2);
         offText->y = y + ((height - offText->height) / 2);
     }
-		
+
     // update button state
 	mouseOver = false;
     down = false;
     pressed = false;
     released = false;
-	
+
     unsigned int mousesCount = FlxG::mousesList.size();
     if(mousesCount != 0 && active) {
         if(!multitouch) mousesCount = 1;

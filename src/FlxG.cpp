@@ -166,8 +166,9 @@ void FlxG::innerUpdate() {
 
         shaders.clear();
         tweener.removeTween(NULL);
-        worldBounds = { 0, 0, width, height };
-        scroolVector = { 0, 0 };
+        worldBounds.x = worldBounds.y = scroolVector.x = scroolVector.y = 0.f;
+		worldBounds.width = width; 
+		worldBounds.height = height;
         toFollow = NULL;
 
         state = stateToSwitch;

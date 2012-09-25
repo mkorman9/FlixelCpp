@@ -57,7 +57,7 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
         if(mapData[i] != -1) {
             FlxTile *tile = new FlxTile(x * tileWidth, y * tileHeight, tileset, tileWidth, tileHeight);
 
-            tile->addAnimation("__default", { mapData[i] });
+            tile->addAnimation("__default", FlxInitializerList<unsigned int>(mapData[i]));
             tile->play("__default");
 
             tile->collisions = (mapData[i] >= firstSolid);
