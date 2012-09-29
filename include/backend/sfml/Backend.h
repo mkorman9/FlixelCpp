@@ -7,7 +7,6 @@
 
 #include "../../FlxBackendBase.h"
 
-#include <glew/glew.h>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>

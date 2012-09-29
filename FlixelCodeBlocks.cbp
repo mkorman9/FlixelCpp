@@ -14,8 +14,8 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-DSFML_DYNAMIC" />
 					<Add option="-DGLEW_STATIC" />
+					<Add option="-DSFML_DYNAMIC" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -64,9 +64,6 @@
 		<Unit filename="include\FlxPath.h" />
 		<Unit filename="include\backend\cpp.h" />
 		<Unit filename="include\tweener\CppTween.h" />
-		<Unit filename="include\glew\glew.h" />
-		<Unit filename="include\glew\glxew.h" />
-		<Unit filename="include\glew\wglew.h" />
 		<Unit filename="include\backend\sfml\Backend.h" />
 		<Unit filename="src\FlxButton.cpp" />
 		<Unit filename="src\FlxEmitter.cpp" />
@@ -90,9 +87,10 @@
 		<Unit filename="src\FlxVirtualKeyboard.cpp" />
 		<Unit filename="src\tweener\CppTween.cpp" />
 		<Unit filename="src\backend\sfml\Backend.cpp" />
-		<Unit filename="src\glew\glew.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="src\backend\sfml\glew\glew.cpp" />
+		<Unit filename="src\backend\sfml\glew\glew.h" />
+		<Unit filename="src\backend\sfml\glew\glxew.h" />
+		<Unit filename="src\backend\sfml\glew\wglew.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

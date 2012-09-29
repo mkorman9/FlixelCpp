@@ -1,4 +1,4 @@
-#include "FlxG.h"
+﻿#include "FlxG.h"
 
 FlxState *FlxG::state;
 float FlxG::elapsed;

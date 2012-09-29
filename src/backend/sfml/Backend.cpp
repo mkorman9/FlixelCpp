@@ -1,3 +1,4 @@
+#include "glew/glew.h"
 #include "backend/sfml/Backend.h"
 #include "FlxU.h"
 #include "FlxG.h"
