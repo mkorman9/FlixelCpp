@@ -9,8 +9,7 @@ LOCAL_C_INCLUDES := jni/flixel/include \
 	jni/SDL_image \
 	jni/SDL_ttf \
 	jni/SDL_net \
-	jni/SDL_mixer \
-	E:\android-ndk-r8b\sources\cxx-stl\gnu-libstdc++\4.6\include
+	jni/SDL_mixer
 
 LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxEmitter.cpp \

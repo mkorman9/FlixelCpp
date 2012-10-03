@@ -68,6 +68,7 @@ public:
     }
 
     virtual void onError(const std::string& resourceName) {
+        (void)resourceName;
     }
 
     virtual void update();

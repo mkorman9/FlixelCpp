@@ -8,7 +8,7 @@ void FlxPreloader::update() {
 
     unsigned int assets = imagesToLoad.size() + fontsToLoad.size() + musicToLoad.size() +
         soundsToLoad.size();
-    if(!assets || (assetsLoaded == assets)) { percent = 100; FlxG::exitMessage = true; return; }
+    if(!assets || (assetsLoaded == assets)) { percent = 100.f; FlxG::exitMessage = true; return; }
 
     percent = ((float)assetsLoaded / (float)assets) * 100.f;
 

@@ -41,6 +41,7 @@ public:
 	}
 
 	float GetCost(MapSearchNode &successor) {
+	    (void)successor;
 		return (float) getMap(x, y);
 	}
 

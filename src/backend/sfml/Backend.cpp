@@ -327,10 +327,12 @@ void SFML_Backend::updateEvents() {
 }
 
 FlxVector SFML_Backend::getMousePosition(int index) {
+    (void)index;
     return FlxVector(window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
 }
 
 bool SFML_Backend::getMouseButtonState(int button, int index) {
+    (void)index;
 
     if(button == 0) {
         return window->GetInput().IsMouseButtonDown(sf::Mouse::Left);

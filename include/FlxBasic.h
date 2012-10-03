@@ -66,11 +66,13 @@ public:
 
     // entity collidates with something?
     virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr) {
+        (void)object; (void)callback;
         return NULL;
     }
 
     // check overlap and make some phycics work
     virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr) {
+        (void)object; (void)callback;
         return NULL;
     }
 };

@@ -37,8 +37,8 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
     // calculate total size of map
     size.x = (float)sizeX;
     size.y = (float)sizeY;
-    sizeInPixels.x = tileWidth * sizeX;
-    sizeInPixels.y = tileHeight * sizeY;
+    sizeInPixels.x = static_cast<float>(tileWidth * sizeX);
+    sizeInPixels.y = static_cast<float>(tileHeight * sizeY);
     bounds.width = sizeInPixels.x;
     bounds.height = sizeInPixels.y;
     firstSolid = firstCollide;
@@ -87,8 +87,8 @@ int FlxTilemap::getTile(int x, int y) {
 
 
 int FlxTilemap::getTileFromPoint(float pointX, float pointY) {
-    int x = pointX / (sizeInPixels.x / size.x);
-    int y = pointY / (sizeInPixels.y / size.y);
+    int x = pointX / static_cast<int>(sizeInPixels.x / size.x);
+    int y = pointY / static_cast<int>(sizeInPixels.y / size.y);
 
     return getTile(x, y);
 }

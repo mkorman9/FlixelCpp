@@ -13,8 +13,8 @@ FlxObject::FlxObject() {
     alpha = 1.0f;
     scale.x = scale.y = 1;
 
-    maxVelocity.x = 1000;
-    maxVelocity.y = 1000;
+    maxVelocity.x = 1000.f;
+    maxVelocity.y = 1000.f;
 
     isGUI = false;
 
