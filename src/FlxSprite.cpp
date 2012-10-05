@@ -136,6 +136,7 @@ void FlxSprite::updateAnimation() {
     }
 }
 
+
 void FlxSprite::calcFrame() {
 
     unsigned int rx = currentFrame * width;
