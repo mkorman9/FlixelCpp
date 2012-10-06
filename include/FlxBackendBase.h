@@ -84,6 +84,23 @@ struct FlxBaseText {
 };
 
 
+// Filesystem access interface
+class FlxBackendFile {
+
+public:
+    virtual ~FlxBackendFile() { }
+
+    virtual bool open(const char *path, const char *mode, bool internal) = 0;
+    virtual  bool eof() = 0;
+    virtual unsigned int tell() = 0;
+    virtual void seek(long offset, int origin) = 0;
+
+    virtual void write(const char *data, unsigned int size) = 0;
+    virtual int read(char *data, unsigned int maxSize) = 0;
+    virtual void close() = 0;
+};
+
+
 /*
 *  Library backend base class.
 *  Template class for loading assets, application/input managment and rendering
@@ -133,9 +150,7 @@ public:
     virtual void playMusic(FlxBackendMusic *music, float vol) = 0;
 
     // file I/O
-    virtual void saveData(const char *path, const std::map<std::string, std::string>& data) = 0;
-    virtual bool loadData(const char *path, std::map<std::string, std::string>& data) = 0;
-    virtual bool internalFileExists(const char *path) = 0;
+    virtual FlxBackendFile* openFile(const char *path, const char *mode, bool internal) = 0;
 
     // network
     virtual bool sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) = 0;

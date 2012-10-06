@@ -58,10 +58,13 @@ void FlxPreloader::update() {
         else {
 			// don't load music now. music files should be streamed,
 			// not loaded on the begining. Check file's existance
-			if(!FlxG::backend->internalFileExists(musicToLoad[currentIterator].c_str())) {
+            FlxBackendFile *file = FlxG::backend->openFile(musicToLoad[currentIterator].c_str(),
+                                                           "r", true);
+			if(!file) {
                 onError(musicToLoad[currentIterator]);
 			}
 
+            delete file;
             currentIterator++;
             assetsLoaded++;
         }

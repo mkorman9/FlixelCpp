@@ -2,7 +2,6 @@
 #include "backend/sfml/Backend.h"
 #include "FlxU.h"
 #include "FlxG.h"
-#include <fstream>
 
 // default vertex shader
 const GLchar DefaultVertexShader[] = \
@@ -116,6 +115,49 @@ public:
         }
     }
 };
+
+
+class SFML_File : public FlxBackendFile {
+
+private:
+    FILE *filePtr;
+public:
+    virtual ~SFML_File() {
+        close();
+    }
+
+    virtual bool open(const char *path, const char *mode, bool internal) {
+        (void)internal;
+
+        filePtr = fopen(path, mode);
+        return filePtr != NULL;
+    }
+
+    virtual bool eof() {
+        return feof(filePtr);
+    }
+
+    virtual unsigned int tell() {
+        return ftell(filePtr);
+    }
+
+    virtual void seek(long offset, int origin) {
+        fseek(filePtr, offset, origin);
+    }
+
+    virtual void write(const char *data, unsigned int size) {
+        fwrite(data, 1, size, filePtr);
+    }
+
+    virtual int read(char *data, unsigned int maxSize) {
+        return fread(data, 1, maxSize, filePtr);
+    }
+
+    virtual void close() {
+        fclose(filePtr);
+    }
+};
+
 
 
 /*
@@ -522,16 +564,21 @@ FlxBackendShader* SFML_Backend::loadShader(const char *path) {
     SFML_Shader *shader = new SFML_Shader();
 
     // load shader data
-    std::ifstream stream(path);
-    if(!stream) return NULL;
+    SFML_File file;
+    if(!file.open(path, "r", true)) return NULL;
 
-    std::string shaderData;
-    while(!stream.eof()) {
-        shaderData += stream.get();
-    }
+    file.seek(0, SEEK_END);
+    unsigned int size = file.tell();
+    file.seek(0, SEEK_SET);
 
-    shaderData = shaderData.substr(0, shaderData.size() - 1);
-    stream.close();
+    char *buffer = new char[size + 1];
+    memset(buffer, 0, size + 1);
+
+    file.read(buffer, size);
+    file.close();
+
+    std::string shaderData(buffer, buffer + size - 1);
+    delete[] buffer;
 
     // create shaders
     shader->shaderProgram  = glCreateProgram();
@@ -680,68 +727,14 @@ void SFML_Backend::playMusic(FlxBackendMusic *buff, float vol) {
     m->play();
 }
 
-// standard PC data saving
-void SFML_Backend::saveData(const char *path, const std::map<std::string, std::string>& data) {
-
-    std::ofstream stream(path);
-    if(!stream) return;
-
-    std::string rawData;
-    for(std::map<std::string, std::string>::const_iterator it = data.begin(); it != data.end(); it++) {
-        rawData += it->first + '\n' + it->second + '\n';
-    }
-
-    // encode data to prevent manual save changes
-    // note: this is not an encryption!
-    for(unsigned int i = 0; i < rawData.size(); i++) {
-        rawData[i] = rawData[i] ^ 24;
-    }
-
-    stream.write(rawData.data(), rawData.size());
-    stream.close();
-}
-
-bool SFML_Backend::loadData(const char *path, std::map<std::string, std::string>& data) {
-
-    std::ifstream stream(path);
-    if(!stream) return false;
-
-    std::string rawData;
-    while(!stream.eof()) {
-        rawData += stream.get() ^ 24;
-    }
-
-    rawData = rawData.substr(0, rawData.size() - 1);
-
-    // parse data
-    std::stringstream ss(rawData);
-    std::string name, value;
-
-    while(!ss.eof()) {
-
-        if(name == "") {
-            std::getline(ss, name);
-        }
-        else {
-            std::getline(ss, value);
-
-            data[name] = value;
-            name = value = "";
-        }
-    }
-
-    return true;
-}
-
-bool SFML_Backend::internalFileExists(const char *path) {
-    std::ifstream stream(path);
-    if(!stream) return false;
-
-    stream.close();
-    return true;
+// standard PC file I/O
+FlxBackendFile* SFML_Backend::openFile(const char *path, const char *mode, bool internal) {
+    SFML_File *file = new SFML_File();
+    return file->open(path, mode, internal) ? file : NULL;
 }
 
 
+// HTTP support
 bool SFML_Backend::sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp) {
 
     sf::Http http;

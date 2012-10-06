@@ -130,6 +130,91 @@ public:
 };
 
 
+class SDL_File : public FlxBackendFile {
+
+private:
+    FILE *externalFilePtr;
+	SDL_RWops *internalFilePtr;
+	bool internalFilsystem;
+public:
+    virtual ~SDL_File() {
+        close();
+    }
+
+    virtual bool open(const char *path, const char *mode, bool internal) {
+		internalFilsystem = internal;
+		
+		if(!internalFilsystem) {
+			externalFilePtr = fopen(path, mode);
+			return externalFilePtr != NULL;
+		}
+		else {
+			internalFilePtr = SDL_RWFromFile(path, mode);
+			return internalFilePtr != NULL;
+		}
+    }
+
+    virtual bool eof() {
+		if(!internalFilsystem) {
+			return feof(externalFilePtr);
+		}
+		else {
+			unsigned int current = tell();
+		    seek(0, SEEK_END);
+			unsigned int size = tell();
+			seek(current, SEEK_SET);
+	
+			return tell() == size;
+		}
+    }
+
+    virtual unsigned int tell() {
+		if(!internalFilsystem) {
+			return ftell(externalFilePtr);
+		}
+		else {
+			return SDL_RWtell(internalFilePtr);
+		}
+    }
+
+    virtual void seek(long offset, int origin) {
+		if(!internalFilsystem) {
+			fseek(externalFilePtr, offset, origin);
+		}
+		else {
+			SDL_RWseek(internalFilePtr, offset, origin);
+		}
+    }
+
+    virtual void write(const char *data, unsigned int size) {
+		if(!internalFilsystem) {
+			fwrite(data, 1, size, externalFilePtr);
+		}
+		else {
+			SDL_RWwrite(internalFilePtr, data, 1, size);
+		}
+    }
+
+    virtual int read(char *data, unsigned int maxSize) {
+		if(!internalFilsystem) {
+			return fread(data, 1, maxSize, externalFilePtr);
+		}
+		else {
+			return SDL_RWread(internalFilePtr, data, 1, maxSize);
+		}
+    }
+
+    virtual void close() {
+		if(!internalFilsystem) {
+			fclose(externalFilePtr);
+		}
+		else {
+			SDL_RWclose(internalFilePtr);
+		}
+    }
+};
+
+
 /*
 *  SDL sound class
 */
@@ -539,24 +624,25 @@ bool SDL_Mobile_Backend::isShadersSupported() {
 
 FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
     SDL_Shader *shader = new SDL_Shader();
-
-    // load shader to memory
-	SDL_RWops *file = SDL_RWFromFile(path, "r");
-	if(!file) return NULL;
-
-	SDL_RWseek(file, 0, SEEK_END);
-	unsigned int size = SDL_RWtell(file);
-	SDL_RWseek(file, 0, SEEK_SET);
-
-	char *buffer = new char[size + 1];
-	SDL_RWread(file, buffer, 1, size);
-
-	std::string shaderData;
-	shaderData.append(buffer, size - 2);
 	
-	SDL_RWclose(file);
-	delete[] buffer;
+    // load shader data
+    SDL_File file;
+    if(!file.open(path, "r", true)) return NULL;
 
+    file.seek(0, SEEK_END);
+    unsigned int size = file.tell();
+    file.seek(0, SEEK_SET);
+
+    char *buffer = new char[size + 1];
+	memset(buffer, 0, size + 1);
+	
+    file.read(buffer, size);
+    file.close();
+
+    std::string shaderData(buffer, buffer + size - 1);
+    delete[] buffer;
+	
+	
     // create shaders
     shader->shaderProgram  = glCreateProgram();
     shader->vertexShader   = glCreateShader(GL_VERTEX_SHADER);
@@ -746,89 +832,9 @@ void SDL_Mobile_Backend::playMusic(FlxBackendMusic *buff, float vol) {
 
 // android/iphone data saving
 // on android it requires WRITE_EXTERNAL_STORAGE permission
-void SDL_Mobile_Backend::saveData(const char *p, const std::map<std::string, std::string>& data) {
-
-	std::string rawData;
-    for(std::map<std::string, std::string>::const_iterator it = data.begin(); it != data.end(); it++) {
-        rawData += it->first + '\n' + it->second + '\n';
-    }
-
-    // encode data to prevent manual save changes
-    // note: this is not an encryption!
-    for(unsigned int i = 0; i < rawData.size(); i++) {
-        rawData[i] = rawData[i] ^ 24;
-    }
-	
-	#ifdef __ANDROID__
-	FILE *file = NULL;
-	
-	// open file
-	file = fopen(p, "w");
-	if(!file) return;
-
-	fwrite(rawData.data(), 1, rawData.size(), file);
-	fclose(file);
-	#endif
-}
-
-bool SDL_Mobile_Backend::loadData(const char *p, std::map<std::string, std::string>& data) {
-
-	#ifdef __ANDROID__
-	FILE *file = NULL;
-
-	file = fopen(p, "r");
-	if(!file) return false;
-
-	// get file size
-	fseek(file, 0, SEEK_END);
-	unsigned int size = ftell(file);
-	fseek(file, 0, SEEK_SET);
-
-	char *buffer = new char[size + 1];
-	fread(buffer, 1, size, file);
-	
-	std::string rawData;
-	rawData.append(buffer, size - 1);
-	
-	delete[] buffer;
-	fclose(file);
-	
-	#else
-	std::string rawData;
-	#endif
-
-
-	// decode data
-	for(unsigned int i = 0; i < rawData.size(); i++) {
-		rawData[i] = rawData[i] ^ 24;
-	}
-
-	// parse data
-    std::stringstream ss(rawData);
-    std::string name, value;
-
-    while(!ss.eof()) {
-
-        if(name == "") {
-            std::getline(ss, name);
-        }
-        else {
-            std::getline(ss, value);
-
-            data[name] = value;
-            name = value = "";
-        }
-    }
-
-    return true;
-}
-
-bool SDL_Mobile_Backend::internalFileExists(const char *path) {
-	SDL_RWops *file = SDL_RWFromFile(path, "r");
-	if(!file) return false;
-	
-	SDL_RWclose(file);
-	return true;
+FlxBackendFile* SDL_Mobile_Backend::openFile(const char *path, const char *mode, bool internal) {
+    SDL_File *file = new SDL_File();
+    return file->open(path, mode, internal) ? file : NULL;
 }
 
 

@@ -68,9 +68,7 @@ public:
     virtual FlxBackendSound* playSound(void *sound, float vol);
     virtual void playMusic(FlxBackendMusic *music, float vol);
 
-    virtual void saveData(const char *path, const std::map<std::string, std::string>& data);
-    virtual bool loadData(const char *path, std::map<std::string, std::string>& data);
-    virtual bool internalFileExists(const char *path);
+    virtual FlxBackendFile* openFile(const char *path, const char *mode, bool internal);
 
     virtual bool sendHttpRequest(FlxHttpRequest *req, FlxHttpResponse& resp);
 };

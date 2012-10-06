@@ -22,6 +22,7 @@
 #include <limits>
 #include <list>
 #include <cctype>
+#include <cstring>
 
 #include <initializer_list>
 #include <functional>
