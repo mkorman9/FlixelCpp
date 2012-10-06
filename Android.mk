@@ -9,8 +9,9 @@ LOCAL_C_INCLUDES := jni/flixel/include \
 	jni/SDL_image \
 	jni/SDL_ttf \
 	jni/SDL_net \
-	jni/SDL_mixer
-
+	jni/SDL_mixer \
+	jni/angelscript/include
+	
 LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxEmitter.cpp \
 	FlxG.cpp \
@@ -30,11 +31,13 @@ LOCAL_SRC_FILES := FlxButton.cpp \
 	FlxShader.cpp \
 	FlxU.cpp \
 	FlxVirtualKeyboard.cpp \
+	FlxScript.cpp \
 	tweener/CppTween.cpp \
 	backend/sdl_mobile/Backend.cpp
 
 LOCAL_CFLAGS := -DFLX_MOBILE --std=gnu++0x
 LOCAL_LDLIBS := -llog
+LOCAL_STATIC_LIBRARIES := libangelscript
 
 include $(BUILD_STATIC_LIBRARY)
 

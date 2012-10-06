@@ -25,6 +25,7 @@ bool FlxG::flashing = false;
 tween::Tweener FlxG::tweener;
 FlxShadersList FlxG::shaders;
 FlxState *FlxG::stateToSwitch = NULL;
+FlxScriptEngine *FlxG::scriptEngine;
 
 
 // quick help function
@@ -62,6 +63,9 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     key = new FlxKeyboard();
     srand(time(0));
 
+    scriptEngine = new FlxScriptEngine();
+    scriptEngine->init();
+
     // flash screen sprite (texture size should be pow of 2)
     flashSprite.makeGraphic(FlxPowerOf2(width), FlxPowerOf2(height), 0xffffff);
     flashSprite.width = width;
@@ -88,6 +92,8 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
         delete state;
     }
 
+    scriptEngine->finalize();
+    delete scriptEngine;
     delete key;
 
     backend->exitApplication();
@@ -167,7 +173,7 @@ void FlxG::innerUpdate() {
         shaders.clear();
         tweener.removeTween(NULL);
         worldBounds.x = worldBounds.y = scroolVector.x = scroolVector.y = 0.f;
-		worldBounds.width = width; 
+		worldBounds.width = width;
 		worldBounds.height = height;
         toFollow = NULL;
 

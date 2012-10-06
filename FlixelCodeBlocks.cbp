@@ -26,6 +26,7 @@
 					<Add library="sfml-network" />
 					<Add library="sfml-main" />
 					<Add library="opengl32" />
+					<Add library="angelscript" />
 				</Linker>
 			</Target>
 		</Build>
@@ -62,6 +63,7 @@
 		<Unit filename="include\FlxVirtualKeyboard.h" />
 		<Unit filename="include\backend\FlxInitializerList.h" />
 		<Unit filename="include\FlxPath.h" />
+		<Unit filename="include\FlxScript.h" />
 		<Unit filename="include\backend\cpp.h" />
 		<Unit filename="include\tweener\CppTween.h" />
 		<Unit filename="include\backend\sfml\Backend.h" />
@@ -83,6 +85,7 @@
 		<Unit filename="src\FlxMouseHolder.cpp" />
 		<Unit filename="src\FlxShader.cpp" />
 		<Unit filename="src\FlxU.cpp" />
+		<Unit filename="src\FlxScript.cpp" />
 		<Unit filename="src\PathFinder.inl" />
 		<Unit filename="src\FlxVirtualKeyboard.cpp" />
 		<Unit filename="src\tweener\CppTween.cpp" />

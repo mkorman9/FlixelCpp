@@ -18,6 +18,7 @@ What is currently ported?
 - Unicode support
 - On-screen virtual keyboard (for mobile devices)
 - Pathfinding (astar by Justin Heyes-Jones)
+- Easy to integrate scripting engine (AngelScript)
 
 What isn't ported yet
 - Camera managment and special effects (currently only screen flash effect is done) 

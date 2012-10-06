@@ -141,6 +141,11 @@ public:
         close();
     }
 
+	SDL_File() {
+		externalFilePtr = NULL;
+		internalFilePtr = NULL;
+	}
+	
     virtual bool open(const char *path, const char *mode, bool internal) {
 		internalFilsystem = internal;
 		
@@ -206,10 +211,10 @@ public:
 
     virtual void close() {
 		if(!internalFilsystem) {
-			fclose(externalFilePtr);
+			if(externalFilePtr) fclose(externalFilePtr);
 		}
 		else {
-			SDL_RWclose(internalFilePtr);
+			if(internalFilePtr) SDL_RWclose(internalFilePtr);
 		}
     }
 };
@@ -626,18 +631,18 @@ FlxBackendShader* SDL_Mobile_Backend::loadShader(const char *path) {
     SDL_Shader *shader = new SDL_Shader();
 	
     // load shader data
-    SDL_File file;
-    if(!file.open(path, "r", true)) return NULL;
+    FlxBackendFile *file = openFile(path, "r", true);
+    if(!file) return NULL;
 
-    file.seek(0, SEEK_END);
-    unsigned int size = file.tell();
-    file.seek(0, SEEK_SET);
+    file->seek(0, SEEK_END);
+    unsigned int size = file->tell();
+    file->seek(0, SEEK_SET);
 
     char *buffer = new char[size + 1];
 	memset(buffer, 0, size + 1);
 	
-    file.read(buffer, size);
-    file.close();
+    file->read(buffer, size);
+    delete file;
 
     std::string shaderData(buffer, buffer + size - 1);
     delete[] buffer;

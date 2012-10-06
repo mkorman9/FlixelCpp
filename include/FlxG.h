@@ -25,6 +25,7 @@
 #include "FlxShader.h"
 #include "FlxVirtualKeyboard.h"
 #include "FlxPath.h"
+#include "FlxScript.h"
 
 #include "tweener/CppTween.h"
 
@@ -95,6 +96,9 @@ public:
 
     // shaders to draw
     static FlxShadersList shaders;
+
+    // global script engine
+    static FlxScriptEngine *scriptEngine;
 
 
     // follow object
