@@ -26,7 +26,7 @@ tween::Tweener FlxG::tweener;
 FlxShadersList FlxG::shaders;
 FlxState *FlxG::stateToSwitch = NULL;
 FlxScriptEngine *FlxG::scriptEngine;
-FlxScriptsList FlxG::scripts;
+FlxScriptsList FlxG::globalScripts;
 
 
 // quick help function
@@ -75,8 +75,8 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
 
     // scripts
     #ifndef FLX_NO_SCRIPT
-    for(unsigned int i = 0; i < scripts.members.size(); i++) {
-        FlxScript *script = scripts.members[i];
+    for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
+        FlxScript *script = globalScripts.members[i];
         FLX_CONTEXT *ctx;
 
         if((ctx = script->findFunction("void onApplicationInit()")) != NULL) {
@@ -108,8 +108,8 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
 
     // scripts
     #ifndef FLX_NO_SCRIPT
-    for(unsigned int i = 0; i < scripts.members.size(); i++) {
-        FlxScript *script = scripts.members[i];
+    for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
+        FlxScript *script = globalScripts.members[i];
         FLX_CONTEXT *ctx;
 
         if((ctx = script->findFunction("void onApplicationExit()")) != NULL) {
@@ -124,7 +124,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     delete key;
 
     shaders.clear();
-    scripts.clear();
+    globalScripts.clear();
 
     backend->exitApplication();
     return 0;
@@ -197,6 +197,19 @@ void FlxG::innerUpdate() {
     if(stateToSwitch) {
         if(state) {
             state->leave();
+
+            #ifndef FLX_NO_SCRIPT
+            for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
+                FlxScript *script = globalScripts.members[i];
+                FLX_CONTEXT *ctx;
+
+                if((ctx = script->findFunction("void onStageEnd()")) != NULL) {
+                    ctx->Execute();
+                    script->endCall(ctx);
+                }
+            }
+            #endif
+
             delete state;
         }
 
@@ -211,6 +224,18 @@ void FlxG::innerUpdate() {
         state->create();
 
         stateToSwitch = NULL;
+
+        #ifndef FLX_NO_SCRIPT
+        for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
+            FlxScript *script = globalScripts.members[i];
+            FLX_CONTEXT *ctx;
+
+            if((ctx = script->findFunction("void onStageBegin()")) != NULL) {
+                ctx->Execute();
+                script->endCall(ctx);
+            }
+        }
+        #endif
     }
 
     // sounds and music garbage collector
@@ -239,10 +264,10 @@ void FlxG::innerUpdate() {
         }
     }
 
-    // scripts
+    // call onFrameEnter on all utiltiy scripts
     #ifndef FLX_NO_SCRIPT
-    for(unsigned int i = 0; i < scripts.members.size(); i++) {
-        FlxScript *script = scripts.members[i];
+    for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
+        FlxScript *script = globalScripts.members[i];
         FLX_CONTEXT *ctx;
 
         if((ctx = script->findFunction("void onFrameEnter()")) != NULL) {
@@ -318,10 +343,10 @@ void FlxG::innerDraw() {
 
     if(exitMessage) return;
 
-    // scripts
+    // call onRender on all utiltiy scripts
     #ifndef FLX_NO_SCRIPT
-    for(unsigned int i = 0; i < scripts.members.size(); i++) {
-        FlxScript *script = scripts.members[i];
+    for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
+        FlxScript *script = globalScripts.members[i];
         FLX_CONTEXT *ctx;
 
         if((ctx = script->findFunction("void onRender()")) != NULL) {

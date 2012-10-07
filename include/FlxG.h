@@ -101,7 +101,7 @@ public:
     static FlxScriptEngine *scriptEngine;
 
     // global utility scripts
-    static FlxScriptsList scripts;
+    static FlxScriptsList globalScripts;
 
 
     // follow object

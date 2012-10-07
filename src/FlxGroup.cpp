@@ -44,10 +44,11 @@ bool FlxGroup::remove(FlxBasic *object, bool dontDelete) {
 
 
 void FlxGroup::clear() {
-    for(unsigned int i = 0; i < members.size(); i++) {
-        delete members[i];
-        members.erase(members.begin() + i);
+    for(auto it = members.begin(); it != members.end(); it++) {
+        delete *it;
     }
+
+    members.clear();
 }
 
 

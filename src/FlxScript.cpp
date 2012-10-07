@@ -370,7 +370,7 @@ static void FlxObject_lostRef(asIScriptGeneric *gen) {
 }
 
 
-static unsigned int getObjectsCount() {
+static unsigned int getEntitiesCount() {
     if(FlxG::state) return FlxG::state->members.size();
     return 0;
 }
@@ -386,6 +386,16 @@ static bool isObject(unsigned int idx) {
 }
 
 
+static bool isGroup(unsigned int idx) {
+    if(FlxG::state) {
+        if(idx >= FlxG::state->members.size()) return false;
+        return FlxG::state->members[idx]->entityType == FLX_GROUP;
+    }
+
+    return false;
+}
+
+
 static FlxObject* getObject(unsigned int idx) {
     if(FlxG::state) {
         return (FlxObject*) FlxG::state->members[idx];
@@ -393,6 +403,56 @@ static FlxObject* getObject(unsigned int idx) {
 
     return 0;
 }
+
+
+static FlxGroup* getGroup(unsigned int idx) {
+    if(FlxG::state) {
+        return (FlxGroup*) FlxG::state->members[idx];
+    }
+
+    return 0;
+}
+
+
+static void addObject(FlxObject *obj) {
+    if(FlxG::state) {
+        FlxG::state->add(obj);
+    }
+}
+
+
+static void addGroup(FlxGroup *group) {
+    if(FlxG::state) {
+        FlxG::state->add(group);
+    }
+}
+
+
+static void FlxGroup_create(asIScriptGeneric *gen) {
+    *(FlxGroup**)gen->GetAddressOfReturnLocation() = new FlxGroup();
+}
+
+
+static FlxObject* FlxSprite_create(float x, float y, const std::string& path, int w, int h) {
+    FlxSprite *spr = new FlxSprite(x, y, path.c_str(), w, h);
+    return (FlxObject*) spr;
+}
+
+
+static void stopFollowingObject() {
+    FlxG::followObject(NULL);
+}
+
+
+static bool overlaps1(FlxObject *obj1, FlxObject *obj2) { return obj1->overlaps(obj2); }
+static bool overlaps2(FlxGroup *obj1, FlxGroup *obj2) { return obj1->overlaps(obj2); }
+static bool overlaps3(FlxObject *obj1, FlxGroup *obj2) { return obj1->overlaps(obj2); }
+static bool overlaps4(FlxGroup *obj1, FlxObject *obj2) { return obj1->overlaps(obj2); }
+
+static bool collide1(FlxObject *obj1, FlxObject *obj2) { return obj1->collide(obj2); }
+static bool collide2(FlxGroup *obj1, FlxGroup *obj2) { return obj1->collide(obj2); }
+static bool collide3(FlxObject *obj1, FlxGroup *obj2) { return obj1->collide(obj2); }
+static bool collide4(FlxGroup *obj1, FlxObject *obj2) { return obj1->collide(obj2); }
 
 
 void FlxScriptEngine::bindFlixelFunctionality() {
@@ -583,9 +643,56 @@ void FlxScriptEngine::bindFlixelFunctionality() {
     registerMethod("FlxObject", "FlxVector@ getCenter()", asMETHOD(FlxObject, getCenter));
     registerMethod("FlxObject", "void kill()", asMETHOD(FlxObject, kill));
 
-    registerFunction("uint getObjectsCount()", asFUNCTION(getObjectsCount));
+    registerType("FlxGroup", sizeof(FlxGroup), asOBJ_REF);
+    registerClassAddref("FlxGroup", "void f()", asFUNCTION(FlxObject_addRef), asCALL_GENERIC);
+    registerClassRelease("FlxGroup", "void f()", asFUNCTION(FlxObject_lostRef), asCALL_GENERIC);
+    registerMethod("FlxGroup", "void add(FlxObject@ obj)", asMETHOD(FlxGroup, add));
+    registerMethod("FlxGroup", "void add(FlxGroup@ obj)", asMETHOD(FlxGroup, add));
+    registerMethod("FlxGroup", "void remove(FlxObject@ obj)", asMETHOD(FlxGroup, remove));
+    registerMethod("FlxGroup", "void remove(FlxGroup@ obj)", asMETHOD(FlxGroup, remove));
+    registerMethod("FlxGroup", "void clear()", asMETHOD(FlxGroup, clear));
+    registerClassFactory("FlxGroup", "FlxGroup@ f()", asFUNCTION(FlxGroup_create), asCALL_GENERIC);
+
+    registerFunction("uint getEntitiesCount()", asFUNCTION(getEntitiesCount));
     registerFunction("bool isObject(uint index)", asFUNCTION(isObject));
+    registerFunction("bool isGroup(uint index)", asFUNCTION(isGroup));
     registerFunction("FlxObject@ getObject(uint index)", asFUNCTION(getObject));
+    registerFunction("FlxGroup@ getGroup(uint index)", asFUNCTION(getGroup));
+
+    registerFunction("void addEntity(FlxObject@ obj)", asFUNCTION(addObject));
+    registerFunction("void addEntity(FlxGroup@ obj)", asFUNCTION(addGroup));
+
+    registerFunction("FlxObject@ FlxSprite(float x = 0, float y = 0, string path = "", \
+                     int w = 0, int h = 0)", asFUNCTION(FlxSprite_create));
+
+    // global properties
+    registerProperty("int FlxG_width", &FlxG::width);
+    registerProperty("int FlxG_height", &FlxG::height);
+    registerProperty("int FlxG_screenWidth", &FlxG::screenWidth);
+    registerProperty("int FlxG_screenHeight", &FlxG::screenHeight);
+    registerProperty("float FlxG_fixedTime", &FlxG::fixedTime);
+    registerProperty("float FlxG_totalTime", &FlxG::totalTime);
+    registerProperty("float FlxG_elapsed", &FlxG::elapsed);
+    registerProperty("float FlxG_fps", &FlxG::fps);
+    registerProperty("bool FlxG_exitMessage", &FlxG::exitMessage);
+    registerProperty("int FlxG_bgColor", &FlxG::bgColor);
+    registerProperty("FlxRect FlxG_worldBounds", &FlxG::worldBounds);
+    registerProperty("FlxVector FlxG_scroolVector", &FlxG::scroolVector);
+    registerProperty("bool FlxG_flashing", &FlxG::flashing);
+
+    registerFunction("void followObject(FlxObject@ obj)", asFUNCTION(FlxG::followObject));
+    registerFunction("void stopFollowingObject()", asFUNCTION(stopFollowingObject));
+    registerFunction("bool overlaps(FlxObject@, FlxObject@)", asFUNCTION(overlaps1));
+    registerFunction("bool overlaps(FlxGroup@, FlxGroup@)", asFUNCTION(overlaps2));
+    registerFunction("bool overlaps(FlxObject@, FlxGroup@)", asFUNCTION(overlaps3));
+    registerFunction("bool overlaps(FlxGroup@, FlxObject@)", asFUNCTION(overlaps4));
+    registerFunction("bool collide(FlxObject@, FlxObject@)", asFUNCTION(collide1));
+    registerFunction("bool collide(FlxGroup@, FlxGroup@)", asFUNCTION(collide2));
+    registerFunction("bool collide(FlxObject@, FlxGroup@)", asFUNCTION(collide3));
+    registerFunction("bool collide(FlxGroup@, FlxObject@)", asFUNCTION(collide4));
+
+    // other stuff
+    registerFunction("void flashScreen(int color, float time)", asFUNCTION(FlxG::flash));
 }
 
 #endif
