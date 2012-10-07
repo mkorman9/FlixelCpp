@@ -26,6 +26,7 @@ tween::Tweener FlxG::tweener;
 FlxShadersList FlxG::shaders;
 FlxState *FlxG::stateToSwitch = NULL;
 FlxScriptEngine *FlxG::scriptEngine;
+FlxScriptsList FlxG::scripts;
 
 
 // quick help function
@@ -72,6 +73,19 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     flashSprite.height = height;
     flashSprite.alpha = 0;
 
+    // scripts
+    #ifndef FLX_NO_SCRIPT
+    for(unsigned int i = 0; i < scripts.members.size(); i++) {
+        FlxScript *script = scripts.members[i];
+        FLX_CONTEXT *ctx;
+
+        if((ctx = script->findFunction("void onApplicationInit()")) != NULL) {
+            ctx->Execute();
+            script->endCall(ctx);
+        }
+    }
+    #endif
+
     // run preloader
     if(preloader) {
         preloader->create();
@@ -92,9 +106,25 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
         delete state;
     }
 
+    // scripts
+    #ifndef FLX_NO_SCRIPT
+    for(unsigned int i = 0; i < scripts.members.size(); i++) {
+        FlxScript *script = scripts.members[i];
+        FLX_CONTEXT *ctx;
+
+        if((ctx = script->findFunction("void onApplicationExit()")) != NULL) {
+            ctx->Execute();
+            script->endCall(ctx);
+        }
+    }
+    #endif
+
     scriptEngine->finalize();
     delete scriptEngine;
     delete key;
+
+    shaders.clear();
+    scripts.clear();
 
     backend->exitApplication();
     return 0;
@@ -112,9 +142,9 @@ void FlxG::switchState(FlxState *newState) {
 
 
 FlxSound FlxG::play(const char *path, float vol) {
-    FlxSound *s = new FlxSound(path);
-    s->play(vol);
-    return *s;
+    FlxSound s(path);
+    s.play(vol);
+    return s;
 }
 
 
@@ -209,6 +239,19 @@ void FlxG::innerUpdate() {
         }
     }
 
+    // scripts
+    #ifndef FLX_NO_SCRIPT
+    for(unsigned int i = 0; i < scripts.members.size(); i++) {
+        FlxScript *script = scripts.members[i];
+        FLX_CONTEXT *ctx;
+
+        if((ctx = script->findFunction("void onFrameEnter()")) != NULL) {
+            ctx->Execute();
+            script->endCall(ctx);
+        }
+    }
+    #endif
+
     // update fps
     fpsCounter += elapsed;
     if(fpsCounter >= 1.f) {
@@ -272,6 +315,22 @@ void FlxG::innerUpdate() {
 
 
 void FlxG::innerDraw() {
+
+    if(exitMessage) return;
+
+    // scripts
+    #ifndef FLX_NO_SCRIPT
+    for(unsigned int i = 0; i < scripts.members.size(); i++) {
+        FlxScript *script = scripts.members[i];
+        FLX_CONTEXT *ctx;
+
+        if((ctx = script->findFunction("void onRender()")) != NULL) {
+            ctx->Execute();
+            script->endCall(ctx);
+        }
+    }
+    #endif
+
     if(state) state->draw();
 
     // draw shaders

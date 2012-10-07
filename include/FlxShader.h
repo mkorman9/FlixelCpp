@@ -62,6 +62,10 @@ public:
     }
 
     void clear() {
+        for(unsigned int i = 0; i < members.size(); i++) {
+            if(members[i]) delete members[i];
+        }
+
         members.clear();
     }
 };

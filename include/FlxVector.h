@@ -17,29 +17,39 @@ public:
     // y value of vector
     float y;
 
+    int _refCount;
 
     FlxVector() {
         x = y = 0.f;
+        _refCount = 1;
     }
 
     FlxVector(const FlxVector& other) {
         x = other.x;
         y = other.y;
+
+        _refCount = 1;
     }
 
     FlxVector(float X, float Y) {
         x = X;
         y = Y;
+
+        _refCount = 1;
     }
 
     FlxVector(float X1, float Y1, float X2, float Y2) {
         x = X2 - X1;
         y = Y2 - Y1;
+
+        _refCount = 1;
     }
 
     FlxVector(const FlxVector &vec1, const FlxVector &vec2) {
         x = vec2.x - vec1.x;
         y = vec2.y - vec1.y;
+
+        _refCount = 1;
     }
 
     float length() const {

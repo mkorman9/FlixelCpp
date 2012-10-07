@@ -48,8 +48,7 @@ void FlxSave::save(const char *path) {
     }
 
     file->write(rawData.data(), rawData.size());
-    file->close();
-
+	
     delete file;
 }
 
@@ -66,7 +65,6 @@ bool FlxSave::load(const char *path) {
 	memset(buffer, 0, size + 1);
 
     file->read(buffer, size);
-    file->close();
 
     for(unsigned int i = 0; i < size; i++) {
         buffer[i] ^= 24;

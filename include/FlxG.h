@@ -100,6 +100,9 @@ public:
     // global script engine
     static FlxScriptEngine *scriptEngine;
 
+    // global utility scripts
+    static FlxScriptsList scripts;
+
 
     // follow object
     static void followObject(FlxObject *object);

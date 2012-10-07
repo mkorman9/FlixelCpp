@@ -12,7 +12,7 @@ FlxGroup::~FlxGroup() {
 
 
 FlxBasic* FlxGroup::add(FlxBasic *object) {
-	
+
     if(object) {
         object->scroolFactor = scroolFactor;
         members.push_back(object);
@@ -46,7 +46,7 @@ bool FlxGroup::remove(FlxBasic *object, bool dontDelete) {
 void FlxGroup::clear() {
     for(unsigned int i = 0; i < members.size(); i++) {
         delete members[i];
-        members.erase(members.begin());
+        members.erase(members.begin() + i);
     }
 }
 

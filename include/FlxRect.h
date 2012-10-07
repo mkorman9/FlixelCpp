@@ -15,12 +15,15 @@ public:
     float y;
     int width;
     int height;
+    int _refCount;
 
     FlxRect(float X = 0, float Y = 0, int Width = 0, int Height = 0) {
         x = X;
         y = Y;
         width = Width;
         height = Height;
+
+        _refCount = 1;
     }
 
     bool overlaps(const FlxRect& second) const {
