@@ -47,6 +47,9 @@ void FlxScript::endCall(asIScriptContext *ctx) {
 */
 void FlxScriptEngine::init() {
     engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
+    engine->SetEngineProperty(asEP_SCRIPT_SCANNER, 0);
+    engine->SetEngineProperty(asEP_STRING_ENCODING, 1);
+
     RegisterStdString(engine);
     RegisterScriptAny(engine);
     RegisterScriptArray(engine, true);
@@ -285,13 +288,31 @@ static void FlxVector_copy(asIScriptGeneric *gen) {
 }
 
 
-static void playSound(const std::string& path, float volume) {
-    FlxG::play(path.c_str(), volume);
+static void playSound(const std::wstring& path, float volume) {
+
+    // convert unicode string to ASCII format
+    std::string s;
+    s.reserve(path.size());
+
+    for(unsigned int i = 0; i < path.size(); i++) {
+        s[i] = static_cast<char>(path[i]);
+    }
+
+    FlxG::play(s.c_str(), volume);
 }
 
 
-static void playMusic(const std::string& path, float volume) {
-    FlxG::playMusic(path.c_str(), volume);
+static void playMusic(const std::wstring& path, float volume) {
+
+    // convert unicode string to ASCII format
+    std::string s;
+    s.reserve(path.size());
+
+    for(unsigned int i = 0; i < path.size(); i++) {
+        s[i] = static_cast<char>(path[i]);
+    }
+
+    FlxG::playMusic(s.c_str(), volume);
 }
 
 
@@ -433,8 +454,17 @@ static void FlxGroup_create(asIScriptGeneric *gen) {
 }
 
 
-static FlxObject* FlxSprite_create(float x, float y, const std::string& path, int w, int h) {
-    FlxSprite *spr = new FlxSprite(x, y, path.c_str(), w, h);
+static FlxObject* FlxSprite_create(float x, float y, const std::wstring& path, int w, int h) {
+
+    // convert unicode string to ASCII format
+    std::string s;
+    s.reserve(path.size());
+
+    for(unsigned int i = 0; i < path.size(); i++) {
+        s[i] = static_cast<char>(path[i]);
+    }
+
+    FlxSprite *spr = new FlxSprite(x, y, s.c_str(), w, h);
     return (FlxObject*) spr;
 }
 
@@ -444,15 +474,32 @@ static void stopFollowingObject() {
 }
 
 
-static bool overlaps1(FlxObject *obj1, FlxObject *obj2) { return obj1->overlaps(obj2); }
-static bool overlaps2(FlxGroup *obj1, FlxGroup *obj2) { return obj1->overlaps(obj2); }
-static bool overlaps3(FlxObject *obj1, FlxGroup *obj2) { return obj1->overlaps(obj2); }
-static bool overlaps4(FlxGroup *obj1, FlxObject *obj2) { return obj1->overlaps(obj2); }
+static void scriptCollisionCallback(FlxBasic *obj1, FlxBasic *obj2) {
 
-static bool collide1(FlxObject *obj1, FlxObject *obj2) { return obj1->collide(obj2); }
-static bool collide2(FlxGroup *obj1, FlxGroup *obj2) { return obj1->collide(obj2); }
-static bool collide3(FlxObject *obj1, FlxGroup *obj2) { return obj1->collide(obj2); }
-static bool collide4(FlxGroup *obj1, FlxObject *obj2) { return obj1->collide(obj2); }
+    // call onObjectsContact() in every global utility script
+    for(unsigned int i = 0; i < FlxG::globalScripts.members.size(); i++) {
+    FLX_CONTEXT *ctx = NULL;
+    if((ctx = FlxG::globalScripts.members[i]->findFunction("void onObjectsContact(FlxObject@, \
+                                                            FlxObject@)")) != NULL)
+        {
+            ctx->SetArgObject(0, (FlxObject*) obj1);
+            ctx->SetArgObject(1, (FlxObject*) obj2);
+
+            ctx->Execute();
+            ctx->Release();
+        }
+    }
+}
+
+
+static bool overlaps(FlxBasic *bas1, FlxBasic *bas2) {
+    return bas1->overlaps(bas2, scriptCollisionCallback) != 0;
+}
+
+
+static bool collide(FlxBasic *bas1, FlxBasic *bas2) {
+    return bas1->collide(bas2, scriptCollisionCallback) != 0;
+}
 
 
 void FlxScriptEngine::bindFlixelFunctionality() {
@@ -682,14 +729,14 @@ void FlxScriptEngine::bindFlixelFunctionality() {
 
     registerFunction("void followObject(FlxObject@ obj)", asFUNCTION(FlxG::followObject));
     registerFunction("void stopFollowingObject()", asFUNCTION(stopFollowingObject));
-    registerFunction("bool overlaps(FlxObject@, FlxObject@)", asFUNCTION(overlaps1));
-    registerFunction("bool overlaps(FlxGroup@, FlxGroup@)", asFUNCTION(overlaps2));
-    registerFunction("bool overlaps(FlxObject@, FlxGroup@)", asFUNCTION(overlaps3));
-    registerFunction("bool overlaps(FlxGroup@, FlxObject@)", asFUNCTION(overlaps4));
-    registerFunction("bool collide(FlxObject@, FlxObject@)", asFUNCTION(collide1));
-    registerFunction("bool collide(FlxGroup@, FlxGroup@)", asFUNCTION(collide2));
-    registerFunction("bool collide(FlxObject@, FlxGroup@)", asFUNCTION(collide3));
-    registerFunction("bool collide(FlxGroup@, FlxObject@)", asFUNCTION(collide4));
+    registerFunction("bool overlaps(FlxObject@, FlxObject@)", asFUNCTION(overlaps));
+    registerFunction("bool overlaps(FlxGroup@, FlxGroup@)", asFUNCTION(overlaps));
+    registerFunction("bool overlaps(FlxObject@, FlxGroup@)", asFUNCTION(overlaps));
+    registerFunction("bool overlaps(FlxGroup@, FlxObject@)", asFUNCTION(overlaps));
+    registerFunction("bool collide(FlxObject@, FlxObject@)", asFUNCTION(collide));
+    registerFunction("bool collide(FlxGroup@, FlxGroup@)", asFUNCTION(collide));
+    registerFunction("bool collide(FlxObject@, FlxGroup@)", asFUNCTION(collide));
+    registerFunction("bool collide(FlxGroup@, FlxObject@)", asFUNCTION(collide));
 
     // other stuff
     registerFunction("void flashScreen(int color, float time)", asFUNCTION(FlxG::flash));
