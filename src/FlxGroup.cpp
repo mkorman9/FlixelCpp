@@ -52,6 +52,11 @@ void FlxGroup::clear() {
 }
 
 
+unsigned int FlxGroup::size() {
+    return members.size();
+}
+
+
 void FlxGroup::update() {
 
     for(unsigned int i = 0; i < members.size(); i++) {

@@ -36,8 +36,8 @@ public:
     // scrool modifier
     FlxVector scroolFactor;
 
-    // special variables
-    //std::map<std::string, std::string> vars;
+    // special user flags
+    int flags;
 
 
     // default contructor
@@ -45,6 +45,7 @@ public:
         active = true;
         scrool = true;
         scroolFactor.x = scroolFactor.y = 1.f;
+        flags = 0;
     }
 
     // destructor's template

@@ -435,17 +435,73 @@ static FlxGroup* getGroup(unsigned int idx) {
 }
 
 
-static void addObject(FlxObject *obj) {
+static FlxBasic* addObject(FlxObject *obj) {
     if(FlxG::state) {
-        FlxG::state->add(obj);
+        return FlxG::state->add(obj);
     }
+
+    return 0;
 }
 
 
-static void addGroup(FlxGroup *group) {
+static FlxBasic* addGroup(FlxGroup *group) {
     if(FlxG::state) {
-        FlxG::state->add(group);
+        return FlxG::state->add(group);
     }
+
+    return 0;
+}
+
+
+static bool isObjectByFlag(int flag) {
+    if(FlxG::state) {
+        for(unsigned int i = 0; i < FlxG::state->members.size(); i++) {
+            if(FlxG::state->members[i]->flags == flag) {
+                return FlxG::state->members[i]->entityType == FLX_OBJECT;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+static bool isGroupByFlag(int flag) {
+    if(FlxG::state) {
+        for(unsigned int i = 0; i < FlxG::state->members.size(); i++) {
+            if(FlxG::state->members[i]->flags == flag) {
+                return FlxG::state->members[i]->entityType == FLX_GROUP;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+static FlxObject* getObjectByFlag(int flag) {
+    if(FlxG::state) {
+        for(unsigned int i = 0; i < FlxG::state->members.size(); i++) {
+            if(FlxG::state->members[i]->flags == flag) {
+                return (FlxObject*) FlxG::state->members[i];
+            }
+        }
+    }
+
+    return 0;
+}
+
+
+static FlxGroup* getGroupByFlag(int flag) {
+    if(FlxG::state) {
+        for(unsigned int i = 0; i < FlxG::state->members.size(); i++) {
+            if(FlxG::state->members[i]->flags == flag) {
+                return (FlxGroup*) FlxG::state->members[i];
+            }
+        }
+    }
+
+    return 0;
 }
 
 
@@ -687,17 +743,25 @@ void FlxScriptEngine::bindFlixelFunctionality() {
     registerClassProperty("FlxObject", "bool isGUI", asOFFSET(FlxObject, isGUI));
     registerClassProperty("FlxObject", "bool isFollowingPath", asOFFSET(FlxObject, isFollowingPath));
     registerClassProperty("FlxObject", "float followingVelocity", asOFFSET(FlxObject, followingVelocity));
+    registerClassProperty("FlxObject", "int flags", asOFFSET(FlxObject, flags));
     registerMethod("FlxObject", "FlxVector@ getCenter()", asMETHOD(FlxObject, getCenter));
     registerMethod("FlxObject", "void kill()", asMETHOD(FlxObject, kill));
 
     registerType("FlxGroup", sizeof(FlxGroup), asOBJ_REF);
     registerClassAddref("FlxGroup", "void f()", asFUNCTION(FlxObject_addRef), asCALL_GENERIC);
     registerClassRelease("FlxGroup", "void f()", asFUNCTION(FlxObject_lostRef), asCALL_GENERIC);
-    registerMethod("FlxGroup", "void add(FlxObject@ obj)", asMETHOD(FlxGroup, add));
-    registerMethod("FlxGroup", "void add(FlxGroup@ obj)", asMETHOD(FlxGroup, add));
+    registerMethod("FlxGroup", "FlxObject@ add(FlxObject@ obj)", asMETHOD(FlxGroup, add));
+    registerMethod("FlxGroup", "FlxGroup@ add(FlxGroup@ obj)", asMETHOD(FlxGroup, add));
     registerMethod("FlxGroup", "void remove(FlxObject@ obj)", asMETHOD(FlxGroup, remove));
     registerMethod("FlxGroup", "void remove(FlxGroup@ obj)", asMETHOD(FlxGroup, remove));
     registerMethod("FlxGroup", "void clear()", asMETHOD(FlxGroup, clear));
+    registerMethod("FlxGroup", "uint size()", asMETHOD(FlxGroup, size));
+    registerMethod("FlxGroup", "bool isObject(int idx)", asMETHOD(FlxGroup, _isObject));
+    registerMethod("FlxGroup", "bool isGroup(int idx)", asMETHOD(FlxGroup, _isGroup));
+    registerMethod("FlxGroup", "FlxObject@ getObject(int idx)", asMETHOD(FlxGroup, _getObject));
+    registerMethod("FlxGroup", "FlxGroup@ getGroup(int idx)", asMETHOD(FlxGroup, _getGroup));
+    registerMethod("FlxGroup", "void clear()", asMETHOD(FlxGroup, clear));
+    registerClassProperty("FlxGroup", "int flags", asOFFSET(FlxGroup, flags));
     registerClassFactory("FlxGroup", "FlxGroup@ f()", asFUNCTION(FlxGroup_create), asCALL_GENERIC);
 
     registerFunction("uint getEntitiesCount()", asFUNCTION(getEntitiesCount));
@@ -705,9 +769,13 @@ void FlxScriptEngine::bindFlixelFunctionality() {
     registerFunction("bool isGroup(uint index)", asFUNCTION(isGroup));
     registerFunction("FlxObject@ getObject(uint index)", asFUNCTION(getObject));
     registerFunction("FlxGroup@ getGroup(uint index)", asFUNCTION(getGroup));
+    registerFunction("bool isObjectByFlag(int flag)", asFUNCTION(isObjectByFlag));
+    registerFunction("bool isGroupByFlag(int flag)", asFUNCTION(isGroupByFlag));
+    registerFunction("FlxObject@ getObjectByFlag(int flag)", asFUNCTION(getObjectByFlag));
+    registerFunction("FlxGroup@ getGroupByFlag(int flag)", asFUNCTION(getGroupByFlag));
 
-    registerFunction("void addEntity(FlxObject@ obj)", asFUNCTION(addObject));
-    registerFunction("void addEntity(FlxGroup@ obj)", asFUNCTION(addGroup));
+    registerFunction("FlxObject@ addEntity(FlxObject@ obj)", asFUNCTION(addObject));
+    registerFunction("FlxGroup@ addEntity(FlxGroup@ obj)", asFUNCTION(addGroup));
 
     registerFunction("FlxObject@ FlxSprite(float x = 0, float y = 0, string path = "", \
                      int w = 0, int h = 0)", asFUNCTION(FlxSprite_create));

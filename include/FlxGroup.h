@@ -8,6 +8,10 @@
 #include "backend/cpp.h"
 #include "FlxBasic.h"
 
+
+class FlxObject;
+
+
 /*
 *  Collection of game objects
 */
@@ -36,6 +40,9 @@ public:
     // remove all elements from group and free memory
     void clear();
 
+    // get entities count
+    unsigned int size();
+
     // any of elements collidates with something
     virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
@@ -51,6 +58,13 @@ public:
     virtual void update();
     virtual void drawGUI();
     virtual void draw();
+
+
+    // inline stuff for script engine
+    inline bool _isObject(int id) { return members[id]->entityType == FLX_OBJECT; }
+    inline bool _isGroup(int id) { return members[id]->entityType == FLX_GROUP; }
+    inline FlxObject* _getObject(int id) { return (FlxObject*) members[id]; }
+    inline FlxGroup* _getGroup(int id) { return (FlxGroup*) members[id]; }
 };
 
 #endif
