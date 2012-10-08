@@ -39,3 +39,7 @@ Android porting NOTES:
 iPhone NOTES:
 - Framework is untested under iPhone. SDL_Mobile_Backend probably works with Apple-specific devices but I can't check it.
 Also XCode project file is not provided with framework.
+
+Compilation macros:
++ FLX_NO_PATHFINDING - compile framework without AStar pathfinding module.
++ FLX_NO_SCRIPT - compile framework without AngelScript scripting engine.

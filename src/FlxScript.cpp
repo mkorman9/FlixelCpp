@@ -525,6 +525,34 @@ static FlxObject* FlxSprite_create(float x, float y, const std::wstring& path, i
 }
 
 
+static FlxObject* FlxText_create(const std::wstring& text, const std::wstring& font, float x, float y,
+                     int size, int color)
+{
+    // convert unicode string to ASCII format
+    std::string s;
+    s.reserve(font.size());
+
+    for(unsigned int i = 0; i < font.size(); i++) {
+        s[i] = static_cast<char>(font[i]);
+    }
+
+    FlxText *tex = new FlxText(text.c_str(), s.c_str(), x, y, size, color);
+    return (FlxObject*) tex;
+}
+
+
+static std::wstring FlxText_getText(FlxObject *obj) {
+    FlxText *t = (FlxText*) obj;
+    return t->text;
+}
+
+
+static void FlxText_setText(FlxObject *obj, const std::wstring& str) {
+    FlxText *t = (FlxText*) obj;
+    t->text = str;
+}
+
+
 static void stopFollowingObject() {
     FlxG::followObject(NULL);
 }
@@ -779,6 +807,11 @@ void FlxScriptEngine::bindFlixelFunctionality() {
 
     registerFunction("FlxObject@ FlxSprite(float x = 0, float y = 0, string path = "", \
                      int w = 0, int h = 0)", asFUNCTION(FlxSprite_create));
+    registerFunction("FlxObject@ FlxText(string text, string font, float x, float y, \
+                     int size, int color)", asFUNCTION(FlxText_create));
+
+    registerFunction("string getObjectText(FlxObject@ obj)", asFUNCTION(FlxText_getText));
+    registerFunction("void setObjectText(FlxObject@ obj, string text)", asFUNCTION(FlxText_setText));
 
     // global properties
     registerProperty("int FlxG_width", &FlxG::width);
