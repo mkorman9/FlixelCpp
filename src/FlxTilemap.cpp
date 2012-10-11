@@ -28,7 +28,7 @@ FlxTilemap::FlxTilemap(const InsertionCallback& callback) {
 
 
 FlxTilemap::~FlxTilemap() {
-    if(mapData) delete mapData;
+    if(mapData) delete[] mapData;
 }
 
 
