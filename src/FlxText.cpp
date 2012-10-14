@@ -19,6 +19,7 @@ FlxText::FlxText(const wchar_t *Text, const char *Font, float X, float Y, int Si
 
 
 FlxText::~FlxText() {
+    FlxG::backend->destroyText(textData);
 }
 
 

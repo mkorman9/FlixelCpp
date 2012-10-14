@@ -73,7 +73,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     flashSprite.height = height;
     flashSprite.alpha = 0;
 
-    // scripts
+    // run init event on scripts
     #ifndef FLX_NO_SCRIPT
     for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
         FlxScript *script = globalScripts.members[i];
@@ -101,12 +101,7 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     backend->mainLoop(innerUpdate, innerDraw);
 
 
-    if(state) {
-        state->leave();
-        delete state;
-    }
-
-    // scripts
+    // run exit event on scripts
     #ifndef FLX_NO_SCRIPT
     for(unsigned int i = 0; i < globalScripts.members.size(); i++) {
         FlxScript *script = globalScripts.members[i];
@@ -118,6 +113,11 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
         }
     }
     #endif
+
+    if(state) {
+        state->leave();
+        delete state;
+    }
 
     scriptEngine->finalize();
     delete scriptEngine;
