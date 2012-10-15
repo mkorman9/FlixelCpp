@@ -49,4 +49,4 @@ Tested compilers:
 - Microsoft Visual Studio 2010
 - GNU GCC ARM 4.6 (Android NDK toolchain)
 
-(NOTE: FlixelCpp requires basic C++0x support. MSVC 2005/2008m, MinGW < 4.6 and NDK < r8 aren't supported).
+(NOTE: FlixelCpp requires basic C++0x support. MSVC 2005/2008, MinGW < 4.6 and NDK < r8 aren't supported).
