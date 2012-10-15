@@ -15,16 +15,9 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-DGLEW_STATIC" />
-					<Add option="-DSFML_DYNAMIC" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
-					<Add library="sfml-system" />
-					<Add library="sfml-window" />
-					<Add library="sfml-graphics" />
-					<Add library="sfml-audio" />
-					<Add library="sfml-network" />
-					<Add library="sfml-main" />
 					<Add library="opengl32" />
 					<Add library="angelscript" />
 				</Linker>
