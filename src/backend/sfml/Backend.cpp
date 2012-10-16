@@ -223,7 +223,7 @@ public:
     }
 
     virtual bool isPlaying() {
-		return Track.GetStatus() == sf::Sound::Playing;
+		return Track.GetStatus() != sf::Sound::Stopped;
     }
 };
 
@@ -404,7 +404,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y, const FlxVe
 
     gfx->Graphic.Bind();
 
-    glTranslatef(x + (source.width / 2), y + (source.height / 2), 0.f);
+    glTranslatef(x + ((float)source.width / 2.f), y + ((float)source.height / 2.f), 0.f);
     glScalef(scale.x, scale.y, 0);
     glRotatef(FlxU::radToDegrees(angle), 0.f, 0.f, 1.f);
     glTranslatef((float)-source.width / 2.f, (float)-source.height / 2.f, 0.f);
@@ -431,7 +431,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y, const FlxVe
     unsigned char r = COLOR_GET_R(color);
     unsigned char g = COLOR_GET_G(color);
     unsigned char b = COLOR_GET_B(color);
-    unsigned char a = (unsigned char)alpha * 255;
+    unsigned char a = alpha * 255.f;
 
     unsigned char colors[] = {
         r, g, b, a,
