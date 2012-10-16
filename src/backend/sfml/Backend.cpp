@@ -431,7 +431,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y, const FlxVe
     unsigned char r = COLOR_GET_R(color);
     unsigned char g = COLOR_GET_G(color);
     unsigned char b = COLOR_GET_B(color);
-    unsigned char a = alpha * 255.f;
+    unsigned char a = static_cast<unsigned char>(alpha * 255.f);
 
     unsigned char colors[] = {
         r, g, b, a,
@@ -468,7 +468,8 @@ FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size,
     str->SetFont(*((sf::Font*)font));
     str->SetText(text);
     str->SetSize((float)size);
-    str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), (unsigned char)alpha * 255));
+    str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color),
+                            static_cast<unsigned char>(alpha * 255.f)));
 
     sf::FloatRect rect = str->GetRect();
     str->SetCenter(rect.GetWidth() / 2, rect.GetHeight() / 2);
@@ -511,7 +512,7 @@ void SFML_Backend::drawText(FlxBaseText *text, float x, float y, const FlxVector
 FlxBackendImage* SFML_Backend::createImage(int width, int height, int color, float alpha) {
     SFML_Image *img = new SFML_Image();
     img->Graphic.Create(width, height, sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color),
-                                                 (unsigned char)alpha * 255));
+                                                 static_cast<unsigned char>(alpha * 255.f)));
     img->Graphic.SetSmooth(false);
 
     return img;
