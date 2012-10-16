@@ -29,7 +29,7 @@ FlxVirtualKeyboard::FlxVirtualKeyboard(float x, float y, const char *backgroundI
 
     // add buttons
     int column = 0, row = 0;
-    float currentX = x + (spacingX * 3.5), currentY = y + (spacingY * 2);
+    float currentX = x + (spacingX * 3.5f), currentY = y + (spacingY * 2.0f);
 
     for(unsigned int i = 0; i < sizeof(keyboardKeys) / sizeof(int); i++) {
         int currentKey = keyboardKeys[i];
@@ -58,7 +58,7 @@ FlxVirtualKeyboard::FlxVirtualKeyboard(float x, float y, const char *backgroundI
         else if(row == 1 && column == 10) {
             row = 2;
             column = 0;
-            currentX = x + (spacingX * 3.5);
+            currentX = x + (spacingX * 3.5f);
             currentY += 3 * (spacingY);
         }
         else if(row == 2 && column == 11) {

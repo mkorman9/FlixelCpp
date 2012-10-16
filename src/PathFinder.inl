@@ -21,8 +21,8 @@ public:
 	}
 
 	int getMap(int X, int Y) {
-		if(X < 0 || Y < 0 || X >= Width || Y >= Height) return (float)FirstCollide;
-		return (float) Map[Y * Width + X];
+		if(X < 0 || Y < 0 || X >= Width || Y >= Height) return (int)FirstCollide;
+		return (int) Map[Y * Width + X];
 	}
 
 	bool IsSameState(MapSearchNode &rhs) {

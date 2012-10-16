@@ -4,8 +4,8 @@
 FlxButton::FlxButton(float X, float Y, const char *buttonImage, int Width, int Height, int statesCount) {
     x = X;
     y = Y;
-    width = Width;
-    height = Height;
+    width = static_cast<float>(Width);
+    height = static_cast<float>(Height);
     buttonStates = statesCount;
     multitouch = true;
     mouseOver = false;
@@ -14,7 +14,7 @@ FlxButton::FlxButton(float X, float Y, const char *buttonImage, int Width, int H
     released = false;
 
     // setup sprite
-    sprite = new FlxSprite(x, y, buttonImage, width, height);
+    sprite = new FlxSprite(x, y, buttonImage, Width, Height);
     sprite->collisions = false;
     sprite->scrool = false;
 
@@ -57,7 +57,7 @@ void FlxButton::update() {
         for(unsigned int i = 0; i < mousesCount; i++) {
             FlxMouse *m = FlxG::mousesList[i];
 
-            FlxRect buttonBounds(x, y, width, height);
+            FlxRect buttonBounds(x, y, static_cast<int>(width), static_cast<int>(height));
             FlxRect mouseBounds(m->x, m->y, 1, 1);
 
             // is mouse over button?

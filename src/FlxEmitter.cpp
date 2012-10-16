@@ -59,9 +59,9 @@ void FlxEmitter::emit(int howMany) {
                                             FlxU::random(0, particleTiles));
 
         part->acceleration.y = gravity;
-        part->angle = FlxU::random((int)particleRotation.x, (int)particleRotation.y);
-        part->velocity.x = FlxU::random((int)particleSpeedX.x, (int)particleSpeedX.y);
-        part->velocity.y = FlxU::random((int)particleSpeedY.x, (int)particleSpeedY.y);
+        part->angle = FlxU::random(particleRotation.x, particleRotation.y);
+        part->velocity.x = FlxU::random(particleSpeedX.x, particleSpeedX.y);
+        part->velocity.y = FlxU::random(particleSpeedY.x, particleSpeedY.y);
 
         if(timeToLife.x > 0 && timeToLife.y > 0)
             part->timeToLife = FlxU::random(timeToLife.x, timeToLife.y);

@@ -58,11 +58,11 @@ int FlxG::setup(const char *title, int Width, int Height, FlxState *state,
     backend->setupSurface(title, width, height, icon);
 
     FlxVector screenSize = backend->getScreenSize();
-	screenWidth = screenSize.x;
-	screenHeight = screenSize.y;
+	screenWidth = static_cast<int>(screenSize.x);
+	screenHeight = static_cast<int>(screenSize.y);
 
     key = new FlxKeyboard();
-    srand(time(0));
+    srand(static_cast<unsigned int>(time(0)));
 
     scriptEngine = new FlxScriptEngine();
     scriptEngine->init();
@@ -311,10 +311,10 @@ void FlxG::innerUpdate() {
 		FlxVector move(objectCenter.x - (width / 2), objectCenter.y - (height / 2));
 
         if(move.x < worldBounds.x) move.x = worldBounds.x;
-        if(move.x + width > worldBounds.width) move.x = worldBounds.width - width;
+        if(move.x + width > worldBounds.width) move.x = static_cast<float>(worldBounds.width - width);
 
         if(move.y < worldBounds.y) move.y = worldBounds.y;
-        if(move.y + height > worldBounds.height) move.y = worldBounds.height - height;
+        if(move.y + height > worldBounds.height) move.y = static_cast<float>(worldBounds.height - height);
 
         scroolVector.x = -move.x;
         scroolVector.y = -move.y;

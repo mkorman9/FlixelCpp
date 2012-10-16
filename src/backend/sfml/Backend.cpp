@@ -134,7 +134,7 @@ public:
     }
 
     virtual bool eof() {
-        return feof(filePtr);
+        return feof(filePtr) != 0;
     }
 
     virtual unsigned int tell() {
@@ -223,7 +223,7 @@ public:
     }
 
     virtual bool isPlaying() {
-        return Track.Playing;
+		return Track.GetStatus() == sf::Sound::Playing;
     }
 };
 
@@ -256,7 +256,7 @@ bool SFML_Backend::setupSurface(const char *title, int width, int height, const 
         }
     }
 
-    FlxMouse::onTouchBegin(0, window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
+    FlxMouse::onTouchBegin(0, (float)window->GetInput().GetMouseX(), (float)window->GetInput().GetMouseY());
     clock.Reset();
 
     // create framebuffer if needed
@@ -313,7 +313,7 @@ void SFML_Backend::mainLoop(void (*onUpdate)(), void (*onDraw)()) {
 
 FlxVector SFML_Backend::getScreenSize() {
     sf::VideoMode screen = sf::VideoMode::GetDesktopMode();
-    return FlxVector(screen.Width, screen.Height);
+    return FlxVector((float)screen.Width, (float)screen.Height);
 }
 
 void SFML_Backend::exitApplication() {
@@ -370,7 +370,7 @@ void SFML_Backend::updateEvents() {
 
 FlxVector SFML_Backend::getMousePosition(int index) {
     (void)index;
-    return FlxVector(window->GetInput().GetMouseX(), window->GetInput().GetMouseY());
+    return FlxVector((float)window->GetInput().GetMouseX(), (float)window->GetInput().GetMouseY());
 }
 
 bool SFML_Backend::getMouseButtonState(int button, int index) {
@@ -407,7 +407,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y, const FlxVe
     glTranslatef(x + (source.width / 2), y + (source.height / 2), 0.f);
     glScalef(scale.x, scale.y, 0);
     glRotatef(FlxU::radToDegrees(angle), 0.f, 0.f, 1.f);
-    glTranslatef(-source.width / 2, -source.height / 2, 0.f);
+    glTranslatef((float)-source.width / 2.f, (float)-source.height / 2.f, 0.f);
 
     float vertices[] = {
         0.0f, 0.0f,
@@ -431,7 +431,7 @@ void SFML_Backend::drawImage(FlxBackendImage *img, float x, float y, const FlxVe
     unsigned char r = COLOR_GET_R(color);
     unsigned char g = COLOR_GET_G(color);
     unsigned char b = COLOR_GET_B(color);
-    unsigned char a = alpha * 255.f;
+    unsigned char a = (unsigned char)alpha * 255;
 
     unsigned char colors[] = {
         r, g, b, a,
@@ -467,8 +467,8 @@ FlxBaseText *SFML_Backend::createText(const wchar_t *text, void *font, int size,
     sf::String *str = new sf::String();
     str->SetFont(*((sf::Font*)font));
     str->SetText(text);
-    str->SetSize(size);
-    str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), alpha * 255.f));
+    str->SetSize((float)size);
+    str->SetColor(sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color), (unsigned char)alpha * 255));
 
     sf::FloatRect rect = str->GetRect();
     str->SetCenter(rect.GetWidth() / 2, rect.GetHeight() / 2);
@@ -511,7 +511,7 @@ void SFML_Backend::drawText(FlxBaseText *text, float x, float y, const FlxVector
 FlxBackendImage* SFML_Backend::createImage(int width, int height, int color, float alpha) {
     SFML_Image *img = new SFML_Image();
     img->Graphic.Create(width, height, sf::Color(COLOR_GET_R(color), COLOR_GET_G(color), COLOR_GET_B(color),
-                                                 alpha * 255.f));
+                                                 (unsigned char)alpha * 255));
     img->Graphic.SetSmooth(false);
 
     return img;
@@ -657,17 +657,17 @@ void SFML_Backend::drawShader(FlxBackendShader *s) {
 
     // draw effect as fullscreen quad
     glBegin(GL_QUADS);
-         glTexCoord2f(0, bottom);
-         glVertex2f(0, 0);
+         glTexCoord2f(0.f, bottom);
+         glVertex2f(0.f, 0.f);
 
          glTexCoord2f(right, bottom);
-         glVertex2f(FlxG::width, 0);
+         glVertex2f((float)FlxG::width, 0.f);
 
-         glTexCoord2f(right, 0);
-         glVertex2f(FlxG::width, FlxG::height);
+         glTexCoord2f(right, 0.f);
+         glVertex2f((float)FlxG::width, (float)FlxG::height);
 
-         glTexCoord2f(0, 0);
-         glVertex2f(0, FlxG::height);
+         glTexCoord2f(0.f, 0.f);
+         glVertex2f(0.f, (float)FlxG::height);
     glEnd();
 
     // unbind shader
