@@ -11,7 +11,7 @@
 #include "FlxU.h"
 #include "FlxParticle.h"
 
-/*
+/**
 *  Particle emitter
 */
 class FlxEmitter : public FlxGroup {
@@ -20,58 +20,116 @@ private:
     std::string tileset;
 public:
 
+	/**
+	*  New particle insertion callback. It's helpful when you want to integrate external physics engine.
+	*/
     typedef std::function<void(FlxEmitter*, FlxParticle*)> InsertionCallback;
 
 
-    // position of emitter
-    float x, y;
+    /**
+	*  X postion of the emmiter
+	*/
+    float x;
+	
+	/**
+	*  Y postion of the emmiter
+	*/
+	float y;
 
-    // gravity acceleration
+	/**
+	*  Particles vertical acceleration
+	*/
     float gravity;
 
-    // particle direction range in X axis
+	/**
+	*  Range of particles speed in X-axis (it's not a vector, it's a range)
+	*/
     FlxVector particleSpeedX;
 
-    // particle direction range in Y axis
+	/**
+	*  Range of particles speed in Y-axis (it's not a vector, it's a range)
+	*/
     FlxVector particleSpeedY;
 
-    // particle rotation range
+	/**
+	*  Range of particles angle in radians (it's not a vector, it's a range)
+	*/
     FlxVector particleRotation;
 
-    // time to life range
+	/**
+	*  Range of particles lifetime in seconds (it's not a vector, it's a range)
+	*/
     FlxVector timeToLife;
 
-    // particle width
+	/**
+	*  Single particle width
+	*/
     int particleWidth;
 
-    // particle height
+	/**
+	*  Single particle height
+	*/
     int particleHeight;
 
-    // number of available tiles for particle
+	/**
+	*  Number of different tile types to random from tilemap
+	*/
     int particleTiles;
 
 
-    // constructor
+    /**
+	*  @param X x-postions oif the emmiter
+	*  @param Y y-postions oif the emmiter
+	*  @param speedRangeX Range of particles speed in X-axis
+	*  @param speedRangeY Range of particles speed in Y-axis
+	*  @param life Range of particles lifetime in seconds
+	*  @param partRotation Range of particles angle in radians
+	*  @param callback Insertion callback, see <code>InsertionCallback</code>
+	*/
     FlxEmitter(float X, float Y, const FlxVector &speedRangeX, const FlxVector &speedRangeY,
                const FlxVector &life, const FlxVector &partRotation = FlxVector(0, 2*FlxU::PI),
                const InsertionCallback& callback = nullptr);
 
-    // destructor
+    /**
+	*  Virtual destructor
+	*/
     virtual ~FlxEmitter();
 
-    // set position of emitter to the position of object
+    /**
+	*  Set emitter's position to passed object positon
+	*  @param obj Object to set
+	*/
     void at(FlxObject *obj);
 
-    // set position of emitter to the center of object
+    /**
+	*  Set emitter's position to center of passed object
+	*  @param obj Object to set
+	*/
     void atCenter(FlxObject *obj);
 
-    // load particles graphic
+    /**
+	*  Load tilemap for particles
+	*  @param tileset Image to load (must be in device's internal storage)
+`	*  @param width Width of single particle	
+	*  @param height Height of single particle
+	*  @param tileTypes How many different types of particles can be generated from specified tileset
+	*/
     void loadGraphic(const char *tileset, int width, int height, int tileTypes = 1);
 
-    // emit specified amount of particles
+    /**
+	*  Emmit specified amount of particles
+	*  @param howMany How many particles
+	*/
     void emit(int howMany);
 
+	/**
+	*  Overrided update event
+	*/
     virtual void update();
+	
+	/**
+	*  Overrided draw event
+	*/
     virtual void draw();
 
 private:

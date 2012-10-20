@@ -15,7 +15,9 @@
 
 class FlxScriptEngine;
 
-// Script object
+/**
+*  Single script object
+*/
 class FlxScript {
 
 private:
@@ -25,15 +27,43 @@ private:
 
     friend class FlxScriptEngine;
 public:
-    FlxScript(FlxScriptEngine *eng) { engine = eng; }
 
+	/**
+	*  Default constructor
+	*  @param eng Pointer to script engine
+	*/
+    FlxScript(FlxScriptEngine *eng) { engine = eng; }
+	
+	/**
+	*  Get AngelScript script builder
+	*  @return AngelScript script builder
+	*/
     inline CScriptBuilder& getBuilder() { return builder; }
+	
+	/**
+	*  Get script main module
+	*  @return Script main module
+	*/
     inline asIScriptModule* getModule() { return mainModule; }
+	
+	/**
+	*  Get script engine
+	*  @return Script engine
+	*/
     inline FlxScriptEngine* getEngine() { return engine; }
 
-    // run function from script
-    asIScriptContext *findFunction(const char *funcDecl);
-    void endCall(asIScriptContext *ctx);
+	/**
+	*  Find function in script's main module.
+	*  @param funcDecl Function's declaration
+	*  @return Function context or <code>NULL</code> on failure
+	*/
+    FLX_CONTEXT *findFunction(const char *funcDecl);
+	
+	/**
+	*  End function calling and delete function context.
+	*  @param ctx Function's context
+	*/
+    void endCall(FLX_CONTEXT *ctx);
 };
 
 
@@ -94,19 +124,35 @@ public:
 #endif
 
 
-// Group of scripts (help class)
+/**
+*  Group of scripts (help class for FlxG)
+*/
 class FlxScriptsList {
 
-public:
+public:	
+
+	/**
+	*  Collection of scripts
+	*/
     std::vector<FlxScript*> members;
 
+    /**
+	*  Add new script to group
+	*  @param s Script to add
+	*  @return Pointer to <code>s</code>, for chaining
+	*/
     FlxScript* add(FlxScript *s) {
         if(!s) return NULL;
 
         members.push_back(s);
         return s;
     }
-
+	
+    /**
+	*  Remove scripts from group
+	*  @param s Script to remove
+	*  @return <code>true</code> if removement was successful. <code>false</code> if script was not found in group
+	*/
     bool remove(FlxScript *s) {
         if(!s) return false;
 
@@ -119,7 +165,10 @@ public:
 
         return false;
     }
-
+	
+    /**
+	*  Remove all scripts from group
+	*/
     void clear() {
         for(unsigned int i = 0; i < members.size(); i++) {
             if(members[i]) delete members[i];

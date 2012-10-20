@@ -30,115 +30,215 @@
 #include "tweener/CppTween.h"
 
 
-/*
-*  Main static class which holds all functionality
+/**
+*  Main class which holds all functionality
 */
 class FlxG {
 
 public:
 
-    // render surface size
-    static int width, height;
+    /**
+	*  Render surface width.
+	*/
+    static int width;
+	
+	/**
+	*  Render surface height.
+	*/
+	static int height;
 
-    // real screen size
-    static int screenWidth, screenHeight;
+    /**
+	*  Desktop resolution in X-axis
+	*/
+    static int screenWidth;
+	
+	/**
+	*  Desktop resolution in Y-axis
+	*/
+	static int screenHeight;
 
-    // current state
+    /**
+	*  Current state
+	*/
     static FlxState *state;
 
-    // fixed timestep time
+    /**
+	*  Fixed timestep duration (in seconds)
+	*/
     static float fixedTime;
 
-    // total application time
+    /**
+	*  Total time of application existance (in seconds)
+	*/
     static float totalTime;
 
-    // time since last frame
+    /**
+	*  Time since last frame (in seconds)
+	*/
     static float elapsed;
 
-    // time in seconds since last frame
+    /**
+	*  Frames per second
+	*/
     static float fps;
 
-    // backend
+    /**
+	*  Framework backend
+	*/
     static FlxBackendBase *backend;
 
-    // exit message
+    /**
+	*  Set it true if application should end
+	*/
     static bool exitMessage;
 
-    // background color
+    /**
+	*  Background color
+	*/
     static int bgColor;
 
-    // keyboard state
+    /**
+	*  Current keyboard state
+	*/
     static FlxKeyboard *key;
 
-    // preloader
+    /**
+	*  Preloader
+	*/
     static FlxPreloader *preloader;
 
-    // music
+    /**
+	*  Current music started by <code>playMusic()</code>
+	*/
     static FlxMusic *music;
 
-    // world's bounds
+    /**
+	*  Scrooling bounds
+	*/
     static FlxRect worldBounds;
 
-	// scrooling vector
+	/**
+	*  Scrooling vector
+	*/
 	static FlxVector scroolVector;
 
-    // mouses array pointer
+    /**
+	*  Mouses (touches) list
+	*/
     static std::vector<FlxMouse*> mousesList;
 
-    // mouse abstraction layer
+    /**
+	*  Helpful mouse abstraction interface
+	*/
     static FlxMouseHolder mouse;
 
-    // is screen being flashed
+    /**
+	*  Is screen being flashed?
+	*/
     static bool flashing;
 
-    // tweener object
+    /**
+	*  Main tweener reference
+	*/
     static tween::Tweener tweener;
 
-    // shaders to draw
+    /**
+	*  Active shaders list
+	*/
     static FlxShadersList shaders;
 
-    // global script engine
+    /**
+	*  Pointer to default scripting engine
+	*/
     static FlxScriptEngine *scriptEngine;
 
-    // global utility scripts
+    /**
+	*  Active scripts list
+	*/
     static FlxScriptsList globalScripts;
 
 
-    // follow object
+    /**
+	*  Follow some object with camera
+	*  @param object Object to follow
+	*/
     static void followObject(FlxObject *object);
 
-    // setup game
+    /**
+	*  Setup framework
+	*  @param title Window title (ASCII format)
+	*  @param Width Window width
+	*  @param Height Window height
+	*  @param state Default state
+	*  @param icon Aplication icon path (in local storage)
+	*  @return Application result (0 on success, > 0 on error)
+	*/
     static int setup(const char *title, int Width, int Height, FlxState *state,
                      const char *icon = NULL);
 
-    // plays a specified sound
+    /**
+	*  Play specified sound.
+	*  @param path Path to sound file (in local storage)
+	*  @param volume Sound volume (in range 0.0 - 1.0)
+	*  @return Reference to sound object
+	*/
     static FlxSound play(const char *path, float volume = 1.0f);
 
-    // plays a specified music
+    /**
+	*  Play specified music.
+	*  @param path Path to music file (in local storage)
+	*  @param volume Music volume (in range 0.0 - 1.0)
+	*  @return Pointer to music object
+	*/
     static FlxMusic* playMusic(const char *path, float volume = 1.0f);
 
-    // set current game state
+    /**
+	*  Set new application state (NOTE: it will be done in <b>NEXT</b> frame)
+	*  @param newState State to switch
+	*/
     static void switchState(FlxState *newState);
 
-    // update mouse state (internal)
+    /**
+	*  Update touch devices (Internal. Do not touch!)
+	*/
     static void updateMouses();
 
-    // special camera effect - flash screen
+    /**
+	*  Camera effect. Screen flash.
+	*  @param Color to flash
+	*  @param time Time of flash (in seconds)
+	*/
     static void flash(int color, float time);
 
-    // check objects collision
+    /**
+	*  Check collision between two entities
+	*  @param one First entity
+	*  @param two Second entity
+	*  @param collisionCallback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Object which overlaps (taken from second entity)
+	*/
     static FlxBasic* overlaps(FlxBasic *one, FlxBasic *two, const FlxBasic::CollisionCallback&
                          collisionCallback = nullptr);
 
-    // check objects collision and do some physics work
+    /**
+	*  Check collision between two entities and do some physics work
+	*  @param one First entity
+	*  @param two Second entity
+	*  @param collisionCallback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Object which overlaps (taken from second entity)
+	*/
     static FlxBasic* collide(FlxBasic *one, FlxBasic *two, const FlxBasic::CollisionCallback&
                          collisionCallback = nullptr);
 
 
-    // update game state (internal)
+    /**
+	*  Update application state (Internal! Do not touch!)
+	*/
     static void innerUpdate();
 
-    // draw game data (internal)
+    /**
+	*  Draw application's stuff (Internal! Do not touch!)
+	*/
     static void innerDraw();
 
 private:

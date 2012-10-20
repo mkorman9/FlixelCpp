@@ -7,41 +7,56 @@
 
 #include "backend/cpp.h"
 
-/*
-*  Path class
+/**
+*  Call used by pathfinding functions
 */
 class FlxPath {
 
 public:
 
-    // single node structure
+    /**
+	*  Single node structure
+	*/
     struct Node {
         float x;
         float y;
     };
 
 
-    // add new node
+    /**
+	*  Add new node
+	*  @param node Node to add
+	*/
     void addNode(const Node& node) {
         nodes.push_back(node);
     }
 
-    // set iterator to front of nodes list
+    /**
+	*  Set iterator to front of list
+	*/
     void setFront() {
         nodesIterator = nodes.begin();
     }
 
-    // set iterator to end of nodes list
+    /**
+	*  Set iterator to end of list
+	*/
     void setBack() {
         nodesIterator = nodes.end();
     }
 
-    // get next node
+    /**
+	*  Get current node and increment iterator
+	*  @return Reference to current node
+	*/
     Node& getNextNode() {
         return *(nodesIterator++);
     }
 
-    // is iterator on the end of list
+    /**
+	*  Is iterator at the end of list
+	*  @return <code>true</code> if it is, <code>false</code> if it isn't
+	*/
     bool isEnd() const {
         return nodesIterator == nodes.end();
     }

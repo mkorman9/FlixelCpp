@@ -8,32 +8,46 @@
 #include "backend/cpp.h"
 #include "FlxGroup.h"
 
-/*
+/**
 *  Basic scene managment class
 */
 class FlxState : public FlxGroup {
 
 public:
 
-    // desturctor
+    /**
+	*  Default destrurctor
+	*/
     ~FlxState() {
         clear();
     }
 
-    // on create event (to override)
+    /**
+	*  State creating event. It's called once when state is being set as default.
+	*  To override.
+	*/
     virtual void create() {
     }
 
-    // on state leaving event (to override)
+    /**
+	*  State leaving event. It's called once when state is being destroyed (but before destructor).
+	*  To override.
+	*/
     virtual void leave() {
     }
 
-    // update all scene elements (to override)
+    /**
+	*  Update state event.
+	*  To override.
+	*/
     virtual void update() {
         FlxGroup::update();
     }
 
-    // draw all scene elements (to override)
+    /**
+	*  Draw event.
+	*  To override.
+	*/
     void draw() {
         FlxGroup::draw();
     }

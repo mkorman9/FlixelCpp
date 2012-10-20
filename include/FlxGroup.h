@@ -12,51 +12,106 @@
 class FlxObject;
 
 
-/*
-*  Collection of game objects
+/**
+*  Collection of game entities (objects or other groups)
 */
 class FlxGroup : public FlxBasic {
 
 public:
+
+    /**
+	*  Members of group
+	*/
     std::vector<FlxBasic*> members;
 
+	/**
+	*  Pair of two entities. Used in <code>selfOverlaps</code> and <code>selfCollide</code> 
+	*/
     struct EntitiesSet {
         FlxBasic *first;
         FlxBasic *second;
     };
 
-    // constructor
+	
+    /**
+	*  Default constructor
+	*/
     FlxGroup();
 
-    // destructor
+    /**
+	*  Virtual destructor
+	*/
     virtual ~FlxGroup();
 
-    // add new entity to group. Returns new object (for chaining)
+    /**
+	*  Add new entity to group.
+	*  @param object Entity to add (musn't be NULL)
+	*  @return <code>object</code> for chaining
+	*/
     FlxBasic* add(FlxBasic *object);
 
-    // remove entity from group
+    /**
+	*  Remove entity from group and <code>delete</code> it
+	*  @param object Entity to remove
+	*  @param dontDelete Put <code>true</code> here if you wouldn't delete object after removement
+	*  @return <code>true</code> if removement was successful. <code>false</code> if entity was not found in group
+	*/
     bool remove(FlxBasic *object, bool dontDelete = false);
 
-    // remove all elements from group and free memory
+    /**
+	*  Remove all enitites from group and delete it's memory
+	*/
     void clear();
 
-    // get entities count
+    /**
+	*  Get members count
+	*  @return Elements count
+	*/
     unsigned int size();
 
-    // any of elements collidates with something
+    /**
+	*  Check collision between two entities
+	*  @param object Entity to check
+	*  @param callback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Object which overlaps or <code>NULL</code>
+	*/
     virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
-    // check overlap and do some phycics work
+    /**
+	*  Check collision between two entities and do some physics work
+	*  @param object Entity to check
+	*  @param callback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Object which overlaps or <code>NULL</code>
+	*/
     virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
-    // check collisions with each other group member
+    /**
+	*  Check collision between two entities inside the same group
+	*  @param callback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Set of two elements which overlaps
+	*/
     EntitiesSet selfOverlaps(const CollisionCallback& callback = nullptr);
 
-    // check collisions with each other group member and do some phycics work
+    /**
+	*  Check collision between two entities inside the same group and do some physics work
+	*  @param callback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Set of two elements which overlaps
+	*/
     EntitiesSet selfCollide(const CollisionCallback& callback = nullptr);
 
+	/**
+	*  Update event.
+	*/
     virtual void update();
+	
+	/**
+	*  Draw all elements flagged as GUI
+	*/
     virtual void drawGUI();
+	
+	/**
+	*  Draw all elements flagged as non-GUI
+	*/
     virtual void draw();
 
 

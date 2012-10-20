@@ -10,7 +10,7 @@
 #include "FlxRect.h"
 #include "FlxPath.h"
 
-/*
+/**
 *  Base for all drawable entities
 */
 class FlxObject : public FlxBasic {
@@ -19,101 +19,179 @@ private:
     FlxPath::Node currentNode;
 public:
 
-    // X position on screen
+    /**
+	* X position on screen
+	*/
     float x;
 
-    // Y position on screen
+	/**
+	* Y position on screen
+	*/
     float y;
-
-    // width of the entity
+	
+	/**
+	* Width of the entity
+	*/
     int width;
-
-    // height of the entity
+	
+	/**
+	* Height of the entity
+	*/
     int height;
 
-    // linear velocity of object
+	/**
+	* Linear velocity of object
+	*/
     FlxVector velocity;
 
-    // acceleration of the entity
+	/**
+	* Acceleration of the entity
+	*/
     FlxVector acceleration;
 
-    // maximum velocity of object
+	/**
+	* Maximum velocity of object
+	*/
     FlxVector maxVelocity;
 
-    // rotation speed
+	/**
+	* Rotation speed
+	*/
     float angularVelocity;
 
-    // rotation of entity
+	/**
+	* Rotation of entity
+	*/
     float angle;
 
-    // scale
+	/**
+	* Scale factor
+	*/
     FlxVector scale;
 
-    // color (in 24-bits) NO ALPHA!!!!1111
+	/**
+	* Color mask, <b>24-bits without alpha</b>
+	*/
     int color;
 
-    // is entity visible or not?
+	/**
+	* Is entity visible or not?
+	*/
     bool visible;
-
-    // entity's hitbox
+	
+	/**
+	*  Entity's hitbox
+	*/
     FlxRect hitbox;
 
-    // hitbox move vector
+	/**
+	*  Translation of hitbox (to correct collision checking)
+	*/
     FlxVector hitboxMove;
-
-    // is entity collidable?
+	
+	/**
+	*  Is entity solid?
+	*/
     bool collisions;
 
-    // opacity (0 - 1)
+	/**
+	*  Opacity (in range 0 - 1)
+	*/
     float alpha;
 
-    // is this element of GUI? If true - don't apply post effects
+	/**
+	*  Is this element of interface? If <code>true</code> - don't apply special effects
+	*/
     bool isGUI;
 
-    // is object following some path?
+	/**
+	*  Is object following some path?
+	*/
     bool isFollowingPath;
 
-    // following velocity
+	/**
+	*  Linear velocity of path following
+	*/
     float followingVelocity;
 
-    // path to follow
+	/**
+	*  Path to follow
+	*/
     FlxPath *pathToFollow;
 
-
-    // get entity's center point
+	/**
+	*  Get entity's center point
+	*  @return Entity's center point
+	*/
     FlxVector getCenter();
 
-    // is entity touching floor
+	
+	/**
+	*  Is entity touching object below?
+	*  @param floor Object to check
+	*  @return <code>true</code> if touching, <code>false</code> if not
+	*/
     bool isTouchingFloor(FlxBasic *floor);
 
-    // is entity touching ceiling
+	/**
+	*  Is entity touching object above?
+	*  @param ceil Object to check
+	*  @return <code>true</code> if touching, <code>false</code> if not
+	*/
     bool isTouchingCeiling(FlxBasic *ceil);
 
-    // entity overlap override
+    /**
+	*  Check collision between two entities
+	*  @param object Entity to check
+	*  @param callback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Object which overlaps or <code>NULL</code>
+	*/
     virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
-    // check overlap and make some phycics work
+    /**
+	*  Check collision between two entities and do some physics work
+	*  @param object Entity to check
+	*  @param callback Callback. See <code>FlxBasic::CollisionCallback</code>
+	*  @return Object which overlaps or <code>NULL</code>
+	*/
     virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr);
 
-    // follow some path
+	/**
+	*  Start following path
+	*  @param toFollow Path to follow
+	*  @param speed Following velocity
+	*/
     void followPath(FlxPath *toFollow, float speed);
 
-    // stop following path
+	/**
+	*  Stop following path
+	*/
     void stopFollowing();
 
-    // kill entity
+	/**
+	*  Deactivate entity
+	*/
     virtual void kill();
 
-    // default contructor
+	/**
+	*  Default constructor
+	*/
     FlxObject();
 
-    // default destructor
+	/**
+	*  Default destructor
+	*/
     virtual ~FlxObject();
 
-    // base update function (to override)
+	/**
+	*  Update event template (to override).
+	*  Anyway, keep in mind that this implementations should be called in inherited function
+	*/
     virtual void update();
 
-    // base rendering function (to override)
+	/**
+	*  Draw event template (to override)
+	*/
     virtual void draw();
 };
 

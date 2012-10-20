@@ -7,14 +7,23 @@
 
 #include "cpp.h"
 
-// initializer list class
-// bypass for Visual Studio
+/**
+*  Initializer list class. Bypass for Visual Studio
+*/
 template<typename T>
 class FlxInitializerList {
 
 public:
+
+	/**
+	*  Arguments list
+	*/
     std::list<T> arguments;
 
+	/**
+	*  Default constructor
+	*  @param args List of arguments
+	*/
     FlxInitializerList(const std::initializer_list<T>& args) {
         for(auto it = args.begin(); it != args.end(); it++) {
             arguments.push_back(*it);

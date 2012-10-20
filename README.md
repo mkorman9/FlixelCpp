@@ -52,3 +52,6 @@ Also XCode project file is not provided with framework.
 - GNU GCC ARM 4.6 (Android NDK toolchain)
 
 (NOTE: FlixelCpp requires basic C++0x support. MSVC 2005/2008, MinGW < 4.6 and NDK < r8 aren't supported).
+
+**Documentation**
+Partial documentation is available [HERE](http://dynax.boo.pl/flixelcpp/)

@@ -7,8 +7,10 @@
 
 namespace FlxKey {
 
-	// Keyboard codes list copied from SFML 1.6
-	// Copyrights by Laurent Gomila
+	/**
+	*  Keyboard codes list copied from SFML 1.6
+	*  Copyrights by Laurent Gomila
+	*/
     enum KeyCode
     {
         A = 'a',
@@ -47,27 +49,27 @@ namespace FlxKey {
         Num7 = '7',
         Num8 = '8',
         Num9 = '9',
-        Escape = 256,
+        Escape = 256,  ///< Escape (on PC) or BACK BUTTON (on Android)
         LControl,
         LShift,
         LAlt,
-        LSystem,      ///< OS specific key (left side) : windows (Win and Linux), apple (MacOS), ...
+        LSystem,
         RControl,
         RShift,
         RAlt,
-        RSystem,      ///< OS specific key (right side) : windows (Win and Linux), apple (MacOS), ...
+        RSystem,
         Menu,
-        LBracket,     ///< [
-        RBracket,     ///< ]
-        SemiColon,    ///< ;
-        Comma,        ///< ,
-        Period,       ///< .
-        Quote,        ///< '
-        Slash,        ///< /
+        LBracket,
+        RBracket,
+        SemiColon,
+        Comma,
+        Period,
+        Quote,
+        Slash,
         BackSlash,
-        Tilde,        ///< ~
-        Equal,        ///< =
-        Dash,         ///< -
+        Tilde,
+        Equal,
+        Dash,
         Space,
         Enter,
         Back,
@@ -78,14 +80,14 @@ namespace FlxKey {
         Home,
         Insert,
         Delete,
-        Add,          ///< +
-        Subtract,     ///< -
-        Multiply,     ///< *
-        Divide,       ///< /
-        Left,         ///< Left arrow
-        Right,        ///< Right arrow
-        Up,           ///< Up arrow
-        Down,         ///< Down arrow
+        Add,
+        Subtract,
+        Multiply,
+        Divide,
+        Left,
+        Right,
+        Up,
+        Down,
         Numpad0,
         Numpad1,
         Numpad2,

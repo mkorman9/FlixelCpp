@@ -8,39 +8,58 @@
 #include "backend/cpp.h"
 #include "FlxVector.h"
 
+/**
+*  Represents type of entity (single object or group of objects)
+*  Simple RTTI mechanism
+*/
 enum FlxEntityType {
     FLX_OBJECT,
     FLX_GROUP
 };
 
-/*
-*  Base for all entities.
-*  Represents all objects in game
+
+/**
+*  Base for all entities in game. Represents every object behavior
 */
 class FlxBasic {
 
 public:
 
-    // collision callback typew
+    /**
+    *  Collision callback type. Used in <code>overlaps()</code> and <code>collide()</code>
+    */
     typedef std::function<void(FlxBasic*, FlxBasic*)> CollisionCallback;
 
-    // entity type
+    /**
+    *  Type of entity (single object or group of objects)
+    */
     FlxEntityType entityType;
 
-    // is entity active or not?
+    /**
+    *  Should entity be updated every frame.
+    *  NOTE: If it's false - update() function won't be called every frame, but draw() will be.
+    */
     bool active;
 
-    // is object scrool-able
+    /**
+    *  Should entity be moved by scroolVector
+    */
     bool scrool;
 
-    // scrool modifier
+    /**
+    *  Scrool modifier. Helpful for parallax scrooling.
+    */
     FlxVector scroolFactor;
 
-    // special user flags
+    /**
+    *  Some user data. Helpful in scripts.
+    */
     int flags;
 
 
-    // default contructor
+    /**
+    *  Default constructor
+    */
     FlxBasic() {
         active = true;
         scrool = true;
@@ -48,30 +67,53 @@ public:
         flags = 0;
     }
 
-    // destructor's template
+    /**
+    *  Destructior's template
+    */
     virtual ~FlxBasic() {
     }
 
-    // base update function (to override)
+    /**
+    *  Update event. It will be called every frame.
+    *  NOTE: Template. Should be overrided later.
+    */
     virtual void update() {
     }
 
-    // base rendering function (to override)
+    /**
+    *  Rendering event. It will be called every frame.
+    *  NOTE: Template. Should be overrided later.
+    */
     virtual void draw() {
     }
 
-    // kill entity
+    /**
+    *  Deactivate entity
+    */
     virtual void kill() {
         active = false;
     }
 
-    // entity collidates with something?
+    /**
+    *  Base template for collisions checking functions.
+    *  @param object Object to check
+    *  @param callback Callback to call (NOTE: if you pass FlxGroup as object, callback will receive
+                                         single single group's element which overlaps)
+    *  @return Always <code>NULL</code> because it is a template
+    */
     virtual FlxBasic* overlaps(FlxBasic *object, const CollisionCallback& callback = nullptr) {
         (void)object; (void)callback;
         return NULL;
     }
 
-    // check overlap and make some phycics work
+    /**
+    *  Base template for collisions checking functions. The main difference between <code>overlaps()</code>
+    *  and <code>collide()</code> is that <code>collide()</code> also makes some physics work.
+    *  @param object Object to check
+    *  @param callback Callback to call (NOTE: if you pass FlxGroup as object, callback will receive
+                                         single single group's element which overlaps)
+    *  @return Always <code>NULL</code> because it is a template
+    */
     virtual FlxBasic* collide(FlxBasic *object, const CollisionCallback& callback = nullptr) {
         (void)object; (void)callback;
         return NULL;

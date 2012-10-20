@@ -33,11 +33,6 @@ void FlxText::setFormat(const char *Font, int Size, int Color) {
 }
 
 
-void FlxText::setText(const wchar_t *Text) {
-    text = Text;
-}
-
-
 void FlxText::update() {
     if(!active) return;
 

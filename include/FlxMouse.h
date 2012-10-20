@@ -7,31 +7,108 @@
 
 #include "backend/cpp.h"
 
-/*
-*  Mouse handler
+/**
+*  Structure representing single mouse device or touch
 */
 struct FlxMouse {
 
 private:
     bool lastLeftDown, lastRightDown, lastMiddleDown;
 public:
-    bool leftDown, middleDown, rightDown;
-    bool leftPressed, middlePressed, rightPressed;
-    bool leftReleased, middleReleased, rightReleased;
 
-    float x, endX;
-    float y, endY;
+	/**
+	*  Is left mouse button down?
+	*/
+    bool leftDown;
+	
+	/**
+	*  Is middle mouse button down?
+	*/
+	bool middleDown;
 
+	/**
+	*  Is right mouse button down?
+	*/
+	bool rightDown;
+	
+	/**
+	*  Is left mouse button just pressed?
+	*/
+    bool leftPressed;
+	
+	/**
+	*  Is middle mouse button just pressed?
+	*/
+	bool middlePressed;
+
+	/**
+	*  Is right mouse button just pressed?
+	*/
+	bool rightPressed;
+
+	/**
+	*  Is left mouse button just released?
+	*/
+    bool leftReleased;
+	
+	/**
+	*  Is middle mouse button just released?
+	*/
+	bool middleReleased;
+
+	/**
+	*  Is right mouse button just released?
+	*/
+	bool rightReleased;
+	
+	/**
+	*  Actual mouse position in X-axis
+	*/
+    float x;
+	
+	/**
+	*  Position in X-axis where click was released (only in touch devices)
+	*/
+	float endX;
+	
+	/**
+	*  Actual mouse position in Y-axis
+	*/
+    float y;
+	
+	/**
+	*  Position in Y-axis where click was released (only in touch devices)
+	*/
+	float endY;
+
+	/**
+	*  Touch index
+	*/
     int index;
 
-
+	
+	/**
+	*  Default constructor
+	*  @param id Touch device index
+	*/
     FlxMouse(int id);
+	
+	/**
+	*  Show hardware mouse cursor (only PC)
+	*/
     void show();
+	
+	/**
+	*  Hide hardware mouse cursor (only PC)
+	*/
     void hide();
 
+	/**
+	*  Update mouse state (Internal! Do not touch!)
+	*/
     void updateState();
 
-    // static internal data
+    // static internal events
     static void onTouchBegin(int pointer, float, float);
     static void onTouchEnd(int pointer, float, float);
 };

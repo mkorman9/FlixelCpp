@@ -9,58 +9,114 @@
 #include "FlxGroup.h"
 #include "FlxPath.h"
 
-/*
+/**
 *  Basic map class
 */
 class FlxTilemap : public FlxGroup {
 
 public:
 
+	/**
+	*  Insertion callback. Similar to <code>FlxEmitter::InsertionCallback</code>
+	*/
     typedef std::function<void(FlxTilemap*, FlxTile*)> InsertionCallback;
 
-    // raw map data
+    /** 
+	*  Raw map data. Index list in row order.
+	*/
     int *mapData;
 
-    // bounds of the map (in pixels)
+    /** 
+	*  Bounds of the map (in pixels).
+	*  Used on scrooling
+	*/
     FlxRect bounds;
 
-    // total map size
+    /** 
+	*  Total map size (in tiles)
+	*/
     FlxVector size;
 
-    // total size of map (in pixels)
+    /** 
+	*  Total map size (in pixels)
+	*/
     FlxVector sizeInPixels;
 
-    // first solid tile index
+    /** 
+	*  Index of first collidable tile in tileset
+	*/
     int firstSolid;
 
 
-    // constructor
+    /** 
+	*  Default constructor
+	*  @param callback See <code>FlxTilemap::InsertionCallback</code>
+	*/
     FlxTilemap(const InsertionCallback& callback = nullptr);
 
-    // destructor
+    /** 
+	*  Default destructor
+	*/
     virtual ~FlxTilemap();
 
-    // load map to memory
+    /** 
+	*  Loads map to memory
+	*  @param map Raw inices array in row order
+	*  @param sizeX Width of map in tiles
+	*  @param sizeY Height of map in tiles
+	*  @param tileset Path to tileset file (must be in local device's storage)
+	*  @param tileWidth Single tile width (in pixels)
+	*  @param tileHeight Single tile height (in pixels)
+	*  @param firstCollide Index of first collidable tile in tileset
+	*/
     void loadMap(int *map, int sizeX, int sizeY, const char *tileset, int tileWidth,
                  int tileHeight, int firstCollide = 1);
 
-    // get tile type from specified index
+    /** 
+	*  Get tile index from specified point (in tiles)
+	*  @param x Tile X
+	*  @param y Tile Y
+	*  @return Tile index or -1 on failure
+	*/
     int getTile(int x, int y);
 
-    // get tile by point
+    /** 
+	*  Get tile index from specified pixel
+	*  @param pointX Pixel X
+	*  @param pointY Pixel Y
+	*  @return Tile index or -1 on failure
+	*/
     int getTileFromPoint(float pointX, float pointY);
 
-    // set tile on index
+    /** 
+	*  Set new index to tile from specified point 
+	*  @param x Tile X
+	*  @param y Tile Y
+	*  @param value New index of tile
+	*/
     void setTile(int x, int y, int value);
 
-    // find path from start point to end point.
-    // return NULL if it's unavailable
+	/** 
+	*  Find path from start to end point.
+	*  NOTE: Always returns NULL if <code>FLX_NO_PATHFINDING</code> is present
+	*  @param startX Start tile X
+	*  @param startY Start tile Y
+	*  @param endX End tile X
+	*  @param endY End tile Y
+	*  @return List of points (in pixels!) to cross, or NULL if path was not found 
+	*/
     FlxPath* findPath(int startX, int startY, int endX, int endY);
 
+	/** 
+	*  Update event (to override)
+	*/
     virtual void update() {
         FlxGroup::update();
     }
 
+	/** 
+	*  Draw event (to override)
+	*/
     virtual void draw() {
         FlxGroup::draw();
     }
