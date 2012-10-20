@@ -10,6 +10,13 @@
 #include "FlxRect.h"
 #include "FlxPath.h"
 
+// Special collision flags
+#define FLX_NO_COLLISIONS_UP 0x00000001
+#define FLX_NO_COLLISIONS_DOWN 0x00000010
+#define FLX_NO_COLLISIONS_RIGHT 0x00000020
+#define FLX_NO_COLLISIONS_LEFT 0x00000100
+
+
 /**
 *  Base for all drawable entities
 */
@@ -28,12 +35,12 @@ public:
 	* Y position on screen
 	*/
     float y;
-	
+
 	/**
 	* Width of the entity
 	*/
     int width;
-	
+
 	/**
 	* Height of the entity
 	*/
@@ -78,7 +85,7 @@ public:
 	* Is entity visible or not?
 	*/
     bool visible;
-	
+
 	/**
 	*  Entity's hitbox
 	*/
@@ -88,7 +95,7 @@ public:
 	*  Translation of hitbox (to correct collision checking)
 	*/
     FlxVector hitboxMove;
-	
+
 	/**
 	*  Is entity solid?
 	*/
@@ -114,6 +121,13 @@ public:
 	*/
     float followingVelocity;
 
+    /**
+    *  Special collision flags. For example FLX_NO_COLLISIONS_UP
+    *  will block collision if object's velocity is pointed directly upside.<br />
+    *  <b>NOTE: It only works with collide() function, not with overlaps()</b>
+    */
+    int collisionsFlags;
+
 	/**
 	*  Path to follow
 	*/
@@ -125,7 +139,7 @@ public:
 	*/
     FlxVector getCenter();
 
-	
+
 	/**
 	*  Is entity touching object below?
 	*  @param floor Object to check

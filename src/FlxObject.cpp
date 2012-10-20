@@ -21,6 +21,8 @@ FlxObject::FlxObject() {
     isFollowingPath = false;
     followingVelocity = 1.f;
     pathToFollow = NULL;
+
+    collisionsFlags = 0;
 }
 
 
@@ -141,7 +143,9 @@ bool FlxObject::isTouchingCeiling(FlxBasic *ceil) {
 FlxBasic* FlxObject::overlaps(FlxBasic *object, const CollisionCallback& callback) {
 
     if(object->entityType == FLX_OBJECT) {
-        if(hitbox.overlaps(((FlxObject*)object)->hitbox)) {
+        FlxObject *obj = (FlxObject*)object;
+
+        if(hitbox.overlaps(obj->hitbox)) {
             if(callback != nullptr) callback(this, object);
             return object;
         }
@@ -184,8 +188,14 @@ FlxBasic* FlxObject::collide(FlxBasic *object, const CollisionCallback& callback
         rect1.height = hitbox.height;
 
         if(rect1.overlaps(obj->hitbox)) {
-            velocity.x = 0;
-            col = true;
+            if((velocity.x < 0 && !(collisionsFlags & FLX_NO_COLLISIONS_LEFT ||
+                                    obj->collisionsFlags & FLX_NO_COLLISIONS_RIGHT)) ||
+               (velocity.x > 0 && !(collisionsFlags & FLX_NO_COLLISIONS_RIGHT ||
+                                    obj->collisionsFlags & FLX_NO_COLLISIONS_LEFT)))
+            {
+                velocity.x = 0;
+                col = true;
+            }
         }
 
         // y-axis
@@ -196,8 +206,14 @@ FlxBasic* FlxObject::collide(FlxBasic *object, const CollisionCallback& callback
         rect2.height = hitbox.height;
 
         if(rect2.overlaps(obj->hitbox)) {
-            velocity.y = 0;
-            col = true;
+            if((velocity.y < 0 && !(collisionsFlags & FLX_NO_COLLISIONS_UP ||
+                                    obj->collisionsFlags & FLX_NO_COLLISIONS_DOWN)) ||
+               (velocity.y > 0 && !(collisionsFlags & FLX_NO_COLLISIONS_DOWN ||
+                                    obj->collisionsFlags & FLX_NO_COLLISIONS_UP)))
+            {
+                velocity.y = 0;
+                col = true;
+            }
         }
 
         if(col && callback != nullptr) callback(this, object);

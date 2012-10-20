@@ -21,45 +21,45 @@ public:
 	*/
     typedef std::function<void(FlxTilemap*, FlxTile*)> InsertionCallback;
 
-    /** 
+    /**
 	*  Raw map data. Index list in row order.
 	*/
     int *mapData;
 
-    /** 
+    /**
 	*  Bounds of the map (in pixels).
 	*  Used on scrooling
 	*/
     FlxRect bounds;
 
-    /** 
+    /**
 	*  Total map size (in tiles)
 	*/
     FlxVector size;
 
-    /** 
+    /**
 	*  Total map size (in pixels)
 	*/
     FlxVector sizeInPixels;
 
-    /** 
+    /**
 	*  Index of first collidable tile in tileset
 	*/
     int firstSolid;
 
 
-    /** 
+    /**
 	*  Default constructor
 	*  @param callback See <code>FlxTilemap::InsertionCallback</code>
 	*/
     FlxTilemap(const InsertionCallback& callback = nullptr);
 
-    /** 
+    /**
 	*  Default destructor
 	*/
     virtual ~FlxTilemap();
 
-    /** 
+    /**
 	*  Loads map to memory
 	*  @param map Raw inices array in row order
 	*  @param sizeX Width of map in tiles
@@ -72,7 +72,7 @@ public:
     void loadMap(int *map, int sizeX, int sizeY, const char *tileset, int tileWidth,
                  int tileHeight, int firstCollide = 1);
 
-    /** 
+    /**
 	*  Get tile index from specified point (in tiles)
 	*  @param x Tile X
 	*  @param y Tile Y
@@ -80,7 +80,7 @@ public:
 	*/
     int getTile(int x, int y);
 
-    /** 
+    /**
 	*  Get tile index from specified pixel
 	*  @param pointX Pixel X
 	*  @param pointY Pixel Y
@@ -88,33 +88,40 @@ public:
 	*/
     int getTileFromPoint(float pointX, float pointY);
 
-    /** 
-	*  Set new index to tile from specified point 
+    /**
+	*  Set new index to tile from specified point
 	*  @param x Tile X
 	*  @param y Tile Y
 	*  @param value New index of tile
 	*/
     void setTile(int x, int y, int value);
 
-	/** 
+    /**
+    *  Set collision flags to all tiles with specified ID
+    *  @param index Index of tiles to set
+    *  @param flags Flags to set
+    */
+    void setTilesProperty(int index, int flags);
+
+	/**
 	*  Find path from start to end point.
 	*  NOTE: Always returns NULL if <code>FLX_NO_PATHFINDING</code> is present
 	*  @param startX Start tile X
 	*  @param startY Start tile Y
 	*  @param endX End tile X
 	*  @param endY End tile Y
-	*  @return List of points (in pixels!) to cross, or NULL if path was not found 
+	*  @return List of points (in pixels!) to cross, or NULL if path was not found
 	*/
     FlxPath* findPath(int startX, int startY, int endX, int endY);
 
-	/** 
+	/**
 	*  Update event (to override)
 	*/
     virtual void update() {
         FlxGroup::update();
     }
 
-	/** 
+	/**
 	*  Draw event (to override)
 	*/
     virtual void draw() {

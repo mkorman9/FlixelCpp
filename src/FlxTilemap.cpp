@@ -56,7 +56,7 @@ void FlxTilemap::loadMap(int *map, int sizeX, int sizeY, const char *tileset, in
     for(int i = 0; i < sizeX * sizeY; i++) {
 
         if(mapData[i] != -1) {
-            FlxTile *tile = new FlxTile(static_cast<float>(x * tileWidth), 
+            FlxTile *tile = new FlxTile(static_cast<float>(x * tileWidth),
 										static_cast<float>(y * tileHeight), tileset, tileWidth, tileHeight);
 
             tile->addAnimation("__default", FlxInitializerList<unsigned int>(mapData[i]));
@@ -100,6 +100,18 @@ void FlxTilemap::setTile(int x, int y, int value) {
 
     if(x < 0 || y < 0 || x >= (int)size.x || y >= (int)size.y) return;
     mapData[(y * (int)size.x) + x] = value;
+}
+
+
+void FlxTilemap::setTilesProperty(int index, int flags) {
+
+    for(unsigned int i = 0; i < members.size(); i++) {
+        FlxTile *tile = (FlxTile*) members[i];
+
+        if(tile->type == index) {
+            tile->collisionsFlags = flags;
+        }
+    }
 }
 
 
