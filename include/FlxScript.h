@@ -67,7 +67,10 @@ public:
 };
 
 
-// Scripts managment class
+/**
+*  Scripts managment class.<br />
+*  Scripting documentation is not ready yet
+*/
 class FlxScriptEngine {
 
 private:
@@ -75,36 +78,145 @@ private:
     void bindFlixelFunctionality();
 public:
 
-    // this functions are automatically called by Flixel
+    /**
+	*  Initialize engine (Internal! Do not touch!)
+	*/
     void init();
+	
+	/**
+	*  Close engine (Internal! Do not touch!)
+	*/
     void finalize();
 
-    // internals
+    /**
+	*  Get AngelScript core device
+	*  @return Pointer to AngelScript engine
+	*/
     inline asIScriptEngine* getCore() { return engine; }
 
-    // functions/variables registering
+    /**
+	*  Register global function
+	*  @param decl Declaration of function
+	*  @param ptr Pointer to function
+	*  @param conv Calling convention
+	*/
     void registerFunction(const char *decl, const asSFuncPtr& ptr, asDWORD conv = asCALL_CDECL);
+	
+	/**
+	*  Register global property
+	*  @param decl Declaration of property
+	*  @param ptr Pointer to memory
+	*/
     void registerProperty(const char *decl, void *ptr);
+	
+	/**
+	*  Register new enum
+	*  @param name Enum name
+	*/
     void registerEnum(const char *name);
+	
+	/**
+	*  Register new enum variable
+	*  @param enumName Enum name
+	*  @param name Variable name
+	*  @param value Value
+	*/
     void registerEnumValue(const char *enumName, const char *name, int value);
+	
+	/**
+	*  Register new class
+	*  @param name Class name
+	*  @param size Size of class (in bytes)
+	*  @param flags Special flags
+	*/
     void registerType(const char *name, int size, asDWORD flags = asOBJ_REF);
+	
+	/**
+	*  Register class method
+	*  @param typeName Class name
+	*  @param decl Method declaration
+	*  @param ptr Pointer to method
+	*  @param conv Calling convention
+	*/
     void registerMethod(const char *typeName, const char *decl, const asSFuncPtr& ptr,
                         asDWORD conv = asCALL_THISCALL);
+						
+	/**
+	*  Register new class property
+	*  @param typeName Class name
+	*  @param decl Declaration of property
+	*  @param offset Offset in class
+	*/
     void registerClassProperty(const char *typeName, const char *decl, int offset);
+	
+	/**
+	*  Register new class constructor
+	*  @param typeName Class name
+	*  @param decl Declaration of constructor
+	*  @param ptr Pointer to function
+	*  @param conv Convention of calling
+	*/
     void registerClassConstructor(const char *typeName, const char *decl, const asSFuncPtr& ptr,
                                   asDWORD conv = asCALL_THISCALL);
+								  
+	/**
+	*  Register new class destructor
+	*  @param typeName Class name
+	*  @param decl Declaration of destructor
+	*  @param ptr Pointer to function
+	*  @param conv Convention of calling
+	*/
     void registerClassDestructor(const char *typeName, const char *decl, const asSFuncPtr& ptr,
                                   asDWORD conv = asCALL_THISCALL);
+								  
+	/**
+	*  Register new class AddReference event
+	*  @param typeName Class function
+	*  @param decl Declaration of function
+	*  @param ptr Pointer to function
+	*  @param conv Convention of calling
+	*/
     void registerClassAddref(const char *typeName, const char *decl, const asSFuncPtr& ptr,
                                   asDWORD conv = asCALL_THISCALL);
+								 
+	/**
+	*  Register new class RemoveReference event
+	*  @param typeName Class function
+	*  @param decl Declaration of function
+	*  @param ptr Pointer to function
+	*  @param conv Convention of calling
+	*/
     void registerClassRelease(const char *typeName, const char *decl, const asSFuncPtr& ptr,
                                   asDWORD conv = asCALL_THISCALL);
+
+	/**
+	*  Register new class factory
+	*  @param typeName Class function
+	*  @param decl Declaration of function
+	*  @param ptr Pointer to function
+	*  @param conv Convention of calling
+	*/
     void registerClassFactory(const char *typeName, const char *decl, const asSFuncPtr& ptr,
                                   asDWORD conv = asCALL_THISCALL);
+								  
+	/**
+	*  Register new interface
+	*  @param name Interface name
+	*/
     void registerInterface(const char *name);
+	
+	/**
+	*  Register new interface method
+	*  @param interface Interface name
+	*  @param decl Declaration of method
+	*/
     void registerInterfaceMethod(const char *interface, const char *decl);
 
-    // load script
+	/**
+	*  Load and script
+	*  @param path Path to script file (in local device's stoarage)
+	*  @return Pointer to new script object or <code>NULL</code>
+	*/
     FlxScript* loadScript(const char *path);
 };
 

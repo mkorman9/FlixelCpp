@@ -117,7 +117,7 @@ public:
     void loadGraphic(const char *tileset, int width, int height, int tileTypes = 1);
 
     /**
-	*  Emmit specified amount of particles
+	*  Emit specified amount of particles
 	*  @param howMany How many particles
 	*/
     void emit(int howMany);

@@ -59,7 +59,7 @@ public:
 
     /**
 	*  Load image to memory
-	*  @param Path to tileset file (must be in local device's storage)
+	*  @param gfx Path to tileset file (must be in local device's storage)
 	*  @param Width Width of single frame (set 0 if you want full image size)
 	*  @param Height Height of single frame (set 0 if you want full image size)
 	*  @return Loading result

@@ -49,15 +49,15 @@ public:
 
 	/**
 	*  Convert angle from degrees to radians 
-	*  @param deegrees Angle in deegrees
+	*  @param degrees Angle in degrees
 	*  @return Converted angle
 	*/
-    static float degreesToRad(float deegrees) {
-        return deegrees * (PI / 180.f);
+    static float degreesToRad(float degrees) {
+        return degrees * (PI / 180.f);
     }
 
 	/**
-	*  Convert angle from radians to deegrees 
+	*  Convert angle from radians to degrees 
 	*  @param radians Angle in radians
 	*  @return Converted angle
 	*/
